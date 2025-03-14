@@ -21,7 +21,7 @@ namespace Domain.Entities.Account
         [Display(Name = "صطح دسترسی")]
         public string Role { get; set; } = "User";
         [Display(Name = "وضعیت حساب")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         [Display(Name = "شماره تماس")]
         [RegularExpression(@"^(\d{11})$", ErrorMessage = "شماره تماس باید 11 رقم باشد")]
         public string? PhoneNumber { get; set; }

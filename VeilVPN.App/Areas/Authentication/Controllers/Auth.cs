@@ -76,19 +76,19 @@ namespace VeilVPN.App.Areas.Authentication.Controllers
                 var user = _userService.GetUserByEmail(model.Email).Result;
                 if (user == null)
                 {
-                    ModelState.AddModelError("Email", "ایمیل یا رمز عبور اشتباه است");
+                    this.ShowToast("ایمیل یا رمز عبور اشتباه است", "error");
                     return View(model);
                 }
                 // Check password
                 if (user.Password != PasswordHelper.EncodePasswordMD5(model.Password))
                 {
-                    ModelState.AddModelError("Email", "ایمیل یا رمز عبور اشتباه است");
+                    this.ShowToast("ایمیل یا رمز عبور اشتباه است", "error");
                     return View(model);
                 }
                 // Check if user is active
                 if (!user.IsActive)
                 {
-                    ModelState.AddModelError("Email", "حساب کاربری شما غیر فعال است");
+                    this.ShowToast("حساب کاربری شما غیر فعال شده است!", "error");
                     return View(model);
                 }
 
@@ -108,10 +108,12 @@ namespace VeilVPN.App.Areas.Authentication.Controllers
                 // Check if user is admin
                 if (user.IsAdmin)
                 {
+                    this.ShowToast("ورود به پنل مدیریت", "success");
                     // Redirect to dashboard
                     return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
-
+                
+                this.ShowToast("ورود موفقیت آمیز", "success");
                 // Redirect to dashboard
                 return RedirectToAction("Index", "Dashboard", new { area = "User" });
             }
