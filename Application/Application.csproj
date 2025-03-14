@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Generators\" />
-    <Folder Include="Extentions\" />
     <Folder Include="Convertors\" />
     <Folder Include="API\" />
   </ItemGroup>

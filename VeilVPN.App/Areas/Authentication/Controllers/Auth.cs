@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using VeilVPN.App.Controllers;
 
 namespace VeilVPN.App.Areas.Authentication.Controllers
 {
@@ -59,9 +60,8 @@ namespace VeilVPN.App.Areas.Authentication.Controllers
 
         public IActionResult SignIn()
         {
-            // Set success message in TempData
-            TempData["ToastMessage"] = "ثبت‌نام با موفقیت انجام شد!";
-            TempData["ToastType"] = "success"; // Can be "success", "error", "warning", etc.
+
+            this.ShowToast("ثبت‌نام با موفقیت انجام شد!", "success");
 
             return View();
         }
