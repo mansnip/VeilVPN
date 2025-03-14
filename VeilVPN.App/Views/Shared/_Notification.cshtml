@@ -1,0 +1,38 @@
+﻿<!-- prismjs plugin -->
+<script src="~/assets/libs/prismjs/prism.js"></script>
+
+<!-- notifications init -->
+<script src="~/assets/js/pages/notifications.init.js"></script>
+
+<!-- App js -->
+<script src="~/assets/js/app.js"></script>
+
+@{
+    var toastMessage = TempData["ToastMessage"];
+    var toastType = TempData["ToastType"];
+}
+
+@if (toastMessage != null)
+{
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="dynamicToast" class="toast toast-border-@TempData["ToastType"] overflow-hidden mt-3" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-2">
+                            <i class="ri-checkbox-circle-fill align-middle text-success"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                        <h6 class="mb-0">@TempData["ToastMessage"]</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // نمایش Toast داینامیک
+            const dynamicToast = document.getElementById('dynamicToast');
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(dynamicToast);
+            toastBootstrap.show();
+        </script>
+}

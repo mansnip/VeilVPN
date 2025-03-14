@@ -1,5 +1,8 @@
-﻿using Domain.Interfaces;
+﻿using DataLayer.Context;
+using Domain.Interfaces;
 using IoC;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,29 @@ DependencyContainer.RegisterDependencies(builder.Services);
 DependencyContainer.RegisterDependencies(builder.Services);
 
 #endregion
+
+// اضافه کردن DbContext
+builder.Services.AddDbContext<VeilVpnDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+#region Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}
+).AddCookie(options =>
+{
+    options.LoginPath = "/Account/SignIn";
+    options.LogoutPath = "/Account/SignOut";
+    options.AccessDeniedPath = "/Account/SignIn";
+    options.ExpireTimeSpan = TimeSpan.FromDays(1);
+});
+#endregion
+
+
 // اضافه کردن Logger
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();

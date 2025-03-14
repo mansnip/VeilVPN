@@ -1,15 +1,16 @@
-﻿@model Domain.ViewModels.Authentication.SignUpViewModel
+﻿@model Domain.ViewModels.Authentication.SignInViewModel
 @{
-    ViewData["Title"] = "صفحه اصلی ";
-    Layout = "";
+    Layout = null;
 }
+
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default">
 
 <head>
 
     <meta charset="utf-8">
-    <title>ثبت نام | VeilVPN - قسمت مدیریت و داشبورد</title>
+    <title>ورود به سیستم | VeilVPN - پنل مدیریت و داشبورد</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description">
     <meta content="Mordad" name="author">
@@ -39,8 +40,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card overflow-hidden m-0 card-bg-fill galaxy-border-none">
-                            <div class="row justify-content-center g-0">
+                        <div class="card overflow-hidden card-bg-fill galaxy-border-none">
+                            <div class="row g-0">
                                 <div class="col-lg-6">
                                     <div class="p-lg-5 p-4 auth-one-bg h-100">
                                         <div class="bg-overlay"></div>
@@ -74,27 +75,32 @@
                                                     </div>
                                                 </div>
                                                 <!-- end carousel -->
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- end col -->
 
                                 <div class="col-lg-6">
                                     <div class="p-lg-5 p-4">
                                         <div>
-                                            <h5 class="text-primary">ثبت حساب</h5>
-                                            <p class="text-muted">اکنون حساب Velzon رایگان خود را دریافت کنید.</p>
+                                            <h5 class="text-primary">برگشت خوش آمدید!</h5>
+                                            <p class="text-muted">برای ادامه به Velzon وارد شوید.</p>
                                         </div>
 
                                         <div class="mt-4">
-                                            <form class="needs-validation" novalidate asp-action="SignUp" asp-controller="Auth" asp-area="Authentication">
+                                            <form asp-action="SignIn" asp-controller="Auth" asp-area="Authentication" method="post">
+
                                                 <div class="mb-3">
                                                     <label for="useremail" class="form-label">ایمیل<span class="text-danger">*</span></label>
                                                     <input asp-for="Email" type="email" class="form-control" id="useremail" placeholder="آدرس ایمیل را وارد کنید" required>
                                                     <span asp-validation-for="Email" class="invalid-feedback"></span>
                                                 </div>
+
                                                 <div class="mb-3">
+                                                    <div class="float-end">
+                                                        <a href="auth-pass-reset-cover.html" class="text-muted">رمز عبور را فراموش کرده اید؟</a>
+                                                    </div>
                                                     <label class="form-label" for="password-input">رمز عبور<span class="text-danger">*</span></label>
                                                     <div class="position-relative auth-pass-inputgroup">
                                                         <input asp-for="Password" type="password" class="form-control pe-5 password-input" onpaste="return false" placeholder="رمز عبور را وارد کنید" id="password-input" aria-describedby="passwordInput" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
@@ -103,25 +109,18 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="mb-4">
-                                                    <p class="mb-0 fs-12 text-muted fst-italic">با ثبت نام در VeilVPN موافقت می کنید<a href="#" class="text-primary text-decoration-underline fst-normal fw-medium">شرایط استفاده</a></p>
-                                                </div>
-
-                                                <div id="password-contain" class="p-3 bg-light mb-2 rounded">
-                                                    <h5 class="fs-13">رمز عبور باید حاوی:</h5>
-                                                    <p id="pass-length" class="invalid fs-12 mb-2">حداقل <b>  8 کاراکتر </b></p>
-                                                    <p id="pass-lower" class="invalid fs-12 mb-2">در <b>  حروف کوچک  </b> حرف (a-z)</p>
-                                                    <p id="pass-upper" class="invalid fs-12 mb-2">حداقل <b>  حروف بزرگ  </b> حرف (A-Z)</p>
-                                                    <p id="pass-number" class="invalid fs-12 mb-0">حداقل <b>  شماره  </b> (0-9)</p>
+                                                <div class="form-check">
+                                                    <input asp-for="IsRememberMe" class="form-check-input" type="checkbox" value="" id="auth-remember-check">
+                                                    <label class="form-check-label" for="auth-remember-check">مرا به خاطر بسپار</label>
                                                 </div>
 
                                                 <div class="mt-4">
-                                                    <button class="btn btn-success w-100" type="submit">ثبت نام کنید</button>
+                                                    <button class="btn btn-success w-100" type="submit">وارد شوید</button>
                                                 </div>
 
                                                 <div class="mt-4 text-center">
                                                     <div class="signin-other-title">
-                                                        <h5 class="fs-13 mb-4 title text-muted">ایجاد حساب کاربری با</h5>
+                                                        <h5 class="fs-13 mb-4 title">وارد شوید با</h5>
                                                     </div>
 
                                                     <div>
@@ -131,15 +130,18 @@
                                                         <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
                                                     </div>
                                                 </div>
+
                                             </form>
                                         </div>
 
                                         <div class="mt-5 text-center">
-                                            <p class="mb-0">از قبل حساب کاربری دارید؟<a href="auth-signin-cover.html" class="fw-semibold text-primary text-decoration-underline">وارد شوید</a> </p>
+                                            <p class="mb-0">حساب کاربری ندارید؟<a href="auth-signup-cover.html" class="fw-semibold text-primary text-decoration-underline">ثبت نام کنید</a> </p>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- end col -->
                             </div>
+                            <!-- end row -->
                         </div>
                         <!-- end card -->
                     </div>
@@ -176,10 +178,11 @@
     <script src="~/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
     <script src="~/assets/js/plugins.js"></script>
 
-    <!-- validation init -->
-    <script src="~/assets/js/pages/form-validation.init.js"></script>
-    <!-- password create init -->
-    <script src="~/assets/js/pages/passowrd-create.init.js"></script>
+    <!-- password-addon init -->
+    <script src="~/assets/js/pages/password-addon.init.js"></script>
+
+    <!-- App js -->
+    <partial name="_Notification" />
 </body>
 
 </html>
