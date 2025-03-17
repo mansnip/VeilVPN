@@ -38,8 +38,16 @@
                 </ul>
 
                 <div class="">
-                    <a href="~/Authentication/Auth/SignIn" class="btn btn-link fw-medium text-decoration-none text-body">وارد شوید</a>
-                    <a href="~/Authentication/Auth/SignUp" class="btn btn-primary">ثبت نام کنید</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="~/UserPanel/Panel/Index" class="btn btn-soft-success material-shadow-none">پنل کاربری</a>
+                    }
+                    else
+                    {
+                        <a href="~/Authentication/Auth/SignIn" class="btn btn-link fw-medium text-decoration-none text-body">وارد شوید</a>
+                        <a href="~/Authentication/Auth/SignUp" class="btn btn-primary">ثبت نام کنید</a>
+                    }
+                    
                 </div>
             </div>
 
@@ -1330,4 +1338,3 @@
     <!--end back-to-top-->
 
 </div>
-

@@ -32,9 +32,8 @@
     <Folder Include="Areas\Authentication\Data\" />
     <Folder Include="Areas\Authentication\Models\" />
     <Folder Include="Areas\Landing\Models\" />
-    <Folder Include="Areas\User\Controllers\" />
-    <Folder Include="Areas\User\Data\" />
-    <Folder Include="Areas\User\Models\" />
+    <Folder Include="Areas\UserPanel\Data\" />
+    <Folder Include="Areas\UserPanel\Models\" />
     <Folder Include="Authentication\" />
     <Folder Include="wwwroot\assets\libs\%40datatables\css\" />
   </ItemGroup>

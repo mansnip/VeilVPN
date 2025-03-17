@@ -8,10 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using VeilVPN.App.Controllers;
+using DataLayer.Migrations;
+using VeilVPN.App.Filters;
 
 namespace VeilVPN.App.Areas.Authentication.Controllers
 {
     [Area("Authentication")]
+    [RedirectIfAuthenticated]
     public class Auth : Controller
     {
         private readonly IUserService _userService;
@@ -41,7 +44,7 @@ namespace VeilVPN.App.Areas.Authentication.Controllers
                 }
 
                 // Add user to database
-                await _userService.AddUser(new User
+                await _userService.AddUser(new Domain.Entities.Account.User
                 {
                     Email = model.Email,
                     Password = PasswordHelper.EncodePasswordMD5(model.Password)
@@ -110,12 +113,12 @@ namespace VeilVPN.App.Areas.Authentication.Controllers
                 {
                     this.ShowToast("ورود به پنل مدیریت", "success");
                     // Redirect to dashboard
-                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                    return RedirectToAction("Index", "Panel", new { area = "Admin" });
                 }
                 
                 this.ShowToast("ورود موفقیت آمیز", "success");
                 // Redirect to dashboard
-                return RedirectToAction("Index", "Dashboard", new { area = "User" });
+                return RedirectToAction("Index", "Panel", new { area = "UserPanel" });
             }
             return View(model);
         }
