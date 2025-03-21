@@ -11,7 +11,7 @@ namespace Domain.Entities.Account
     {
         [Display(Name = "رمز عبور")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-        [MaxLength(50, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
+        [MaxLength(150, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
         public string Password { get; set; }
         [Display(Name = "ایمیل")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
@@ -28,5 +28,15 @@ namespace Domain.Entities.Account
         [Display(Name = "مدیر سایت؟")]
         public bool IsAdmin { get; set; } = false;
 
+
+        // Navigation properties
+        public virtual ICollection<Invoice> Invoices { get; set; }
+        public virtual ICollection<Subscription> Subscriptions { get; set; }
+
+        public User()
+        {
+            Invoices = new HashSet<Invoice>();
+            Subscriptions = new HashSet<Subscription>();
+        }
     }
 }

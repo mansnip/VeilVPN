@@ -1,4 +1,6 @@
-﻿using DataLayer.Context;
+﻿using Application.Services.Interfaces;
+using DataLayer.Context;
+using DataLayer.Repositories;
 using Domain.Interfaces;
 using IoC;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -16,6 +18,8 @@ DependencyContainer.RegisterDependencies(builder.Services);
 
 DependencyContainer.RegisterDependencies(builder.Services);
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserService, UserService>();
 #endregion
 
 // اضافه کردن DbContext
@@ -32,9 +36,9 @@ builder.Services.AddAuthentication(options =>
 }
 ).AddCookie(options =>
 {
-    options.LoginPath = "/Account/SignIn";
-    options.LogoutPath = "/Account/SignOut";
-    options.AccessDeniedPath = "/Account/SignIn";
+    options.LoginPath = "/Authentication/Auth/SignIn";
+    options.LogoutPath = "/Authentication/Auth/SignOut";
+    options.AccessDeniedPath = "/Authentication/Auth/AccessDenied"; // صفحه دسترسی غیرمجاز
     options.ExpireTimeSpan = TimeSpan.FromDays(1);
 });
 #endregion

@@ -1,4 +1,6 @@
-﻿using Application.Services.Implimentation;
+﻿using Application.Security;
+using Application.Services.Implementations;
+using Application.Services.Implimentation;
 using Application.Services.Interfaces;
 using DataLayer.Repositories;
 using Domain.Interfaces;
@@ -18,6 +20,7 @@ namespace IoC
             #region services
 
             service.AddScoped<IUserService, UserService>();
+            service.AddSingleton<PasswordHasher>();
 
             #endregion
 
@@ -27,6 +30,14 @@ namespace IoC
 
 
             #endregion
+
+            // افزودن سرویس جدید محاسبه قیمت اشتراک
+            service.AddScoped<ISubscriptionService, SubscriptionService>();
+            service.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            service.AddScoped<IInvoiceService, InvoiceService>();
+            service.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
+            service.AddHttpClient("VpnApi");
         }
     }
 }

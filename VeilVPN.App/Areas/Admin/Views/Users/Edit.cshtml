@@ -1,0 +1,114 @@
+﻿@model Domain.Entities.Account.User
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">ویرایش کاربر</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="~/Admin/Home/Index">داشبورد</a></li>
+                    <li class="breadcrumb-item"><a href="~/Admin/Users/Index">مدیریت کاربران</a></li>
+                    <li class="breadcrumb-item active">ویرایش کاربر</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">ویرایش اطلاعات کاربر</h4>
+            </div>
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Users" asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="CreateDateTime" />
+
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <label asp-for="Email" class="form-label">ایمیل</label>
+                            <input asp-for="Email" class="form-control" placeholder="ایمیل کاربر را وارد کنید" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label class="form-label">رمز عبور</label>
+                            <input name="NewPassword" type="password" class="form-control" placeholder="برای تغییر رمز عبور، رمز جدید را وارد کنید" />
+                            <small class="text-muted">اگر نمی‌خواهید رمز عبور را تغییر دهید، این فیلد را خالی بگذارید.</small>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <label asp-for="PhoneNumber" class="form-label">شماره تماس</label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="شماره تماس را وارد کنید" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label asp-for="Role" class="form-label">نقش کاربر</label>
+                            <select asp-for="Role" class="form-select">
+                                <option value="User">کاربر عادی</option>
+                                <option value="Admin">مدیر</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <div class="form-check form-switch form-switch-success">
+                                <input class="form-check-input" type="checkbox" role="switch" asp-for="IsActive">
+                                <label class="form-check-label" asp-for="IsActive">فعال</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-check form-switch form-switch-danger">
+                                <input class="form-check-input" type="checkbox" role="switch" asp-for="IsAdmin">
+                                <label class="form-check-label" asp-for="IsAdmin">مدیر سایت</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <div class="form-check form-switch form-switch-danger">
+                                <input class="form-check-input" type="checkbox" role="switch" asp-for="IsDelete">
+                                <label class="form-check-label" asp-for="IsDelete">حذف شده</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label class="form-label">تاریخ ثبت‌نام</label>
+                            <input type="text" class="form-control" value="@Model.CreateDateTime.ToPersianDate()" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 text-end">
+                            <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-danger">انصراف</a>
+                            <button type="submit" class="btn btn-success">ذخیره تغییرات</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

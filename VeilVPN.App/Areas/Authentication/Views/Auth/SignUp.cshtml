@@ -89,6 +89,7 @@
 
                                         <div class="mt-4">
                                             <form class="needs-validation" novalidate asp-action="SignUp" asp-controller="Auth" asp-area="Authentication">
+                                                @Html.AntiForgeryToken()
                                                 <div class="mb-3">
                                                     <label for="useremail" class="form-label">ایمیل<span class="text-danger">*</span></label>
                                                     <input asp-for="Email" type="email" class="form-control" id="useremail" placeholder="آدرس ایمیل را وارد کنید" required>

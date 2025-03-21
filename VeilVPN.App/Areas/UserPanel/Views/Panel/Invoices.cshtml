@@ -1,0 +1,123 @@
+﻿@model List<Domain.ViewModels.UserPanel.InvoiceViewModel>
+@using Application.Extensions
+
+@{
+    ViewData["Title"] = "فاکتورهای من";
+    Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">فاکتورهای من</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">داشبورد</a></li>
+                    <li class="breadcrumb-item active">فاکتورهای من</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- نمایش پیام‌های موفقیت و خطا -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>موفقیت!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>خطا!</strong> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">لیست فاکتورها</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-nowrap align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>شماره فاکتور</th>
+                                <th>تاریخ</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var invoice in Model)
+                                {
+                                    <tr>
+                                        <td>@invoice.InvoiceNumber</td>
+                                        <td>@invoice.InvoiceDate.ToPersianDate()</td>
+                                        <td>@invoice.TotalAmount.ToPrice() تومان</td>
+                                        <td>
+                                            @if (invoice.PaymentStatus == "پرداخت شده")
+                                            {
+                                                <span class="badge bg-success-subtle text-success">@invoice.PaymentStatus</span>
+                                            }
+                                            else if (invoice.PaymentStatus == "در انتظار پرداخت")
+                                            {
+                                                <span class="badge bg-warning-subtle text-warning">@invoice.PaymentStatus</span>
+                                            }
+                                            else if (invoice.PaymentStatus == "لغو شده")
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger">@invoice.PaymentStatus</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-info-subtle text-info">@invoice.PaymentStatus</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="hstack gap-2">
+                                                <a href="@Url.Action("ShowInvoice", "Panel", new { id = invoice.Id })" class="btn btn-sm btn-soft-primary">
+                                                    <i class="ri-eye-line"></i> مشاهده
+                                                </a>
+                                                @if (invoice.PaymentStatus == "در انتظار پرداخت")
+                                                {
+                                                    <form asp-area="UserPanel" asp-controller="Panel" asp-action="ProcessPayment" method="post">
+                                                        <input type="hidden" name="invoiceId" value="@invoice.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-soft-success">
+                                                            <i class="ri-bank-card-line"></i> پرداخت
+                                                        </button>
+                                                    </form>
+
+                                                    <form asp-area="UserPanel" asp-controller="Panel" asp-action="CancelInvoice" method="post" onsubmit="return confirm('آیا از لغو این فاکتور اطمینان دارید؟');">
+                                                        <input type="hidden" name="invoiceId" value="@invoice.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-soft-danger">
+                                                            <i class="ri-close-circle-line"></i> لغو
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center">هیچ فاکتوری یافت نشد.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,9 +1,5 @@
 ﻿using Domain.Entities.Account;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.Services.Interfaces
 {
@@ -18,5 +14,7 @@ namespace Application.Services.Interfaces
         Task<List<User>> GetAllUsers();
         Task<bool> IsExistUserByEmail(string email);
         Task<bool> IsExistUserById(string id);
+
+
     }
 }

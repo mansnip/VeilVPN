@@ -1,0 +1,328 @@
+﻿@model List<Domain.ViewModels.UserPanel.SubscriptionViewModel>
+@{
+    ViewData["Title"] = "اشتراک‌های من";
+    Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- شروع عنوان صفحه -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">اشتراک‌های من</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">اشتراک VPN</a></li>
+                    <li class="breadcrumb-item active">اشتراک‌های من</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- پایان عنوان صفحه -->
+<!-- شروع بخش کارت اشتراک فعال -->
+@if (Model != null && Model.Any(s => s.IsActive))
+{
+    var activeSubscription = Model.FirstOrDefault(s => s.IsActive);
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header border-0 align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">اشتراک فعال</h4>
+                    <div>
+                        <span class="badge badge-soft-success">فعال</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="text-center p-3">
+                                <div class="avatar-md mx-auto mb-3">
+                                    <div class="avatar-title bg-soft-primary text-primary rounded-circle fs-1">
+                                        <i class="ri-wifi-line"></i>
+                                    </div>
+                                </div>
+                                <h5 class="mb-3">@activeSubscription.Traffic گیگابایت / @activeSubscription.Duration روزه</h5>
+                                <p class="text-muted mb-0">تاریخ شروع: @activeSubscription.StartDate.ToPersianDate()</p>
+                                <p class="text-muted mb-0">تاریخ پایان: @activeSubscription.EndDate.ToPersianDate()</p>
+                                <div class="mt-3">
+                                    <span class="badge bg-light text-muted p-2">
+                                        <i class="ri-time-line align-middle me-1"></i> @activeSubscription.DaysRemaining روز باقی‌مانده
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-8">
+                            <div class="p-3">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="mb-3">ترافیک مصرفی</h5>
+                                        <div class="progress animated-progress custom-progress progress-label">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: @activeSubscription.PercentTrafficUsed%" aria-valuenow="@activeSubscription.PercentTrafficUsed" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="label">@activeSubscription.PercentTrafficUsed%</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <span class="text-muted small">استفاده شده: @(activeSubscription.Traffic - activeSubscription.RemainingTraffic) گیگابایت</span>
+                                            <span class="text-muted small">باقی‌مانده: @activeSubscription.RemainingTraffic گیگابایت</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <h5 class="mb-3">مدت زمان</h5>
+                                        <div class="progress animated-progress custom-progress progress-label">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: @(((activeSubscription.Duration - activeSubscription.DaysRemaining) * 100) / activeSubscription.Duration)%" aria-valuenow="@(((activeSubscription.Duration - activeSubscription.DaysRemaining) * 100) / activeSubscription.Duration)" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="label">@(((activeSubscription.Duration - activeSubscription.DaysRemaining) * 100) / activeSubscription.Duration)%</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <span class="text-muted small">گذشته: @(activeSubscription.Duration - activeSubscription.DaysRemaining) روز</span>
+                                            <span class="text-muted small">باقی‌مانده: @activeSubscription.DaysRemaining روز</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-end">
+                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-primary">خرید اشتراک جدید</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- پایان بخش کارت اشتراک فعال -->
+<!-- شروع لیست اشتراک‌ها -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">تاریخچه اشتراک‌ها</h4>
+                <div class="flex-shrink-0">
+                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-primary btn-sm">
+                        <i class="ri-add-line align-bottom me-1"></i> خرید اشتراک جدید
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive table-card">
+                        <table class="table table-hover align-middle table-nowrap mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">تاریخ شروع</th>
+                                    <th scope="col">تاریخ پایان</th>
+                                    <th scope="col">ترافیک</th>
+                                    <th scope="col">مدت (روز)</th>
+                                    <th scope="col">ترافیک باقیمانده</th>
+                                    <th scope="col">وضعیت</th>
+                                    <th scope="col">جزئیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var subscription in Model.OrderByDescending(s => s.StartDate))
+                                {
+                                    <tr>
+                                        <td>@subscription.StartDate.ToPersianDate()</td>
+                                        <td>@subscription.EndDate.ToPersianDate()</td>
+                                        <td>@subscription.Traffic گیگابایت</td>
+                                        <td>@subscription.Duration</td>
+                                        <td>
+                                            <div class="progress animated-progress progress-sm">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: @((subscription.RemainingTraffic * 100) / subscription.Traffic)%" aria-valuenow="@((subscription.RemainingTraffic * 100) / subscription.Traffic)" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <small>@subscription.RemainingTraffic از @subscription.Traffic گیگابایت</small>
+                                        </td>
+                                        <td>
+                                            @if (subscription.IsActive)
+                                            {
+                                                <span class="badge badge-soft-success">فعال</span>
+                                            }
+                                            else if (subscription.EndDate < DateTime.Now)
+                                            {
+                                                <span class="badge badge-soft-danger">منقضی شده</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-soft-warning">غیرفعال</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#subscriptionDetails-@subscription.Id">
+                                                <i class="ri-eye-line align-bottom"></i> جزئیات
+                                            </button>
+                                            <!-- مدال جزئیات -->
+                                            <div class="modal fade" id="subscriptionDetails-@subscription.Id" tabindex="-1" aria-labelledby="subscriptionDetailsLabel-@subscription.Id" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="subscriptionDetailsLabel-@subscription.Id">جزئیات اشتراک</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-borderless mb-0">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>شناسه اشتراک:</th>
+                                                                            <td>@subscription.Id</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>نوع اشتراک:</th>
+                                                                            <td>@subscription.Traffic گیگابایت / @subscription.Duration روزه</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>تاریخ شروع:</th>
+                                                                            <td>@subscription.StartDate.ToPersianDate()</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>تاریخ پایان:</th>
+                                                                            <td>@subscription.EndDate.ToPersianDate()</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>ترافیک کل:</th>
+                                                                            <td>@subscription.Traffic گیگابایت</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>ترافیک مصرف شده:</th>
+                                                                            <td>@(subscription.Traffic - subscription.RemainingTraffic) گیگابایت</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>ترافیک باقیمانده:</th>
+                                                                            <td>@subscription.RemainingTraffic گیگابایت</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th>وضعیت:</th>
+                                                                            <td>
+                                                                                @if (subscription.IsActive)
+                                                                                {
+                                                                                    <span class="badge badge-soft-success">فعال</span>
+                                                                                }
+                                                                                else if (subscription.EndDate < DateTime.Now)
+                                                                                {
+                                                                                    <span class="badge badge-soft-danger">منقضی شده</span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span class="badge badge-soft-warning">غیرفعال</span>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center p-4">
+                        <div class="avatar-md mx-auto mb-4">
+                            <div class="avatar-title bg-light text-danger rounded-circle">
+                                <i class="ri-information-line fs-1"></i>
+                            </div>
+                        </div>
+                        <h4 class="mb-3">هیچ اشتراکی یافت نشد!</h4>
+                        <p class="text-muted mb-4">شما تا به حال هیچ اشتراکی خریداری نکرده‌اید.</p>
+                        <div>
+                            <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-success">خرید اشتراک</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- پایان لیست اشتراک‌ها -->
+<!-- راهنمای اشتراک -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">سوالات متداول درباره اشتراک</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion custom-accordionwithicon accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                چگونه اشتراک VeilVPN را خریداری کنم؟
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                برای خرید اشتراک، ابتدا یکی از طرح‌های موجود را انتخاب کرده و روی دکمه "خرید اشتراک" کلیک کنید. سپس مراحل پرداخت را تکمیل نمایید. پس از تأیید پرداخت، اشتراک شما بلافاصله فعال می‌شود و می‌توانید از خدمات VeilVPN استفاده کنید.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                آیا می‌توانم طرح اشتراک خود را ارتقا دهم؟
+                            </button>
+                        </h2>
+                        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                بله، شما می‌توانید در هر زمان طرح اشتراک خود را ارتقا دهید. برای این کار، به پنل کاربری خود مراجعه کرده و از بخش "اشتراک‌های من" اقدام به خرید اشتراک جدید کنید. تفاوت قیمت بین طرح فعلی و طرح جدید از شما دریافت خواهد شد.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                چگونه می‌توانم از VeilVPN در چند دستگاه استفاده کنم؟
+                            </button>
+                        </h2>
+                        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                پس از خرید اشتراک، می‌توانید نرم‌افزار VeilVPN را برای سیستم‌عامل‌های مختلف (ویندوز، مک، اندروید، iOS) دانلود کرده و با استفاده از اطلاعات کاربری خود وارد شوید. شما می‌توانید همزمان در چند دستگاه از VeilVPN استفاده کنید، اما توجه داشته باشید که میزان ترافیک مصرفی در همه دستگاه‌ها محاسبه می‌شود.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                                آیا استفاده از VeilVPN قانونی است؟
+                            </button>
+                        </h2>
+                        <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                استفاده از VPN در بیشتر کشورها قانونی است، اما قوانین در این زمینه متفاوت است. VeilVPN برای حفظ حریم خصوصی و امنیت آنلاین طراحی شده است. توصیه می‌کنیم که از VeilVPN مطابق با قوانین کشور خود استفاده کنید.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- پایان راهنمای اشتراک -->
+@section Scripts {
+    <!-- سفارشی کردن متن آکاردئون -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // برای اصلاح نمایش اکاردئون
+            var accordionButtons = document.querySelectorAll('.accordion-button');
+            accordionButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    setTimeout(function() {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 300);
+                });
+            });
+        });
+    </script>
+}

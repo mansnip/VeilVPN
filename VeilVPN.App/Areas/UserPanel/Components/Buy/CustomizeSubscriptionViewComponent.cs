@@ -1,21 +1,27 @@
 ﻿using Application.Services.Interfaces;
+using Domain.ViewModels.UserPanel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VeilVPN.App.Areas.UserPanel.Components.Buy
 {
     public class CustomizeSubscriptionViewComponent : ViewComponent
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
+
         public CustomizeSubscriptionViewComponent(IUserService userService)
         {
-            _userService = userService;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
-            return View("CustomizeSubscription");
+            var model = new SubscriptionModel
+            {
+                Traffic = 30,
+                Duration = 30
+            };
+
+            return View("CustomizeSubscription", model);
         }
-
-
     }
 }

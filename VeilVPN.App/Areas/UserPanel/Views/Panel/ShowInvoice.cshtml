@@ -1,0 +1,214 @@
+﻿@using Application.Extensions
+@model Domain.ViewModels.UserPanel.InvoiceViewModel
+
+@{
+    ViewData["Title"] = "جزئیات فاکتور";
+    Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">جزئیات فاکتور</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">فاکتورها</a></li>
+                    <li class="breadcrumb-item active">جزئیات فاکتور</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- نمایش پیام‌های موفقیت و خطا -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>موفقیت!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>خطا!</strong> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-xxl-9">
+        <div class="card" id="demo">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-header border-bottom-dashed p-4">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <img src="/assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="لوگو" height="17">
+                                <img src="/assets/images/logo-light.png" class="card-logo card-logo-light" alt="لوگو" height="17">
+                                <div class="mt-sm-5 mt-4">
+                                    <h6 class="text-muted text-uppercase fw-semibold">VeilVPN</h6>
+                                    <p class="text-muted mb-1">ارائه دهنده خدمات VPN</p>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 mt-sm-0 mt-3">
+                                <h6><span class="text-muted fw-normal">شماره فاکتور: </span>@Model.InvoiceNumber</h6>
+                                <h6><span class="text-muted fw-normal">تاریخ: </span>@Model.InvoiceDate.ToPersianDate()</h6>
+                                @if (!string.IsNullOrEmpty(Model.UserFullName))
+                                {
+                                    <h6><span class="text-muted fw-normal">نام کاربر: </span>@Model.UserFullName</h6>
+                                }
+                                <h6><span class="text-muted fw-normal">ایمیل: </span>@Model.UserEmail</h6>
+                                @if (!string.IsNullOrEmpty(Model.UserPhone))
+                                {
+                                    <h6><span class="text-muted fw-normal">شماره تماس: </span>@Model.UserPhone</h6>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-6">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">شماره فاکتور</p>
+                                <h5 class="fs-14 mb-0">@Model.InvoiceNumber</h5>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">تاریخ</p>
+                                <h5 class="fs-14 mb-0">@Model.InvoiceDate.ToPersianDate()</h5>
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">وضعیت پرداخت</p>
+                                @if (Model.PaymentStatus == "پرداخت شده")
+                                {
+                                    <span class="badge bg-success-subtle text-success fs-11">@Model.PaymentStatus</span>
+                                }
+                                else if (Model.PaymentStatus == "در انتظار پرداخت")
+                                {
+                                    <span class="badge bg-warning-subtle text-warning fs-11">@Model.PaymentStatus</span>
+                                }
+                                else if (Model.PaymentStatus == "لغو شده")
+                                {
+                                    <span class="badge bg-danger-subtle text-danger fs-11">@Model.PaymentStatus</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info-subtle text-info fs-11">@Model.PaymentStatus</span>
+                                }
+                            </div>
+                            <div class="col-lg-3 col-6">
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">مبلغ کل</p>
+                                <h5 class="fs-14 mb-0">@Model.TotalAmount.ToPrice() تومان</h5>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="table-responsive">
+                                <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th scope="col" style="width: 50px;">#</th>
+                                            <th scope="col">خدمات</th>
+                                            <th scope="col">قیمت واحد</th>
+                                            <th scope="col">تعداد</th>
+                                            <th scope="col" class="text-end">مبلغ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">01</th>
+                                            <td class="text-start">
+                                                <span class="fw-medium">اشتراک VPN</span>
+                                                <p class="text-muted mb-0">@Model.Subscription.Traffic گیگابایت برای @Model.Subscription.Duration روز</p>
+                                            </td>
+                                            <td>@Model.Subscription.BasePrice.ToPrice() تومان</td>
+                                            <td>1</td>
+                                            <td class="text-end">@Model.Subscription.BasePrice.ToPrice() تومان</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="border-top border-top-dashed mt-2">
+                            <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
+                                <tbody>
+                                    <tr>
+                                        <td>قیمت پایه</td>
+                                        <td class="text-end">@Model.Subscription.BasePrice.ToPrice() تومان</td>
+                                    </tr>
+                                    @if (Model.Subscription.DiscountPercent > 0)
+                                    {
+                                        <tr>
+                                            <td>تخفیف (@Model.Subscription.DiscountPercent%)</td>
+                                            <td class="text-end text-danger">- @Model.Subscription.DiscountAmount.ToPrice() تومان</td>
+                                        </tr>
+                                    }
+                                    <tr class="border-top border-top-dashed fs-15">
+                                        <th scope="row">مبلغ نهایی</th>
+                                        <th class="text-end">@Model.Subscription.FinalPrice.ToPrice() تومان</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <p class="mb-0">
+                                    <span class="fw-semibold">توجه:</span>
+                                    <span>لطفاً توجه داشته باشید که اشتراک شما پس از تأیید پرداخت فعال خواهد شد.</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="hstack gap-2 justify-content-end d-print-none mt-4">
+                            <a href="javascript:window.print()" class="btn btn-success"><i class="ri-printer-line align-bottom me-1"></i>چاپ</a>
+
+                            @if (ViewBag.IsPreview == true)
+                            {
+                                <form asp-area="UserPanel" asp-controller="Panel" asp-action="CreateInvoice" method="post">
+                                    <input type="hidden" name="traffic" value="@ViewBag.Traffic" />
+                                    <input type="hidden" name="duration" value="@ViewBag.Duration" />
+                                    <button type="submit" class="btn btn-primary"><i class="ri-shopping-cart-line align-bottom me-1"></i>خرید اشتراک</button>
+                                </form>
+                            }
+                            else if (Model.PaymentStatus == "در انتظار پرداخت")
+                            {
+                                <div class="d-flex gap-2">
+                                    <form asp-area="UserPanel" asp-controller="Panel" asp-action="ProcessPayment" method="post">
+                                        <input type="hidden" name="invoiceId" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-primary"><i class="ri-bank-card-line align-bottom me-1"></i>پرداخت</button>
+                                    </form>
+
+                                    <form asp-area="UserPanel" asp-controller="Panel" asp-action="CancelInvoice" method="post" onsubmit="return confirm('آیا از لغو این فاکتور اطمینان دارید؟');">
+                                        <input type="hidden" name="invoiceId" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-danger"><i class="ri-close-circle-line align-bottom me-1"></i>لغو فاکتور</button>
+                                    </form>
+                                </div>
+                            }
+
+                            <a href="@Url.Action("Invoices", "Panel")" class="btn btn-secondary"><i class="ri-arrow-left-line align-bottom me-1"></i>بازگشت</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* اضافه کردن اسکریپت برای حل مشکل رفرش صفحه پیش‌فاکتور *@
+@if (ViewBag.IsPreview == true)
+{
+    <script>
+        // جلوگیری از رفرش صفحه توسط کاربر برای جلوگیری از ایجاد فاکتور جدید
+        window.addEventListener('beforeunload', function(e) {
+            // فقط اگر کاربر می‌خواهد صفحه را رفرش کند این پیام را نمایش می‌دهیم
+            // این باعث می‌شود اگر کاربر روی دکمه «خرید اشتراک» کلیک کند، پیام نمایش داده نشود
+            if (e.target.activeElement.tagName !== 'BUTTON') {
+                e.preventDefault();
+                e.returnValue = 'با رفرش این صفحه، یک پیش‌فاکتور جدید ایجاد خواهد شد. آیا مطمئن هستید؟';
+            }
+        });
+    </script>
+}
