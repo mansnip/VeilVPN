@@ -25,12 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Generators\" />
-    <Folder Include="Convertors\" />
-    <Folder Include="API\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 

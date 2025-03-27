@@ -1,11 +1,11 @@
-﻿
+﻿@model Domain.ViewModels.UserPanel.SubscriptionModel
 @{
     ViewData["Title"] = "خرید اشتراک";
     Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
 }
 
 
-@await Component.InvokeAsync("CustomizeSubscription")
+@await Component.InvokeAsync("CustomizeSubscription", Model)
 
 <div class="main-content">
     <div class="page-content">
@@ -15,7 +15,7 @@
             <div class="row justify-content-center mt-5">
                 <div class="col-lg-6">
                     <div class="text-center mb-4 pb-2">
-                        <h4 class="fw-semibold fs-22">اشتراک VeilVPN خود را انتخاب کنید</h4>
+                        <h4 class="fw-semibold fs-22">اشتراک RahaGozar خود را انتخاب کنید</h4>
                         <p class="text-muted mb-4 fs-15">قیمت‌گذاری ساده بدون هزینه‌های پنهان. ویژگی‌های پیشرفته برای امنیت و حریم خصوصی شما</p>
 
                         <!-- سوئیچ تغییر بین ماهانه و سالانه -->
@@ -295,7 +295,7 @@
                 <div class="col-lg-8">
                     <div class="text-center mb-4 pb-2">
                         <h4 class="fw-semibold fs-22">سوالات متداول</h4>
-                        <p class="text-muted mb-4 fs-15">پاسخ به سوالات رایج درباره خدمات VeilVPN</p>
+                        <p class="text-muted mb-4 fs-15">پاسخ به سوالات رایج درباره خدمات RahaGozar</p>
                     </div>
                 </div>
                 <!--end col-->
@@ -310,12 +310,12 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne">
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            چگونه می‌توانم اشتراک VeilVPN را خریداری کنم؟
+                                            چگونه می‌توانم اشتراک RahaGozar را خریداری کنم؟
                                         </button>
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
-                                            برای خرید اشتراک VeilVPN، کافیست یکی از پلن‌های موجود را انتخاب کرده و روی دکمه "خرید اشتراک" کلیک کنید. سپس وارد صفحه پرداخت شده و پس از تکمیل فرآیند پرداخت، اشتراک شما فعال خواهد شد.
+                                            برای خرید اشتراک RahaGozar، کافیست یکی از پلن‌های موجود را انتخاب کرده و روی دکمه "خرید اشتراک" کلیک کنید. سپس وارد صفحه پرداخت شده و پس از تکمیل فرآیند پرداخت، اشتراک شما فعال خواهد شد.
                                         </div>
                                     </div>
                                 </div>
@@ -334,24 +334,24 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingThree">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                            چگونه می‌توانم از VeilVPN در دستگاه‌های مختلف استفاده کنم؟
+                                            چگونه می‌توانم از RahaGozar در دستگاه‌های مختلف استفاده کنم؟
                                         </button>
                                     </h2>
                                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
-                                            پس از خرید اشتراک، می‌توانید از پنل کاربری خود، نرم‌افزار VeilVPN را برای سیستم‌عامل‌های مختلف (ویندوز، مک، اندروید و iOS) دانلود کرده و با استفاده از نام کاربری و رمز عبور خود، در دستگاه‌های مختلف استفاده کنید.
+                                            پس از خرید اشتراک، می‌توانید از پنل کاربری خود، نرم‌افزار RahaGozar را برای سیستم‌عامل‌های مختلف (ویندوز، مک، اندروید و iOS) دانلود کرده و با استفاده از نام کاربری و رمز عبور خود، در دستگاه‌های مختلف استفاده کنید.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingFour">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                            آیا استفاده از VeilVPN قانونی است؟
+                                            آیا استفاده از RahaGozar قانونی است؟
                                         </button>
                                     </h2>
                                     <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                                         <div class="accordion-body">
-                                            استفاده از VPN در اکثر کشورها قانونی است، اما قوانین هر کشور متفاوت است. VeilVPN برای حفظ حریم خصوصی و امنیت آنلاین شما طراحی شده است. لطفاً از قوانین کشور خود مطلع باشید و از VPN برای فعالیت‌های غیرقانونی استفاده نکنید.
+                                            استفاده از VPN در اکثر کشورها قانونی است، اما قوانین هر کشور متفاوت است. RahaGozar برای حفظ حریم خصوصی و امنیت آنلاین شما طراحی شده است. لطفاً از قوانین کشور خود مطلع باشید و از VPN برای فعالیت‌های غیرقانونی استفاده نکنید.
                                         </div>
                                     </div>
                                 </div>

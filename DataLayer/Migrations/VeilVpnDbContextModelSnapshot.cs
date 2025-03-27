@@ -88,10 +88,19 @@ namespace DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsRenewal")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentRefId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RemarkName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RenewalSubscriptionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -136,6 +145,9 @@ namespace DataLayer.Migrations
                     b.Property<int>("RemainingTraffic")
                         .HasColumnType("int");
 
+                    b.Property<string>("RemarkName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -146,6 +158,18 @@ namespace DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VpnEmailName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VpnId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VpnServerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId")
@@ -154,6 +178,130 @@ namespace DataLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.VPN.VPNServer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApiPassword")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ApiUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ApiUsername")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CurrentUsers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Flag")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("InboundID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("MaxUsers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VPNServers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.VPN.VPNSubscription", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConnectionUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("DownloadBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ExpiryDateUnix")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("InboundId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("PurchaseDateUnix")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Reset")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubscriptionName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<long>("UploadBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VPNServerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VPNServerId");
+
+                    b.ToTable("VPNSubscriptions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Invoice", b =>
@@ -184,6 +332,25 @@ namespace DataLayer.Migrations
                     b.Navigation("Invoice");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.VPN.VPNSubscription", b =>
+                {
+                    b.HasOne("Domain.Entities.Account.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.VPN.VPNServer", "VPNServer")
+                        .WithMany()
+                        .HasForeignKey("VPNServerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("VPNServer");
                 });
 
             modelBuilder.Entity("Domain.Entities.Account.User", b =>

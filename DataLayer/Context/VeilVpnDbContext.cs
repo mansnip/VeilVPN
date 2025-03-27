@@ -1,8 +1,10 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Account;
+using Domain.Entities.VPN;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -20,6 +22,7 @@ namespace DataLayer.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<VPNServer> VPNServers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +66,18 @@ namespace DataLayer.Context
                 .HasForeignKey<Subscription>(s => s.InvoiceId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            // تنظیمات مدل VPNSubscription
+            modelBuilder.Entity<VPNSubscription>()
+                .HasOne(vs => vs.VPNServer)
+                .WithMany()
+                .HasForeignKey(vs => vs.VPNServerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<VPNSubscription>()
+                .HasOne(vs => vs.User)
+                .WithMany()
+                .HasForeignKey(vs => vs.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }

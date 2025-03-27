@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.ViewModels.UserPanel
 {
-    public class SubscriptionViewModel
+    public class SubscriptionnViewModel
     {
         public string Id { get; set; }
         public int Traffic { get; set; }
@@ -18,6 +18,7 @@ namespace Domain.ViewModels.UserPanel
         public int DaysRemaining { get; set; }
         public int PercentTrafficUsed { get; set; }
         public string? UserId { get; set; }
+
 
     }
 }

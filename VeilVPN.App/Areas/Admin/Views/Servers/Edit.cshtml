@@ -1,0 +1,214 @@
+﻿@model Domain.Entities.VPN.VPNServer
+
+@{
+    ViewData["Title"] = "ویرایش سرور VPN";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                    <h4 class="mb-sm-0">ویرایش سرور VPN</h4>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Servers">سرورهای VPN</a></li>
+                            <li class="breadcrumb-item active">ویرایش سرور</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <h4 class="card-title mb-0 flex-grow-1">ویرایش اطلاعات سرور</h4>
+                        <div class="flex-shrink-0">
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                                    <i class="ri-eye-line align-bottom"></i> مشاهده جزئیات
+                                </a>
+                                <a asp-action="Index" class="btn btn-primary">
+                                    <i class="ri-arrow-go-back-line align-bottom"></i> بازگشت به لیست
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" asp-for="Id" />
+                            @Html.AntiForgeryToken()
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Name" class="form-label">نام سرور</label>
+                                        <input asp-for="Name" class="form-control" placeholder="نام سرور را وارد کنید" required />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً نام سرور را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="IpAddress" class="form-label">آدرس IP</label>
+                                        <input asp-for="IpAddress" class="form-control" placeholder="192.168.1.1" required />
+                                        <span asp-validation-for="IpAddress" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً آدرس IP سرور را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="ApiUrl" class="form-label">آدرس API</label>
+                                        <input asp-for="ApiUrl" class="form-control" placeholder="https://example.com/api" required />
+                                        <span asp-validation-for="ApiUrl" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً آدرس API را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Location" class="form-label">موقعیت</label>
+                                        <input asp-for="Location" class="form-control" placeholder="آلمان، فرانکفورت" required />
+                                        <span asp-validation-for="Location" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً موقعیت سرور را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="ApiUsername" class="form-label">نام کاربری API</label>
+                                        <input asp-for="ApiUsername" class="form-control" placeholder="نام کاربری API را وارد کنید" required />
+                                        <span asp-validation-for="ApiUsername" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً نام کاربری API را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="ApiPassword" class="form-label">رمز عبور API</label>
+                                        <input asp-for="ApiPassword" type="password" class="form-control" placeholder="برای تغییر رمز عبور، مقدار جدید را وارد کنید" />
+                                        <span asp-validation-for="ApiPassword" class="text-danger"></span>
+                                        <div class="form-text">اگر قصد تغییر رمز عبور را ندارید، این فیلد را خالی بگذارید</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="MaxUsers" class="form-label">حداکثر تعداد کاربران</label>
+                                        <input asp-for="MaxUsers" type="number" class="form-control" min="1" required />
+                                        <span asp-validation-for="MaxUsers" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً حداکثر تعداد کاربران را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="CurrentUsers" class="form-label">تعداد کاربران فعلی</label>
+                                        <input asp-for="CurrentUsers" type="number" class="form-control" min="0" required />
+                                        <span asp-validation-for="CurrentUsers" class="text-danger"></span>
+                                        <div class="invalid-feedback">
+                                            لطفاً تعداد کاربران فعلی را وارد کنید
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Flag" class="form-label">آدرس پرچم</label>
+                                        <input asp-for="Flag" class="form-control" placeholder="آدرس تصویر پرچم را وارد کنید" />
+                                        <span asp-validation-for="Flag" class="text-danger"></span>
+                                        <div class="form-text">آدرس تصویر پرچم کشور سرور را وارد کنید (اختیاری)</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label asp-for="IsActive" class="form-label d-block">وضعیت سرور</label>
+                                        <div class="form-check form-switch form-switch-lg">
+                                            <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+                                            <label class="form-check-label" for="IsActive">فعال</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">آخرین بروزرسانی</label>
+                                        <input value="@(Model.UpdatedAt?.ToString("yyyy/MM/dd HH:mm") ?? "-")" class="form-control" readonly disabled />
+                                        <div class="form-text">این مقدار به صورت خودکار بروزرسانی می‌شود</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-lg-12">
+                                    <div class="hstack gap-2 justify-content-end">
+                                        <a asp-action="Index" class="btn btn-light">انصراف</a>
+                                        <button type="submit" class="btn btn-success">بروزرسانی سرور</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // اعتبارسنجی فرم
+        (function () {
+            'use strict'
+
+            // فرم‌هایی که نیاز به اعتبارسنجی دارند
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // حلقه برای جلوگیری از ارسال
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}
+

@@ -1,0 +1,288 @@
+﻿@model Domain.Entities.Subscription
+
+@{
+    ViewData["Title"] = "جزئیات اشتراک";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- شروع عنوان صفحه -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">جزئیات اشتراک</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Subscription")">اشتراک‌ها</a></li>
+                    <li class="breadcrumb-item active">جزئیات</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- پایان عنوان صفحه -->
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">اطلاعات اشتراک</h5>
+                    <div class="flex-shrink-0">
+                        <a href="@Url.Action("Index", "Subscription")" class="btn btn-soft-primary btn-sm">
+                            <i class="ri-arrow-right-line align-bottom"></i> بازگشت به لیست
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-nowrap mb-0">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="text-muted">شناسه اشتراک</th>
+                                <td>@Model.Id</td>
+                                <th scope="row" class="text-muted">کاربر</th>
+                                <td>@(Model.User?.Email ?? "نامشخص")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">نام کاربری VPN</th>
+                                <td>@Model.VpnEmailName</td>
+                                <th scope="row" class="text-muted">نام نمایشی</th>
+                                <td>@(Model.RemarkName ?? "بدون نام")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">وضعیت</th>
+                                <td>
+                                    @if (Model.IsActive)
+                                    {
+                                        <span class="badge bg-success-subtle text-success">فعال</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger">غیرفعال</span>
+                                    }
+                                </td>
+                                <th scope="row" class="text-muted">نام سرور</th>
+                                <td id="serverName">در حال بارگذاری...</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">تاریخ شروع</th>
+                                <td>@Model.StartDate.ToString("yyyy/MM/dd")</td>
+                                <th scope="row" class="text-muted">تاریخ انقضا</th>
+                                <td>@Model.EndDate.ToString("yyyy/MM/dd")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">مدت اشتراک (روز)</th>
+                                <td>@Model.Duration</td>
+                                <th scope="row" class="text-muted">روزهای باقیمانده</th>
+                                <td id="remainingDays">در حال محاسبه...</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">حجم کل (گیگابایت)</th>
+                                <td>@Model.Traffic</td>
+                                <th scope="row" class="text-muted">حجم باقیمانده (گیگابایت)</th>
+                                <td>@Model.RemainingTraffic</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">وضعیت مصرف ترافیک</h4>
+            </div>
+            <div class="card-body">
+                <div class="px-4">
+                    <div id="trafficProgressWrapper">
+                        <div class="progress animated-progress custom-progress progress-label">
+                            <div class="progress-bar bg-info" role="progressbar" id="trafficProgressBar"
+                                 style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="label" id="trafficProgressLabel">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            <p class="mb-0 text-muted">حجم کل: <span class="fw-medium">@Model.Traffic گیگابایت</span></p>
+                        </div>
+                        <div>
+                            <p class="mb-0 text-muted">حجم مصرف شده: <span class="fw-medium" id="usedTraffic">در حال محاسبه...</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">وضعیت زمان اشتراک</h4>
+            </div>
+            <div class="card-body">
+                <div class="px-4">
+                    <div id="timeProgressWrapper">
+                        <div class="progress animated-progress custom-progress progress-label">
+                            <div class="progress-bar bg-success" role="progressbar" id="timeProgressBar"
+                                 style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="label" id="timeProgressLabel">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            <p class="mb-0 text-muted">شروع: <span class="fw-medium">@Model.StartDate.ToString("yyyy/MM/dd")</span></p>
+                        </div>
+                        <div>
+                            <p class="mb-0 text-muted">انقضا: <span class="fw-medium">@Model.EndDate.ToString("yyyy/MM/dd")</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">عملیات مدیریتی</h4>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <form id="resetTrafficForm" method="post" action="@Url.Action("ResetTraffic", "Subscription")">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="button" class="btn btn-warning" id="resetTrafficBtn">
+                            <i class="ri-restart-line me-1"></i> ریست ترافیک
+                        </button>
+                    </form>
+
+                    <a href="#" class="btn btn-info disabled">
+                        <i class="ri-edit-2-line me-1"></i> ویرایش اشتراک
+                    </a>
+
+                    <a href="#" class="btn btn-danger disabled">
+                        <i class="ri-close-circle-line me-1"></i> غیرفعال‌سازی
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال ریست ترافیک -->
+<div class="modal fade" id="resetTrafficModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ریست ترافیک</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-2 text-center">
+                    <lord-icon src="https://cdn.lordicon.com/kbtmbyzy.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:90px;height:90px"></lord-icon>
+                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                        <h4>آیا از ریست ترافیک اطمینان دارید؟</h4>
+                        <p class="text-muted mx-4 mb-0">با این کار تمام ترافیک مصرفی کاربر ریست می‌شود و می‌تواند مجدداً از حجم اشتراک خود استفاده کند.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-success" id="confirmResetTraffic">بله، ریست شود</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // دریافت اطلاعات سرور
+            $.ajax({
+                url: "/Admin/Servers/GetServerName",
+                type: "GET",
+                data: { id: "@Model.VpnServerID" },
+                success: function (data) {
+                    if (data.success) {
+                        $("#serverName").text(data.name);
+                    } else {
+                        $("#serverName").text("خطا در بارگذاری");
+                    }
+                },
+                error: function () {
+                    $("#serverName").text("خطا در بارگذاری");
+                }
+            });
+
+            // بارگذاری آمار اشتراک
+            function loadSubscriptionStats() {
+                $.ajax({
+                    url: "@Url.Action("GetSubscriptionStats", "Subscription")",
+                    type: "GET",
+                    data: { id: "@Model.Id" },
+                    success: function (data) {
+                        if (data.success) {
+                            // بروزرسانی نوار پیشرفت ترافیک
+                            $("#trafficProgressBar").css("width", data.trafficUsagePercent + "%");
+                            $("#trafficProgressBar").attr("aria-valuenow", data.trafficUsagePercent);
+                            $("#trafficProgressLabel").text(data.trafficUsagePercent + "%");
+
+                            // بروزرسانی نوار پیشرفت زمان
+                            $("#timeProgressBar").css("width", data.timeUsagePercent + "%");
+                            $("#timeProgressBar").attr("aria-valuenow", data.timeUsagePercent);
+                            $("#timeProgressLabel").text(data.timeUsagePercent + "%");
+
+                            // بروزرسانی اطلاعات دیگر
+                            $("#remainingDays").text(data.remainingDays + " روز");
+
+                            // محاسبه حجم مصرف شده
+                            var usedTraffic = @Model.Traffic - data.remainingTraffic;
+                            $("#usedTraffic").text(usedTraffic + " گیگابایت");
+
+                            // تغییر رنگ نوار پیشرفت بر اساس میزان مصرف
+                            if (data.trafficUsagePercent > 90) {
+                                $("#trafficProgressBar").removeClass("bg-info").addClass("bg-danger");
+                            } else if (data.trafficUsagePercent > 70) {
+                                $("#trafficProgressBar").removeClass("bg-info").addClass("bg-warning");
+                            }
+
+                            if (data.timeUsagePercent > 90) {
+                                $("#timeProgressBar").removeClass("bg-success").addClass("bg-danger");
+                            } else if (data.timeUsagePercent > 70) {
+                                $("#timeProgressBar").removeClass("bg-success").addClass("bg-warning");
+                            }
+                        } else {
+                            console.error("خطا در دریافت آمار:", data.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("خطا در درخواست آمار:", error);
+                    }
+                });
+            }
+
+            // بارگذاری اولیه آمار
+            loadSubscriptionStats();
+
+            // نمایش مودال ریست ترافیک
+            $("#resetTrafficBtn").on("click", function () {
+                $("#resetTrafficModal").modal("show");
+            });
+
+            // تأیید ریست ترافیک
+            $("#confirmResetTraffic").on("click", function () {
+                $("#resetTrafficForm").submit();
+            });
+        });
+    </script>
+}

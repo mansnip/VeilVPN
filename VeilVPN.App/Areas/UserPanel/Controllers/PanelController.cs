@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Domain.ViewModels.UserPanel;
 using Application.Services.Interfaces;
-using System.Threading.Tasks;
+using VeilVPN.App.Controllers;
 using System;
-using Domain.Entities;
+using System.Threading.Tasks;
 
 namespace VeilVPN.App.Areas.UserPanel.Controllers
 {
@@ -16,12 +16,14 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
         private readonly ISubscriptionService _subscriptionService;
         private readonly IUserService _userService;
         private readonly IInvoiceService _invoiceService;
+        private readonly IServerVPNService _serverVpnService;
 
-        public PanelController(ISubscriptionService subscriptionService, IUserService userService, IInvoiceService invoiceService)
+        public PanelController(ISubscriptionService subscriptionService, IUserService userService, IInvoiceService invoiceService, IServerVPNService serverVPNService)
         {
             _subscriptionService = subscriptionService;
             _userService = userService;
             _invoiceService = invoiceService;
+            _serverVpnService = serverVPNService;
         }
 
         public IActionResult Index()
@@ -32,6 +34,7 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
+            this.ShowSuccess("با موفقیت خارج شدید");
             return RedirectToAction("SignIn", "Auth", new { area = "Authentication" });
         }
 
@@ -40,12 +43,43 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
             return View();
         }
 
-        // Buy a new subscription
-        public IActionResult BuySubscription()
+        // خرید اشتراک جدید یا تمدید اشتراک موجود
+        public async Task<IActionResult> BuySubscription(string subscriptionId = null)
         {
-            return View();
-        }
+            // مدل پیش‌فرض
+            var model = new SubscriptionModel
+            {
+                Traffic = 30,
+                Duration = 30
+            };
 
+            // اگر شناسه اشتراک ارسال شده باشد، اطلاعات آن را برای تمدید بارگیری می‌کنیم
+            if (!string.IsNullOrEmpty(subscriptionId))
+            {
+                // دریافت اشتراک با شناسه مورد نظر که متعلق به کاربر جاری باشد
+                var userId = User.Identity.Name;
+                var subscription = await _subscriptionService.GetSubscriptionById(subscriptionId);
+
+                // بررسی اینکه آیا اشتراک پیدا شده و متعلق به همین کاربر است
+                if (subscription != null && subscription.UserId == userId)
+                {
+                    // اطلاعات اشتراک را در مدل قرار می‌دهیم
+                    model.Traffic = subscription.Traffic;
+                    model.Duration = subscription.Duration;
+                    model.RemarkName = subscription.RemarkName;
+                    model.IsRenewal = true;
+                    model.RenewalSubscriptionId = subscriptionId;
+                    model.RenewalSubscriptionName = subscription.RemarkName;
+                }
+                else
+                {
+                    // اشتراک پیدا نشد یا متعلق به کاربر دیگری است
+                    this.ShowError("اشتراک مورد نظر برای تمدید یافت نشد");
+                }
+            }
+
+            return View(model);
+        }
 
         #region Show Invoice
 
@@ -59,27 +93,24 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
 
                 if (invoiceViewModel == null)
                 {
-                    TempData["ErrorMessage"] = "فاکتور مورد نظر یافت نشد.";
-                    return RedirectToAction("Invoices");
+                    return this.RedirectWithError("فاکتور مورد نظر یافت نشد", "Invoices");
                 }
-
+                ViewBag.RemarkName = invoiceViewModel.RemarkName;
                 return View(invoiceViewModel);
             }
             catch (Exception ex)
             {
                 // لاگ کردن خطا
-                TempData["ErrorMessage"] = "خطایی در بازیابی اطلاعات فاکتور رخ داده است.";
-                return RedirectToAction("Invoices");
+                return this.RedirectWithError("خطایی در بازیابی اطلاعات فاکتور رخ داده است", "Invoices");
             }
         }
-
 
         #endregion
 
         #region ShowInvoicePreview
 
         [HttpGet]
-        public async Task<IActionResult> ShowInvoicePreview(int traffic, int duration)
+        public async Task<IActionResult> ShowInvoicePreview(int traffic, int duration, string remarkName, string renewalId = null)
         {
             try
             {
@@ -92,6 +123,7 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
                     InvoiceNumber = "پیش‌فاکتور", // اینجا شماره فاکتور واقعی ایجاد نمی‌شود
                     InvoiceDate = DateTime.Now,
                     PaymentStatus = "پیش نمایش", // وضعیت پرداخت برای پیش‌فاکتور
+                    RemarkName = remarkName,
                     Subscription = new SubscriptionDetails
                     {
                         Traffic = traffic,
@@ -99,7 +131,7 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
                         BasePrice = priceDetails.BasePrice,
                         DiscountPercent = priceDetails.DiscountPercent,
                         DiscountAmount = priceDetails.DiscountAmount,
-                        FinalPrice = priceDetails.FinalPrice
+                        FinalPrice = priceDetails.FinalPrice,
                     }
                 };
 
@@ -107,13 +139,35 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
                 ViewBag.IsPreview = true; // این مقدار را برای تشخیص پیش‌فاکتور در ویو اضافه می‌کنیم
                 ViewBag.Traffic = traffic; // برای استفاده در فرم خرید
                 ViewBag.Duration = duration; // برای استفاده در فرم خرید
+                ViewBag.RemarkName = remarkName;
+
+                // اضافه کردن اطلاعات تمدید به ViewBag
+                ViewBag.RenewalId = renewalId;
+
+                // اگر renewalId داشتیم، اطلاعات اشتراک اصلی را دریافت و ذخیره می‌کنیم
+                if (!string.IsNullOrEmpty(renewalId))
+                {
+                    var userId = User.Identity.Name; // دریافت آیدی کاربر جاری
+                    var originalSubscription = await _subscriptionService.GetSubscriptionById(renewalId);
+
+                    if (originalSubscription != null && originalSubscription.UserId == userId)
+                    {
+                        invoiceViewModel.IsRenewal = true;
+                        invoiceViewModel.RenewalSubscriptionId = renewalId;
+                        invoiceViewModel.RenewalSubscriptionName = originalSubscription.RemarkName;
+
+                        // اضافه کردن یک بج نمایشی در پیش‌فاکتور برای تمدید
+                        ViewBag.IsRenewal = true;
+                        ViewBag.RenewalSubscriptionName = originalSubscription.RemarkName;
+                    }
+                }
 
                 return View("ShowInvoice", invoiceViewModel);
             }
             catch (Exception ex)
             {
                 // لاگ کردن خطا
-                TempData["ErrorMessage"] = "خطایی در محاسبه قیمت رخ داده است. لطفا دوباره تلاش کنید.";
+                this.ShowError("خطایی در محاسبه قیمت رخ داده است. لطفا دوباره تلاش کنید");
                 return RedirectToAction("Index", "Subscription", new { area = "UserPanel" });
             }
         }
@@ -123,7 +177,7 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
         #region CreateInvoice
 
         [HttpPost]
-        public async Task<IActionResult> CreateInvoice(int traffic, int duration)
+        public async Task<IActionResult> CreateInvoice(int traffic, int duration, string remarkName, string renewalId = null)
         {
             try
             {
@@ -132,7 +186,9 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
 
                 // ذخیره فاکتور در دیتابیس
                 var userId = User.Identity.Name;
-                var invoice = await _invoiceService.CreateInvoiceAsync(userId, traffic, duration, priceDetails);
+
+                // افزودن پارامتر renewalId به متد CreateInvoiceAsync
+                var invoice = await _invoiceService.CreateInvoiceAsync(userId, traffic, duration, priceDetails, remarkName, renewalId);
 
                 // هدایت به صفحه نمایش فاکتور با استفاده از شناسه فاکتور
                 return RedirectToAction("ShowInvoice", new { id = invoice.Id });
@@ -140,8 +196,12 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
             catch (Exception ex)
             {
                 // لاگ کردن خطا
-                TempData["ErrorMessage"] = "خطایی در ایجاد فاکتور رخ داده است. لطفا دوباره تلاش کنید.";
-                return RedirectToAction("Index", "Subscription", new { area = "UserPanel" });
+                this.ShowError("خطایی در ایجاد فاکتور رخ داده است. لطفا دوباره تلاش کنید");
+                if (renewalId == null)
+                {
+                    return RedirectToAction("BuySubscription");
+                }
+                return RedirectToAction("MySubscriptions", "Subscription", new { area = "UserPanel" });
             }
         }
 
@@ -159,47 +219,51 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
 
                 if (invoice == null)
                 {
-                    TempData["ErrorMessage"] = "فاکتور مورد نظر یافت نشد.";
-                    return RedirectToAction("Invoices");
+                    return this.RedirectWithError("فاکتور مورد نظر یافت نشد", "Invoices");
                 }
 
                 // بررسی دسترسی کاربر به این فاکتور
                 if (invoice.UserId != User.Identity.Name)
                 {
-                    TempData["ErrorMessage"] = "شما اجازه دسترسی به این فاکتور را ندارید.";
-                    return RedirectToAction("Invoices");
+                    return this.RedirectWithError("شما اجازه دسترسی به این فاکتور را ندارید", "Invoices");
                 }
 
                 // بررسی وضعیت فاکتور - از PaymentStatus استفاده می‌کنیم
                 if (invoice.PaymentStatus != "در انتظار پرداخت")
                 {
-                    TempData["ErrorMessage"] = "این فاکتور قابل پرداخت نیست.";
-                    return RedirectToAction("ShowInvoice", new { id = invoiceId });
+                    return this.RedirectWithError("این فاکتور قابل پرداخت نیست",
+                        "ShowInvoice", new { id = invoiceId });
                 }
 
                 // در آینده: ارتباط با درگاه پرداخت
+
                 // فعلاً: تغییر وضعیت فاکتور به پرداخت شده
                 bool result = await _invoiceService.UpdateInvoiceStatusAsync(invoiceId, "پرداخت شده");
 
                 if (result)
                 {
                     // ایجاد اشتراک جدید برای کاربر
-                    await _subscriptionService.CreateSubscriptionFromInvoiceAsync(invoiceId);
-
-                    TempData["SuccessMessage"] = "پرداخت با موفقیت انجام شد و اشتراک شما فعال گردید.";
-                    return RedirectToAction("ShowInvoice", new { id = invoiceId });
+                    var create = await _subscriptionService.CreateSubscriptionFromInvoiceAsync(invoiceId);
+                    if (create.success)
+                    {
+                        return this.RedirectWithSuccess("پرداخت با موفقیت انجام شد و اشتراک شما فعال گردید",
+                            "ShowInvoice", new { id = invoiceId });
+                    }
+                    else
+                    {
+                        return this.RedirectWithError(create.Message, "ShowInvoice", new { id = invoiceId });
+                    }
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "خطایی در پردازش پرداخت رخ داده است. لطفاً با پشتیبانی تماس بگیرید.";
-                    return RedirectToAction("ShowInvoice", new { id = invoiceId });
+                    return this.RedirectWithError("خطایی در پردازش پرداخت رخ داده است. لطفاً با پشتیبانی تماس بگیرید",
+                        "ShowInvoice", new { id = invoiceId });
                 }
             }
             catch (Exception ex)
             {
                 // لاگ کردن خطا
-                TempData["ErrorMessage"] = "خطایی در پردازش پرداخت رخ داده است. لطفاً دوباره تلاش کنید.";
-                return RedirectToAction("Invoices");
+                return this.RedirectWithError("خطایی در پردازش پرداخت رخ داده است. لطفاً دوباره تلاش کنید", "Invoices");
             }
         }
 
@@ -217,22 +281,20 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
 
                 if (invoice == null)
                 {
-                    TempData["ErrorMessage"] = "فاکتور مورد نظر یافت نشد.";
-                    return RedirectToAction("Invoices");
+                    return this.RedirectWithError("فاکتور مورد نظر یافت نشد", "Invoices");
                 }
 
                 // بررسی دسترسی کاربر به این فاکتور
                 if (invoice.UserId != User.Identity.Name)
                 {
-                    TempData["ErrorMessage"] = "شما اجازه دسترسی به این فاکتور را ندارید.";
-                    return RedirectToAction("Invoices");
+                    return this.RedirectWithError("شما اجازه دسترسی به این فاکتور را ندارید", "Invoices");
                 }
 
                 // بررسی وضعیت فاکتور - از PaymentStatus استفاده می‌کنیم
                 if (invoice.PaymentStatus != "در انتظار پرداخت")
                 {
-                    TempData["ErrorMessage"] = "این فاکتور قابل لغو نیست.";
-                    return RedirectToAction("ShowInvoice", new { id = invoiceId });
+                    return this.RedirectWithError("این فاکتور قابل لغو نیست",
+                        "ShowInvoice", new { id = invoiceId });
                 }
 
                 // تغییر وضعیت فاکتور به لغو شده
@@ -240,25 +302,22 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
 
                 if (result)
                 {
-                    TempData["SuccessMessage"] = "فاکتور با موفقیت لغو شد.";
-                    return RedirectToAction("Invoices");
+                    return this.RedirectWithSuccess("فاکتور با موفقیت لغو شد", "Invoices");
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "خطایی در لغو فاکتور رخ داده است. لطفاً با پشتیبانی تماس بگیرید.";
-                    return RedirectToAction("ShowInvoice", new { id = invoiceId });
+                    return this.RedirectWithError("خطایی در لغو فاکتور رخ داده است. لطفاً با پشتیبانی تماس بگیرید",
+                        "ShowInvoice", new { id = invoiceId });
                 }
             }
             catch (Exception ex)
             {
                 // لاگ کردن خطا
-                TempData["ErrorMessage"] = "خطایی در لغو فاکتور رخ داده است. لطفاً دوباره تلاش کنید.";
-                return RedirectToAction("Invoices");
+                return this.RedirectWithError("خطایی در لغو فاکتور رخ داده است. لطفاً دوباره تلاش کنید", "Invoices");
             }
         }
 
         #endregion
-
 
         #region Invoices
 

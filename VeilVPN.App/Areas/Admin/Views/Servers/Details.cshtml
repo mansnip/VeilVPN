@@ -1,0 +1,473 @@
+﻿@model Domain.Entities.VPN.VPNServer
+@{
+    ViewData["Title"] = "جزئیات سرور VPN";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">جزئیات سرور VPN</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript:%20void(0);">داشبورد</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Servers")">سرورهای VPN</a></li>
+                    <li class="breadcrumb-item active">جزئیات سرور</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    @if (!string.IsNullOrEmpty(Model.Flag))
+                    {
+                        <div class="position-relative d-inline-block mb-3">
+                            <img src="@Model.Flag" alt="@Model.Location" class="avatar-lg rounded-circle img-thumbnail">
+                            <span class="position-absolute top-0 start-100 translate-middle badge border border-light rounded-circle @(Model.IsActive ? "bg-success" : "bg-danger") p-1">
+                                <span class="visually-hidden">@(Model.IsActive ? "فعال" : "غیرفعال")</span>
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="position-relative d-inline-block mb-3">
+                            <div class="avatar-lg">
+                                <div class="avatar-title bg-light text-primary rounded-circle fs-1">
+                                    <i class="ri-server-fill"></i>
+                                </div>
+                            </div>
+                            <span class="position-absolute top-0 start-100 translate-middle badge border border-light rounded-circle @(Model.IsActive ? "bg-success" : "bg-danger") p-1">
+                                <span class="visually-hidden">@(Model.IsActive ? "فعال" : "غیرفعال")</span>
+                            </span>
+                        </div>
+                    }
+                    <h5 class="mb-1">@Model.Name</h5>
+                    <p class="text-muted">@Model.Location</p>
+
+                    <div class="d-flex gap-2 justify-content-center mt-4">
+                        <a href="@Url.Action("Edit", "Servers", new { id = Model.Id })" class="btn btn-primary">
+                            <i class="ri-pencil-line align-bottom me-1"></i> ویرایش
+                        </a>
+                        <button type="button" class="btn btn-danger" id="deleteServer">
+                            <i class="ri-delete-bin-line align-bottom me-1"></i> حذف
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-2">
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-6 border-end">
+                                <div class="p-2">
+                                    <h5 class="mb-1">@(Model.MaxUsers > 0 ? (Model.CurrentUsers * 100) / Model.MaxUsers : 0)%</h5>
+                                    <p class="text-muted mb-0">استفاده شده</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2">
+                                    <h5 class="mb-1">@Model.CurrentUsers/@Model.MaxUsers</h5>
+                                    <p class="text-muted mb-0">کاربران</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="progress animated-progress custom-progress progress-label">
+                        @{
+                            var percentage = Model.MaxUsers > 0 ? (Model.CurrentUsers * 100) / Model.MaxUsers : 0;
+                            var progressClass = percentage < 50 ? "bg-success" :
+                            (percentage < 75 ? "bg-warning" : "bg-danger");
+                        }
+                        <div class="progress-bar @progressClass" role="progressbar" style="width: @percentage%;" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                            <div class="label">@percentage%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6 class="text-muted mb-3 fw-semibold text-uppercase">وضعیت سرور</h6>
+                    <div class="d-flex py-2">
+                        <div class="flex-shrink-0">
+                            <i class="ri-checkbox-circle-fill text-@(Model.IsActive ? "success" : "danger") me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0">@(Model.IsActive ? "سرور فعال است" : "سرور غیرفعال است")</p>
+                        </div>
+                    </div>
+                    <div class="d-flex py-2">
+                        <div class="flex-shrink-0">
+                            <i class="ri-time-line text-muted me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0">آخرین بروزرسانی: @(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToString("yyyy/MM/dd HH:mm") : "-")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">اطلاعات سرور</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <th class="ps-0" scope="row">نام سرور :</th>
+                                <td class="text-muted">@Model.Name</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">آدرس IP :</th>
+                                <td class="text-muted">@Model.IpAddress</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">آدرس API :</th>
+                                <td class="text-muted">@Model.ApiUrl</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">نام کاربری API :</th>
+                                <td class="text-muted">@Model.ApiUsername</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">رمز عبور API :</th>
+                                <td class="text-muted">
+                                    <div class="d-flex align-items-center">
+                                        <input type="password" disabled class="form-control form-control-sm bg-light border-0" value="********" id="apiPassword" style="max-width: 220px;">
+                                        <button type="button" class="btn btn-sm btn-light ms-2" id="togglePassword" data-password="@Model.ApiPassword">
+                                            <i class="ri-eye-line" id="toggleIcon"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">موقعیت :</th>
+                                <td class="text-muted">@Model.Location</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">حداکثر کاربران :</th>
+                                <td class="text-muted">@Model.MaxUsers</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0" scope="row">کاربران فعلی :</th>
+                                <td class="text-muted">@Model.CurrentUsers</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex">
+                    <h5 class="card-title flex-grow-1 mb-0">آمار کاربران</h5>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown">
+                            <a class="btn btn-sm btn-soft-primary dropdown-toggle" href="#" role="button" id="timeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ri-history-line align-middle me-1"></i> <span>۷ روز گذشته</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="timeDropdown">
+                                <li><a class="dropdown-item" href="#">۲۴ ساعت گذشته</a></li>
+                                <li><a class="dropdown-item" href="#">۷ روز گذشته</a></li>
+                                <li><a class="dropdown-item" href="#">۳۰ روز گذشته</a></li>
+                                <li><a class="dropdown-item" href="#">۹۰ روز گذشته</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-soft-primary ms-2" id="refreshStats">
+                            <i class="ri-refresh-line align-middle"></i> بروزرسانی
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="userStats" data-colors='["--vz-primary", "--vz-warning"]' class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">رویدادهای اخیر</h4>
+                <div class="flex-shrink-0">
+                    <button type="button" class="btn btn-soft-primary btn-sm">
+                        <i class="ri-refresh-line align-middle"></i> بازخوانی
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center py-3">
+                    <div class="avatar-xs flex-shrink-0 me-3">
+                        <div class="avatar-title bg-light text-primary rounded-circle">
+                            <i class="ri-user-line"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="fs-14 mb-0">کاربر جدید اضافه شد</h5>
+                        <p class="text-muted mb-0">۱۴۰۲/۰۲/۲۰ ۱۰:۳۰</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center py-3">
+                    <div class="avatar-xs flex-shrink-0 me-3">
+                        <div class="avatar-title bg-light text-warning rounded-circle">
+                            <i class="ri-restart-line"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="fs-14 mb-0">سرور ریستارت شد</h5>
+                        <p class="text-muted mb-0">۱۴۰۲/۰۲/۱۹ ۰۸:۱۵</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center py-3">
+                    <div class="avatar-xs flex-shrink-0 me-3">
+                        <div class="avatar-title bg-light text-success rounded-circle">
+                            <i class="ri-shield-check-line"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="fs-14 mb-0">بروزرسانی امنیتی انجام شد</h5>
+                        <p class="text-muted mb-0">۱۴۰۲/۰۲/۱۸ ۱۶:۴۵</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- end col -->
+</div>
+<!-- end row -->
+@Html.AntiForgeryToken()
+
+<!-- Delete Modal -->
+<div class="modal fade zoomIn" id="deleteServerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-2 text-center">
+                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                        <h4>آیا از حذف این سرور اطمینان دارید؟</h4>
+                        <p class="text-muted mx-4 mb-0">این عملیات غیرقابل بازگشت است و تمام اطلاعات مربوط به این سرور حذف خواهد شد.</p>
+                    </div>
+                </div>
+                <form id="deleteForm">
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                        <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">انصراف</button>
+                        <button type="button" class="btn w-sm btn-danger" id="delete-record">بله، حذف شود</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- پایان مودال حذف -->
+
+@section Scripts {
+    <!-- apexcharts -->
+    <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded");
+
+            // بررسی بارگذاری jQuery
+            if (typeof $ === 'undefined') {
+                console.error("jQuery is not loaded!");
+                alert("خطا: jQuery بارگذاری نشده است");
+                return;
+            }
+
+            console.log("jQuery version:", $.fn.jquery);
+
+            // مدیریت نمایش/پنهان کردن رمز عبور API
+            $("#togglePassword").on("click", function () {
+                var passwordField = $("#apiPassword");
+                var toggleIcon = $("#toggleIcon");
+                var actualPassword = $(this).data("password");
+
+                if (passwordField.attr("type") === "password") {
+                    passwordField.attr("type", "text");
+                    passwordField.val(actualPassword);
+                    toggleIcon.removeClass("ri-eye-line").addClass("ri-eye-off-line");
+                } else {
+                    passwordField.attr("type", "password");
+                    passwordField.val("********");
+                    toggleIcon.removeClass("ri-eye-off-line").addClass("ri-eye-line");
+                }
+            });
+
+            // مدیریت بروزرسانی آمار سرور
+            $("#refreshStats").on("click", function() {
+                // نمایش لودینگ
+                $(this).html('<i class="ri-loader-4-line align-middle fa-spin"></i> در حال به‌روزرسانی');
+
+                // درخواست AJAX برای دریافت اطلاعات جدید
+                $.ajax({
+                    url: '@Url.Action("RefreshStats", "Servers", new { id = Model.Id })',
+                    type: 'GET',
+                    success: function(result) {
+                        if (result.success) {
+                            // به‌روزرسانی اطلاعات در صفحه
+                            toastr.success('اطلاعات با موفقیت به‌روزرسانی شد');
+                            // بروزرسانی صفحه
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            toastr.error(result.message || 'خطا در به‌روزرسانی اطلاعات');
+                        }
+                    },
+                    error: function() {
+                        toastr.error('خطا در ارتباط با سرور');
+                    },
+                    complete: function() {
+                        // برگرداندن حالت دکمه
+                        $("#refreshStats").html('<i class="ri-refresh-line align-middle"></i> بروزرسانی');
+                    }
+                });
+            });
+
+            // تست ساده با استفاده از JavaScript خالص
+            document.getElementById("deleteServer").addEventListener("click", function() {
+                console.log("Delete button clicked using pure JS");
+
+                // نمایش مودال با Bootstrap 5
+                var myModal = new bootstrap.Modal(document.getElementById('deleteServerModal'));
+                myModal.show();
+            });
+
+            // رویداد کلیک دکمه تایید حذف
+            document.getElementById("delete-record").addEventListener("click", function() {
+                console.log("Confirm delete clicked using pure JS");
+
+                // نمایش لودینگ روی دکمه
+                this.innerHTML = '<i class="ri-loader-4-line align-middle fa-spin"></i> در حال حذف...';
+                this.disabled = true;
+
+                // گرفتن توکن ضد جعل
+                var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                console.log("CSRF Token:", token);
+
+                // ارسال درخواست با fetch API
+                fetch('@Url.Action("Delete", "Servers", new { id = Model.Id })', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    }
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log("Delete response:", result);
+
+                    if (result.success) {
+                        // بستن مودال
+                        var deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteServerModal'));
+                        deleteModal.hide();
+
+                        // نمایش پیام موفقیت
+                        toastr.success('سرور با موفقیت حذف شد');
+
+                        // انتقال به صفحه لیست
+                        setTimeout(function() {
+                            window.location.href = '@Url.Action("Index", "Servers")';
+                        }, 1500);
+                    } else {
+                        // نمایش پیام خطا
+                        toastr.error(result.message || 'خطا در حذف سرور');
+
+                        // بازگشت دکمه به حالت اولیه
+                        document.getElementById("delete-record").innerHTML = 'بله، حذف شود';
+                        document.getElementById("delete-record").disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error("Delete error:", error);
+                    toastr.error('خطا در ارتباط با سرور');
+
+                    // بازگشت دکمه به حالت اولیه
+                    document.getElementById("delete-record").innerHTML = 'بله، حذف شود';
+                    document.getElementById("delete-record").disabled = false;
+                });
+            });
+
+            // نمودار آمار کاربران
+            var options = {
+                series: [{
+                    name: 'کاربران فعال',
+                    data: [32, 36, 28, 35, 39, 33, 30]
+                }, {
+                    name: 'کاربران جدید',
+                    data: [8, 5, 12, 10, 7, 9, 11]
+                }],
+                chart: {
+                    height: 320,
+                    type: 'line',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                markers: {
+                    size: 3,
+                    strokeWidth: 0,
+                    hover: {
+                        size: 6
+                    }
+                },
+                xaxis: {
+                    categories: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'],
+                    axisBorder: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return value + " کاربر";
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: '#f1f1f1',
+                },
+                tooltip: {
+                    shared: true,
+                    y: {
+                        formatter: function (value) {
+                            return value + " کاربر";
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'left'
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#userStats"), options);
+            chart.render();
+        });
+    </script>
+}
+

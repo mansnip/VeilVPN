@@ -22,7 +22,6 @@ namespace VeilVPN.App.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
             var users = await _userRepository.GetAllUsers();
             return View(users);
         }
@@ -58,8 +57,7 @@ namespace VeilVPN.App.Areas.Admin.Controllers
                 }
 
                 await _userRepository.AddUser(user);
-                TempData["SuccessMessage"] = "کاربر جدید با موفقیت ایجاد شد";
-                return RedirectToAction(nameof(Index));
+                return this.RedirectWithSuccess("کاربر جدید با موفقیت ایجاد شد", nameof(Index));
             }
             return View(user);
         }
@@ -72,13 +70,13 @@ namespace VeilVPN.App.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound();
+                return this.RedirectWithError("شناسه کاربر نامعتبر است", nameof(Index));
             }
 
             var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
-                return NotFound();
+                return this.RedirectWithError("کاربر مورد نظر یافت نشد", nameof(Index));
             }
 
             return View(user);
@@ -96,7 +94,7 @@ namespace VeilVPN.App.Areas.Admin.Controllers
                 var existingUser = await _userRepository.GetUserById(user.Id);
                 if (existingUser == null)
                 {
-                    return NotFound();
+                    return this.RedirectWithError("کاربر مورد نظر یافت نشد", nameof(Index));
                 }
 
                 // بررسی تغییر ایمیل و وجود ایمیل تکراری
@@ -139,15 +137,12 @@ namespace VeilVPN.App.Areas.Admin.Controllers
                 existingUser.IsActive = user.IsActive;
 
                 await _userRepository.UpdateUser(existingUser);
-                this.ShowToast("اطلاعات کاربر با موفقیت به‌روزرسانی شد", "success");
-                return RedirectToAction(nameof(Index));
+                return this.RedirectWithSuccess("اطلاعات کاربر با موفقیت به‌روزرسانی شد", nameof(Index));
             }
             return View(user);
         }
 
-
         #endregion
-
 
         #region Delete
 
@@ -155,21 +150,20 @@ namespace VeilVPN.App.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound();
+                return this.RedirectWithError("شناسه کاربر نامعتبر است", nameof(Index));
             }
 
             var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
-                return NotFound();
+                return this.RedirectWithError("کاربر مورد نظر یافت نشد", nameof(Index));
             }
 
             // حذف نرم
             user.IsDelete = true;
             await _userRepository.UpdateUser(user);
 
-            TempData["SuccessMessage"] = "کاربر با موفقیت حذف شد";
-            return RedirectToAction(nameof(Index));
+            return this.RedirectWithSuccess("کاربر با موفقیت حذف شد", nameof(Index));
         }
 
         #endregion

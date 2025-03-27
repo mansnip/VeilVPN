@@ -13,14 +13,8 @@ namespace VeilVPN.App.Areas.UserPanel.Components.Buy
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(SubscriptionModel model)
         {
-            var model = new SubscriptionModel
-            {
-                Traffic = 30,
-                Duration = 30
-            };
-
             return View("CustomizeSubscription", model);
         }
     }

@@ -20,13 +20,16 @@ namespace Application.Services.Implimentation
             _invoiceRepository = invoiceRepository ?? throw new ArgumentNullException(nameof(invoiceRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
-        
+
         // سازنده و سایر متدها...
 
-        public async Task<InvoiceViewModel> CreateInvoiceAsync(string userId, int traffic, int duration, SubscriptionPriceDetails priceDetails)
+        public async Task<InvoiceViewModel> CreateInvoiceAsync(string userId, int traffic, int duration, SubscriptionPriceDetails priceDetails, string remarkName, string renewalId = null)
         {
             // ایجاد شماره فاکتور منحصر به فرد
             string invoiceNumber = GenerateInvoiceNumber();
+
+            // بررسی وضعیت تمدید
+            bool isRenewal = !string.IsNullOrEmpty(renewalId);
 
             // ایجاد فاکتور جدید
             var invoice = new Invoice
@@ -40,7 +43,10 @@ namespace Application.Services.Implimentation
                 DiscountPercent = (int)priceDetails.DiscountPercent,
                 DiscountAmount = priceDetails.DiscountAmount,
                 FinalPrice = priceDetails.FinalPrice,
-                Status = "در انتظار پرداخت" // تنظیم وضعیت پیش‌فرض
+                RemarkName = remarkName,
+                Status = "در انتظار پرداخت", // تنظیم وضعیت پیش‌فرض
+                IsRenewal = isRenewal,
+                RenewalSubscriptionId = renewalId
             };
 
             // ذخیره فاکتور در دیتابیس
@@ -53,6 +59,9 @@ namespace Application.Services.Implimentation
                 InvoiceNumber = invoice.InvoiceNumber,
                 InvoiceDate = invoice.CreatedDate,
                 PaymentStatus = invoice.Status,
+                RemarkName = remarkName,
+                IsRenewal = isRenewal,
+                RenewalSubscriptionId = renewalId,
                 Subscription = new SubscriptionDetails
                 {
                     Traffic = traffic,
@@ -75,6 +84,7 @@ namespace Application.Services.Implimentation
 
             return new InvoiceViewModel
             {
+                RemarkName = invoice.RemarkName,
                 Id = invoice.Id,
                 InvoiceNumber = invoice.InvoiceNumber,
                 InvoiceDate = invoice.CreatedDate,

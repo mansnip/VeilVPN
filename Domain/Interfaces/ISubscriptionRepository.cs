@@ -16,5 +16,10 @@ namespace Domain.Interfaces
         Task<bool> IsUserHasActiveSubscriptionAsync(string userId);
         Task<Subscription> GetUserActiveSubscriptionAsync(string userId);
         Task<Subscription> GetActiveSubscriptionByUserIdAsync(string userId);
+        Task<Subscription> GetSubscriptionById(string subscriptionId);
+
+        // متدهای جدید برای پنل مدیریت
+        Task<List<Subscription>> GetAllWithUserAsync();
+        Task<Subscription> GetSubscriptionWithUserAndServerAsync(string id);
     }
 }

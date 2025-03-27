@@ -1,7 +1,11 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.API;
+using Application.Generators;
+using Application.Services.Interfaces;
+using Domain.DTOs.VPN;
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.ViewModels.UserPanel;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +18,9 @@ namespace Application.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly ApiManager _apiManager;
+        private readonly IServerVPNService _serverVPNService;
+        private readonly ILogger<SubscriptionService> _logger;
 
         // قیمت هر گیگابایت (تومان)
         private const int PricePerGB = 2500;
@@ -23,14 +30,22 @@ namespace Application.Services.Implementations
         public SubscriptionService(
             IUserRepository userRepository,
             IInvoiceRepository invoiceRepository,
-            ISubscriptionRepository subscriptionRepository)
+            ISubscriptionRepository subscriptionRepository,
+            ApiManager apiManager,
+            IServerVPNService serverVPNService,
+            ILogger<SubscriptionService> logger)
+
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _invoiceRepository = invoiceRepository ?? throw new ArgumentNullException(nameof(invoiceRepository));
             _subscriptionRepository = subscriptionRepository ?? throw new ArgumentNullException(nameof(subscriptionRepository));
+            _apiManager = apiManager ?? throw new ArgumentNullException(nameof(apiManager));
+            _serverVPNService = serverVPNService ?? throw new ArgumentNullException(nameof(serverVPNService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<SubscriptionViewModel> GetUserActiveSubscriptionAsync(string userId)
+
+        public async Task<SubscriptionnViewModel> GetUserActiveSubscriptionAsync(string userId)
         {
             // دریافت اشتراک فعال کاربر
             var subscription = await _subscriptionRepository.GetActiveSubscriptionByUserIdAsync(userId);
@@ -39,7 +54,7 @@ namespace Application.Services.Implementations
                 return null;
 
             // تبدیل به ViewModel
-            return new SubscriptionViewModel
+            return new SubscriptionnViewModel
             {
                 Id = subscription.Id,
                 UserId = subscription.UserId,
@@ -170,49 +185,163 @@ namespace Application.Services.Implementations
                 return 0.0; // بدون تخفیف
         }
 
-        public async Task<bool> CreateSubscriptionFromInvoiceAsync(string invoiceId)
+        public async Task<(bool success, string Message)> CreateSubscriptionFromInvoiceAsync(string invoiceId)
         {
             try
             {
                 // دریافت فاکتور از دیتابیس
                 var invoice = await _invoiceRepository.GetByIdAsync(invoiceId);
 
-                if (invoice == null || invoice.Status != "پرداخت شده")
-                    return false;
+                if (invoice == null)
+                    return (false, "فاکتور مورد نظر یافت نشد");
 
-                // ایجاد اشتراک جدید
-                var subscription = new Subscription
+                if (invoice.Status != "پرداخت شده")
+                    return (false, "وضعیت فاکتور برای ایجاد اشتراک مناسب نیست");
+
+                // گرفتن کاربر
+                var user = await _userRepository.GetUserById(invoice.UserId);
+                if (user == null)
+                    return (false, "کاربر مورد نظر یافت نشد");
+
+                // بررسی آیا عملیات تمدید است یا خرید جدید
+                bool isRenewal = !string.IsNullOrEmpty(invoice.RenewalSubscriptionId);
+                _logger?.LogInformation($"شروع {(isRenewal ? "تمدید" : "ایجاد")} اشتراک برای کاربر {user.Email} با شناسه فاکتور {invoiceId}");
+
+                if (isRenewal)
                 {
-                    UserId = invoice.UserId,
-                    Traffic = invoice.Traffic,
-                    Duration = invoice.Duration,
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(invoice.Duration),
-                    RemainingTraffic = invoice.Traffic,
-                    IsActive = true,
-                    InvoiceId = invoice.Id
-                };
+                    // دریافت اشتراک قبلی برای تمدید
+                    var existingSubscription = await _subscriptionRepository.GetByIdAsync(invoice.RenewalSubscriptionId);
+                    if (existingSubscription == null)
+                        return (false, "اشتراک مورد نظر برای تمدید یافت نشد");
 
-                // ذخیره اشتراک در دیتابیس
-                await _subscriptionRepository.CreateAsync(subscription);
+                    // دریافت سرور مربوط به اشتراک قبلی
+                    var server = await _serverVPNService.GetServerByIdAsync(existingSubscription.VpnServerID);
+                    if (server == null)
+                        return (false, "سرور مربوط به اشتراک یافت نشد");
 
-                return true;
+                    // ریست کردن ترافیک کاربر قبل از تمدید
+                    var resetResult = await _apiManager.ResetClientTraffic(server, existingSubscription.VpnEmailName);
+                    if (!resetResult.Success)
+                    {
+                        _logger?.LogWarning($"خطا در ریست ترافیک کاربر: {resetResult.Message}");
+                        // ادامه می‌دهیم حتی اگر ریست ترافیک با خطا مواجه شد
+                    }
+                    else
+                    {
+                        _logger?.LogInformation("ترافیک کاربر با موفقیت ریست شد");
+                    }
+
+                    // مقادیر جدید برای تمدید (جایگزین کردن کامل مقادیر قبلی، نه اضافه کردن)
+                    int newDuration = invoice.Duration;
+                    double newTraffic = invoice.Traffic;
+
+                    // به‌روزرسانی اشتراک در سرور VPN
+                    var updateResult = await _apiManager.UpdateClient(
+                        server,
+                        existingSubscription.VpnId,
+                        existingSubscription.VpnEmailName,
+                        newTraffic,      // مقدار جدید ترافیک
+                        newDuration,     // مقدار جدید مدت زمان
+                        true,
+                        0,
+                        existingSubscription.Id);
+
+                    if (!updateResult.Success)
+                        return (false, $"خطا در به‌روزرسانی اشتراک در سرور: {updateResult.Message}");
+
+                    // به‌روزرسانی اطلاعات اشتراک در دیتابیس - جایگزینی کامل مقادیر
+                    existingSubscription.Traffic = (int)newTraffic;
+                    existingSubscription.RemainingTraffic = (int)newTraffic; // ریست کردن ترافیک باقیمانده
+                    existingSubscription.Duration = newDuration;
+
+                    // تنظیم تاریخ شروع از امروز
+                    existingSubscription.StartDate = DateTime.Now;
+                    existingSubscription.EndDate = DateTime.Now.AddDays(newDuration);
+
+                    existingSubscription.IsActive = true;
+                    existingSubscription.InvoiceId = invoice.Id;
+                    existingSubscription.RemarkName = invoice.RemarkName;
+
+                    // ذخیره تغییرات اشتراک
+                    await _subscriptionRepository.UpdateAsync(existingSubscription);
+
+                    return (true, $"اشتراک با موفقیت تمدید شد و تا تاریخ {existingSubscription.EndDate.ToShortDateString()} معتبر است.");
+                }
+                else
+                {
+                    // گرفتن لیست سرور ها 
+                    var servers = await _serverVPNService.GetAllServersAsync();
+                    if (servers == null || !servers.Any())
+                        return (false, "هیچ سروری برای ایجاد اشتراک یافت نشد");
+
+                    // انتخاب سروری که کمترین کاربر را دارد
+                    var server = servers.OrderBy(s => s.CurrentUsers).First();
+
+                    // ساخت نام اشتراک که تکراری هم نباشد
+                    string email = UniqueRandomStringGenerator.GenerateUniqueRandomString();
+
+                    // ساخت آیدی اشتراک کاربر
+                    string vpnId = Guid.NewGuid().ToString();
+
+                    // ایجاد اشتراک در سرور 
+                    var result = await _apiManager.AddClient(
+                        server,
+                        email,
+                        vpnId,
+                        invoice.Traffic,
+                        invoice.Duration,
+                        true,
+                        0);
+
+                    // اگر افزودن کاربر به سرور موفقیت آمیز نبود
+                    if (!result.Success)
+                        return (false, result.Message);
+
+                    // ایجاد اشتراک جدید
+                    var subscription = new Subscription
+                    {
+                        UserId = invoice.UserId,
+                        Traffic = invoice.Traffic,
+                        Duration = invoice.Duration,
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now.AddDays(invoice.Duration),
+                        RemainingTraffic = invoice.Traffic,
+                        IsActive = true,
+                        InvoiceId = invoice.Id,
+                        VpnServerID = server.Id,
+                        VpnEmailName = email,
+                        RemarkName = invoice.RemarkName,
+                        VpnId = vpnId,
+                    };
+
+                    // ذخیره اشتراک در دیتابیس
+                    await _subscriptionRepository.CreateAsync(subscription);
+                    server.CurrentUsers++;
+                    await _serverVPNService.UpdateServerAsync(server);
+
+                    return (true, "اشتراک جدید با موفقیت ساخته و فعال شده است.");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                _logger?.LogError(ex, "خطا در ایجاد/تمدید اشتراک");
+                return (false, $"خطا در سیستم: {ex.Message}");
             }
         }
+
+
 
         // دریافت اشتراک‌های کاربر
         public async Task<List<SubscriptionViewModel>> GetUserSubscriptionsAsync(string userId)
         {
+            // دریافت اشتراک‌های کاربر از دیتابیس
             var subscriptions = await _subscriptionRepository.GetUserSubscriptionsAsync(userId);
 
             if (subscriptions == null || !subscriptions.Any())
                 return new List<SubscriptionViewModel>();
 
-            return subscriptions.Select(sub => new SubscriptionViewModel
+            // ایجاد لیست ویومدل‌ها با اطلاعات پایه از دیتابیس
+            var viewModels = subscriptions.Select(sub => new SubscriptionViewModel
             {
                 Id = sub.Id,
                 Traffic = sub.Traffic,
@@ -222,8 +351,90 @@ namespace Application.Services.Implementations
                 EndDate = sub.EndDate,
                 IsActive = sub.IsActive,
                 DaysRemaining = (sub.EndDate - DateTime.Now).Days > 0 ? (sub.EndDate - DateTime.Now).Days : 0,
-                PercentTrafficUsed = (int)(100 - ((double)sub.RemainingTraffic / sub.Traffic) * 100)
+                PercentTrafficUsed = (int)(100 - ((double)sub.RemainingTraffic / sub.Traffic) * 100),
+                VpnEmailName = sub.VpnEmailName,
+                HasVpnConnection = !string.IsNullOrEmpty(sub.VpnServerID) && !string.IsNullOrEmpty(sub.VpnEmailName),
             }).ToList();
+
+            // گروه‌بندی اشتراک‌ها بر اساس سرور VPN برای کاهش تعداد درخواست‌ها
+            var subscriptionsByServer = subscriptions
+                .Where(s => !string.IsNullOrEmpty(s.VpnServerID))
+                .GroupBy(s => s.VpnServerID)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // برای هر سرور VPN، اطلاعات را دریافت می‌کنیم
+            foreach (var serverGroup in subscriptionsByServer)
+            {
+                var serverId = serverGroup.Key;
+                var serverSubscriptions = serverGroup.Value;
+
+                // دریافت اطلاعات سرور
+                var server = await _serverVPNService.GetServerByIdAsync(serverId);
+                if (server == null)
+                    continue;
+
+                try
+                {
+                    // دریافت اطلاعات inbound‌ها از سرور VPN
+                    var inboundsResponse = await _apiManager.GetInbounds(server);
+
+                    if (!inboundsResponse.Success || inboundsResponse.Data?.Inbounds == null)
+                    {
+                        _logger.LogWarning($"خطا در دریافت اطلاعات Inbound از سرور {server.Name}: {inboundsResponse.Message}");
+                        continue;
+                    }
+
+                    // پردازش اطلاعات کلاینت‌ها برای هر اشتراک در این سرور
+                    foreach (var subscription in serverSubscriptions)
+                    {
+                        // یافتن ویومدل مرتبط
+                        var viewModel = viewModels.FirstOrDefault(vm => vm.Id == subscription.Id);
+                        if (viewModel == null)
+                            continue;
+
+                        viewModel.VpnServerName = server.Name;
+
+                        // جستجوی کلاینت مرتبط در تمام inbound‌ها
+                        ClientStat clientStat = null;
+                        foreach (var inbound in inboundsResponse.Data.Inbounds)
+                        {
+                            clientStat = inbound.ClientStats?
+                                .FirstOrDefault(c => c.Email?.Equals(subscription.VpnEmailName, StringComparison.OrdinalIgnoreCase) == true);
+
+                            if (clientStat != null)
+                            {
+                                viewModel.Port = inbound.Port;
+                                break;
+                            }
+                        }
+
+                        // اگر کلاینت پیدا شد، اطلاعات را به روزرسانی می‌کنیم
+                        if (clientStat != null)
+                        {
+                            viewModel.IsVpnActive = clientStat.IsActive;
+                            viewModel.VpnRemainingTraffic = clientStat.RemainingGigabytes;
+                            viewModel.VpnRemainingDays = clientStat.RemainingDays;
+                            viewModel.VpnUsagePercentage = clientStat.UsagePercentage;
+                            viewModel.RemarkName = subscription.RemarkName;
+                            viewModel.VpnServerUrl = server.ApiUrl;
+                            viewModel.VpnId = subscription.VpnId;
+                            
+                        }
+                        else
+                        {
+                            // اگر کلاینت در سرور پیدا نشد
+                            viewModel.HasVpnConnection = false;
+                            _logger.LogWarning($"کلاینت با ایمیل {subscription.VpnEmailName} در سرور {server.Name} یافت نشد");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"خطا در دریافت اطلاعات از سرور VPN {server.Name}");
+                }
+            }
+
+            return viewModels;
         }
 
         // بررسی وضعیت اشتراک فعال کاربر
@@ -246,6 +457,11 @@ namespace Application.Services.Implementations
                 RemainingDays = (activeSubscription.EndDate - DateTime.Now).Days,
                 ExpirationDate = activeSubscription.EndDate
             };
+        }
+
+        public async Task<Subscription> GetSubscriptionById(string subscriptionId)
+        {
+            return await _subscriptionRepository.GetSubscriptionById(subscriptionId);
         }
     }
 }

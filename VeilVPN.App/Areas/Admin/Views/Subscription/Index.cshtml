@@ -1,0 +1,222 @@
+﻿@model IEnumerable<Domain.Entities.Subscription>
+
+@{
+    ViewData["Title"] = "مدیریت اشتراک ‌ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">مدیریت اشتراک‌ها</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">داشبورد</a></li>
+                    <li class="breadcrumb-item active">اشتراک‌ها</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card" id="subscriptionList">
+            <div class="card-header border-bottom-dashed">
+                <div class="row g-4 align-items-center">
+                    <div class="col-sm">
+                        <div>
+                            <h5 class="card-title mb-0">لیست اشتراک‌ها</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body border-bottom-dashed border-bottom">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-xl-6">
+                            <div class="search-box">
+                                <input type="text" class="form-control search" id="searchInput" placeholder="جستجوی کاربر، ایمیل، یا وضعیت...">
+                                <i class="ri-search-line search-icon"></i>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="row g-3">
+                                <div class="col-sm-4">
+                                    <div class="">
+                                        <input type="text" class="form-control" id="datepicker-range" data-provider="flatpickr" data-date-format="d M, Y" data-range-date="true" placeholder="تاریخ را انتخاب کنید">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        <select class="form-control" data-choices data-choices-search-false id="statusFilter">
+                                            <option value="">وضعیت</option>
+                                            <option value="all" selected>همه</option>
+                                            <option value="active">فعال</option>
+                                            <option value="inactive">غیرفعال</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        <button type="button" class="btn btn-primary w-100" id="filterBtn">
+                                            <i class="ri-equalizer-fill me-2 align-bottom"></i>فیلترها
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="table-responsive table-card mb-1">
+                        <table class="table align-middle" id="subscriptionTable">
+                            <thead class="table-light text-muted">
+                                <tr>
+                                    <th class="sort" data-sort="subscription-id">شناسه</th>
+                                    <th class="sort" data-sort="user">کاربر</th>
+                                    <th class="sort" data-sort="traffic">ترافیک (GB)</th>
+                                    <th class="sort" data-sort="remaining">باقیمانده (GB)</th>
+                                    <th class="sort" data-sort="duration">مدت (روز)</th>
+                                    <th class="sort" data-sort="start-date">تاریخ شروع</th>
+                                    <th class="sort" data-sort="end-date">تاریخ انقضا</th>
+                                    <th class="sort" data-sort="status">وضعیت</th>
+                                    <th class="sort" data-sort="action">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="list form-check-all">
+                                @foreach (var subscription in Model)
+                                {
+                                    <tr>
+                                        <td class="subscription-id">@subscription.Id.Substring(0, 8)...</td>
+                                        <td class="user">@(subscription.User?.Email ?? "نامشخص")</td>
+                                        <td class="traffic">@subscription.Traffic</td>
+                                        <td class="remaining">@subscription.RemainingTraffic</td>
+                                        <td class="duration">@subscription.Duration</td>
+                                        <td class="start-date">@subscription.StartDate.ToString("yyyy/MM/dd")</td>
+                                        <td class="end-date">@subscription.EndDate.ToString("yyyy/MM/dd")</td>
+                                        <td class="status">
+                                            @if (subscription.IsActive)
+                                            {
+                                                <span class="badge bg-success-subtle text-success">فعال</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger">غیرفعال</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <div class="view">
+                                                    <a href="@Url.Action("Details", "Subscription", new { id = subscription.Id })" class="btn btn-sm btn-primary">
+                                                        <i class="ri-eye-fill align-bottom me-1"></i> مشاهده
+                                                    </a>
+                                                </div>
+                                                <div class="reset">
+                                                    <button class="btn btn-sm btn-warning reset-traffic-btn" data-id="@subscription.Id">
+                                                        <i class="ri-restart-line align-bottom me-1"></i> ریست ترافیک
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <div class="text-center p-4">
+                                <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                <h5 class="mt-2">متاسفم! هیچ اشتراکی یافت نشد</h5>
+                                <p class="text-muted mb-0">هیچ اشتراکی با معیارهای جستجوی شما پیدا نشد.</p>
+                            </div>
+                        }
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="pagination-wrap hstack gap-2">
+                            <a class="page-item pagination-prev disabled" href="#">قبلی</a>
+                            <ul class="pagination listjs-pagination mb-0"></ul>
+                            <a class="page-item pagination-next" href="#">بعدی</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Traffic Modal -->
+<div class="modal fade" id="resetTrafficModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ریست ترافیک</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-2 text-center">
+                    <lord-icon src="https://cdn.lordicon.com/kbtmbyzy.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:90px;height:90px"></lord-icon>
+                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                        <h4>آیا از ریست ترافیک اطمینان دارید؟</h4>
+                        <p class="text-muted mx-4 mb-0">با این کار تمام ترافیک مصرفی کاربر ریست می‌شود و می‌تواند مجدداً از حجم اشتراک خود استفاده کند.</p>
+                    </div>
+                </div>
+                <form id="resetTrafficForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="subscriptionId" name="id" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-success" id="confirmResetTraffic">بله، ریست شود</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // رویداد کلیک برای دکمه ریست ترافیک
+            $('.reset-traffic-btn').on('click', function () {
+                var subscriptionId = $(this).data('id');
+                $('#subscriptionId').val(subscriptionId);
+                $('#resetTrafficModal').modal('show');
+            });
+
+            // رویداد تأیید ریست ترافیک
+            $('#confirmResetTraffic').on('click', function () {
+                $('#resetTrafficForm').attr('action', '@Url.Action("ResetTraffic", "Subscription")');
+                $('#resetTrafficForm').submit();
+            });
+
+            // جستجو در جدول
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                $("#subscriptionTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            // فیلتر بر اساس وضعیت
+            $('#statusFilter').on('change', function () {
+                var value = $(this).val().toLowerCase();
+                if (value === 'all' || value === '') {
+                    $("#subscriptionTable tbody tr").show();
+                } else {
+                    $("#subscriptionTable tbody tr").filter(function () {
+                        return $(this).find('.status').text().toLowerCase().indexOf(value) > -1;
+                    }).show();
+                    $("#subscriptionTable tbody tr").filter(function () {
+                        return $(this).find('.status').text().toLowerCase().indexOf(value) === -1;
+                    }).hide();
+                }
+            });
+        });
+    </script>
+}

@@ -9,7 +9,16 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
-            <h4 class="mb-sm-0">جزئیات فاکتور</h4>
+            <h4 class="mb-sm-0">
+                @if (ViewBag.IsRenewal == true)
+                {
+                    <span>جزئیات پیش‌فاکتور تمدید اشتراک</span>
+                }
+                else
+                {
+                    <span>جزئیات فاکتور</span>
+                }
+            </h4>
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item"><a href="javascript: void(0);">فاکتورها</a></li>
@@ -37,6 +46,24 @@
     </div>
 }
 
+<!-- اضافه کردن اعلان تمدید اشتراک -->
+@if (ViewBag.IsRenewal == true)
+{
+    <div class="alert alert-info border-0" role="alert">
+        <i class="ri-refresh-line me-2 align-middle fs-15"></i>
+        <span>
+            @if (!string.IsNullOrEmpty(ViewBag.RenewalSubscriptionName))
+            {
+                <span>شما در حال تمدید اشتراک «<strong>@ViewBag.RenewalSubscriptionName</strong>» هستید.</span>
+            }
+            else
+            {
+                <span>شما در حال تمدید اشتراک خود هستید.</span>
+            }
+        </span>
+    </div>
+}
+
 <div class="row justify-content-center">
     <div class="col-xxl-9">
         <div class="card" id="demo">
@@ -48,7 +75,7 @@
                                 <img src="/assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="لوگو" height="17">
                                 <img src="/assets/images/logo-light.png" class="card-logo card-logo-light" alt="لوگو" height="17">
                                 <div class="mt-sm-5 mt-4">
-                                    <h6 class="text-muted text-uppercase fw-semibold">VeilVPN</h6>
+                                    <h6 class="text-muted text-uppercase fw-semibold">RahaGozar</h6>
                                     <p class="text-muted mb-1">ارائه دهنده خدمات VPN</p>
                                 </div>
                             </div>
@@ -119,8 +146,23 @@
                                         <tr>
                                             <th scope="row">01</th>
                                             <td class="text-start">
-                                                <span class="fw-medium">اشتراک VPN</span>
+                                                @if (ViewBag.IsRenewal == true)
+                                                {
+                                                    <span class="fw-medium">تمدید اشتراک VPN</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="fw-medium">اشتراک VPN</span>
+                                                }
                                                 <p class="text-muted mb-0">@Model.Subscription.Traffic گیگابایت برای @Model.Subscription.Duration روز</p>
+                                                @if (!string.IsNullOrEmpty(ViewBag.RemarkName))
+                                                {
+                                                    <p class="text-muted mb-0"><small>نام اشتراک: @ViewBag.RemarkName</small></p>
+                                                }
+                                                @if (ViewBag.IsRenewal == true && !string.IsNullOrEmpty(ViewBag.RenewalSubscriptionName))
+                                                {
+                                                    <p class="text-muted mb-0"><small>تمدید اشتراک: @ViewBag.RenewalSubscriptionName</small></p>
+                                                }
                                             </td>
                                             <td>@Model.Subscription.BasePrice.ToPrice() تومان</td>
                                             <td>1</td>
@@ -157,7 +199,14 @@
                             <div class="alert alert-info">
                                 <p class="mb-0">
                                     <span class="fw-semibold">توجه:</span>
-                                    <span>لطفاً توجه داشته باشید که اشتراک شما پس از تأیید پرداخت فعال خواهد شد.</span>
+                                    @if (ViewBag.IsRenewal == true)
+                                    {
+                                        <span>پس از تمدید اشتراک، ترافیک و مدت زمان جدید به اشتراک فعلی شما اضافه خواهد شد.</span>
+                                    }
+                                    else
+                                    {
+                                        <span>لطفاً توجه داشته باشید که اشتراک شما پس از تأیید پرداخت فعال خواهد شد.</span>
+                                    }
                                 </p>
                             </div>
                         </div>
@@ -170,7 +219,26 @@
                                 <form asp-area="UserPanel" asp-controller="Panel" asp-action="CreateInvoice" method="post">
                                     <input type="hidden" name="traffic" value="@ViewBag.Traffic" />
                                     <input type="hidden" name="duration" value="@ViewBag.Duration" />
-                                    <button type="submit" class="btn btn-primary"><i class="ri-shopping-cart-line align-bottom me-1"></i>خرید اشتراک</button>
+                                    <input type="hidden" name="remarkName" value="@ViewBag.RemarkName" />
+
+                                    <!-- اضافه کردن فیلد مخفی برای شناسه اشتراک در حال تمدید -->
+                                    @if (ViewBag.IsRenewal == true && !string.IsNullOrEmpty(ViewBag.RenewalId))
+                                    {
+                                        <input type="hidden" name="renewalId" value="@ViewBag.RenewalId" />
+                                    }
+
+                                    <button type="submit" class="btn btn-primary">
+                                        @if (ViewBag.IsRenewal == true)
+                                        {
+                                            <i class="ri-refresh-line align-bottom me-1"></i>
+                                            <span>تمدید اشتراک</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="ri-shopping-cart-line align-bottom me-1"></i>
+                                            <span>خرید اشتراک</span>
+                                        }
+                                    </button>
                                 </form>
                             }
                             else if (Model.PaymentStatus == "در انتظار پرداخت")

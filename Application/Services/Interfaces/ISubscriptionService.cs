@@ -1,4 +1,6 @@
-﻿using Domain.ViewModels.UserPanel;
+﻿using Domain.DTOs.VPN;
+using Domain.Entities;
+using Domain.ViewModels.UserPanel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +16,15 @@ namespace Application.Services.Interfaces
         double CalculateDiscount(int duration);
 
         // متد جدید
-        Task<bool> CreateSubscriptionFromInvoiceAsync(string invoiceId);
+        Task<(bool success, string Message)> CreateSubscriptionFromInvoiceAsync(string invoiceId);
         Task<List<SubscriptionViewModel>> GetUserSubscriptionsAsync(string userId);
         Task<SubscriptionStatusViewModel> GetUserSubscriptionStatus(string userId);
         // متد جدید برای دریافت اشتراک فعال کاربر
-        Task<SubscriptionViewModel> GetUserActiveSubscriptionAsync(string userId);
+        Task<SubscriptionnViewModel> GetUserActiveSubscriptionAsync(string userId);
 
         // متد جدید برای دریافت تاریخچه مصرف
         Task<List<UsageHistoryViewModel>> GetUsageHistoryAsync(string userId);
+        Task<Subscription> GetSubscriptionById(string subscriptionId);
     }
 
 }

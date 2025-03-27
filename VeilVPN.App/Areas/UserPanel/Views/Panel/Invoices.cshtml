@@ -84,7 +84,7 @@
                                         </td>
                                         <td>
                                             <div class="hstack gap-2">
-                                                <a href="@Url.Action("ShowInvoice", "Panel", new { id = invoice.Id })" class="btn btn-sm btn-soft-primary">
+                                                <a href="@Url.Action("ShowInvoice", "Panel", new {area = "UserPanel", id = invoice.Id })" class="btn btn-sm btn-soft-primary">
                                                     <i class="ri-eye-line"></i> مشاهده
                                                 </a>
                                                 @if (invoice.PaymentStatus == "در انتظار پرداخت")

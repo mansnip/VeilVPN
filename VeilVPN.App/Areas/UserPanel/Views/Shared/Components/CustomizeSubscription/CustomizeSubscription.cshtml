@@ -3,18 +3,65 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">شخصی‌سازی اشتراک VeilVPN</h4>
+                <h4 class="card-title mb-0 flex-grow-1">
+                    @if (Model.IsRenewal)
+                    {
+                        <span>تمدید اشتراک RahaGozar</span>
+                    }
+                    else
+                    {
+                        <span>شخصی‌سازی اشتراک RahaGozar</span>
+                    }
+                </h4>
             </div><!-- end card header -->
 
             <div class="card-body">
+                <!-- اضافه کردن باکس اطلاعیه برای تمدید اشتراک -->
+                @if (Model.IsRenewal && !string.IsNullOrEmpty(Model.RenewalSubscriptionId))
+                {
+                    <div class="alert alert-info border-0 mb-4" role="alert">
+                        <i class="ri-refresh-line me-2 align-middle fs-15"></i>
+                        <span>
+                            @if (!string.IsNullOrEmpty(Model.RenewalSubscriptionName))
+                            {
+                                <span>شما در حال تمدید اشتراک «<strong>@Model.RenewalSubscriptionName</strong>» هستید.</span>
+                            }
+                            else
+                            {
+                                <span>شما در حال تمدید اشتراک خود هستید.</span>
+                            }
+                            می‌توانید مقادیر ترافیک و مدت زمان را تغییر دهید.
+                        </span>
+                    </div>
+                }
+
                 <div class="live-preview">
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="card border shadow-none">
                                 <div class="card-body">
-                                    <h5 class="fs-16 fw-semibold">اشتراک دلخواه خود را بسازید</h5>
-                                    <p class="text-muted">با انتخاب مقدار ترافیک و مدت زمان، اشتراک متناسب با نیاز خود را ایجاد کنید.</p>
+                                    @if (Model.IsRenewal)
+                                    {
+                                        <h5 class="fs-16 fw-semibold">تنظیمات تمدید اشتراک</h5>
+                                        <p class="text-muted">با انتخاب مقدار ترافیک و مدت زمان، اشتراک خود را تمدید کنید.</p>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="fs-16 fw-semibold">اشتراک دلخواه خود را بسازید</h5>
+                                        <p class="text-muted">با انتخاب مقدار ترافیک و مدت زمان، اشتراک متناسب با نیاز خود را ایجاد کنید.</p>
+                                    }
 
+                                    <!-- اضافه کردن فیلد نام اشتراک -->
+                                    <div class="mb-4">
+                                        <h6 class="fs-14 mb-2">نام اشتراک <small class="text-muted">(اختیاری)</small></h6>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="ri-bookmark-line"></i></span>
+                                            <input type="text" id="remarkName" name="RemarkName" class="form-control" placeholder="مثال: اشتراک شرکت" value="@Model.RemarkName" maxlength="20">
+                                        </div>
+                                        <small class="text-muted mt-1 d-block">یک نام دلخواه برای شناسایی آسان این اشتراک در لیست اشتراک‌های خود وارد کنید.</small>
+                                    </div>
+
+                                    <!-- ادامه کد قبلی بدون تغییر -->
                                     <div class="mt-4">
                                         <div class="mb-4">
                                             <h6 class="fs-14 mb-2">میزان ترافیک (گیگابایت)</h6>
@@ -53,6 +100,26 @@
                                     <div class="table-responsive">
                                         <table class="table table-borderless mb-0">
                                             <tbody>
+                                                <!-- افزودن نوع درخواست (تمدید یا خرید جدید) -->
+                                                <tr>
+                                                    <td class="fw-medium">نوع درخواست:</td>
+                                                    <td class="text-end">
+                                                        @if (Model.IsRenewal)
+                                                        {
+                                                            <span class="badge bg-info">تمدید اشتراک</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-success">خرید جدید</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+
+                                                <!-- افزودن نام اشتراک به خلاصه سفارش (مخفی در صورت خالی بودن) -->
+                                                <tr id="remarkNameRow" style="display: @(string.IsNullOrEmpty(Model.RemarkName) ? "none" : "table-row");">
+                                                    <td class="fw-medium">نام اشتراک:</td>
+                                                    <td class="text-end" id="summaryRemarkName">@Model.RemarkName</td>
+                                                </tr>
                                                 <tr>
                                                     <td class="fw-medium">ترافیک:</td>
                                                     <td class="text-end" id="summaryTraffic">@Model.Traffic گیگابایت</td>
@@ -79,9 +146,26 @@
 
                                     <div class="mt-4 pt-2">
                                         <form id="subscriptionForm" asp-area="UserPanel" asp-controller="Panel" asp-action="ShowInvoicePreview" method="get">
-                                            <input type="hidden" id="hiddenTraffic" name="traffic" value="30">
-                                            <input type="hidden" id="hiddenDuration" name="duration" value="30">
-                                            <button type="submit" class="btn btn-success w-100">مشاهده پیش‌فاکتور</button>
+                                            <input type="hidden" id="hiddenTraffic" name="traffic" value="@Model.Traffic">
+                                            <input type="hidden" id="hiddenDuration" name="duration" value="@Model.Duration">
+                                            <input type="hidden" id="hiddenRemarkName" name="remarkName" value="@Model.RemarkName">
+
+                                            <!-- افزودن فیلد مخفی برای شناسه اشتراک در حال تمدید -->
+                                            @if (Model.IsRenewal && !string.IsNullOrEmpty(Model.RenewalSubscriptionId))
+                                            {
+                                                <input type="hidden" name="renewalId" value="@Model.RenewalSubscriptionId">
+                                            }
+
+                                            <button type="submit" class="btn btn-success w-100">
+                                                @if (Model.IsRenewal)
+                                                {
+                                                    <span>مشاهده پیش‌فاکتور تمدید</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>مشاهده پیش‌فاکتور</span>
+                                                }
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
@@ -94,8 +178,9 @@
     </div>
 </div>
 
-<!-- اضافه کردن اسکریپت برای محاسبه قیمت -->
+<!-- اسکریپت بدون تغییر همانند قبل -->
 <script>
+    // کد جاوااسکریپت بدون تغییر
     document.addEventListener('DOMContentLoaded', function() {
     // تعریف قیمت‌های پایه
     const pricePerGB = 2500; // قیمت هر گیگابایت: 2500 تومان
@@ -104,6 +189,7 @@
     // اسلایدرها
     const trafficRange = document.getElementById('trafficRange');
     const durationRange = document.getElementById('durationRange');
+    const remarkNameInput = document.getElementById('remarkName');
 
     // نمایش مقادیر
     const trafficValue = document.getElementById('trafficValue');
@@ -113,126 +199,142 @@
     const summaryPrice = document.getElementById('summaryPrice');
     const discountRow = document.getElementById('discountRow');
     const summaryDiscount = document.getElementById('summaryDiscount');
+    const remarkNameRow = document.getElementById('remarkNameRow');
+    const summaryRemarkName = document.getElementById('summaryRemarkName');
 
     // فیلدهای پنهان فرم
     const hiddenTraffic = document.getElementById('hiddenTraffic');
     const hiddenDuration = document.getElementById('hiddenDuration');
+    const hiddenRemarkName = document.getElementById('hiddenRemarkName');
+
+    // به‌روزرسانی نام اشتراک در خلاصه سفارش
+    remarkNameInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        hiddenRemarkName.value = value;
+
+        if (value) {
+            remarkNameRow.style.display = 'table-row';
+            summaryRemarkName.textContent = value;
+        } else {
+            remarkNameRow.style.display = 'none';
+        }
+    });
 
     // تابع محاسبه قیمت در سمت کلاینت (فقط برای نمایش)
     function calculatePrice() {
-    const traffic = parseInt(trafficRange.value);
-    const duration = parseInt(durationRange.value);
+        const traffic = parseInt(trafficRange.value);
+        const duration = parseInt(durationRange.value);
 
-    // محاسبه قیمت پایه
-    const trafficCost = traffic * pricePerGB;
-    const durationCost = duration * pricePerDay;
+        // محاسبه قیمت پایه
+        const trafficCost = traffic * pricePerGB;
+        const durationCost = duration * pricePerDay;
 
-    // مجموع قیمت پایه
-    let finalPrice = trafficCost + durationCost;
+        // مجموع قیمت پایه
+        let finalPrice = trafficCost + durationCost;
 
-    // اعمال تخفیف بر اساس مدت زمان
-    let discount = 0;
+        // اعمال تخفیف بر اساس مدت زمان
+        let discount = 0;
 
-    if (duration >= 300 && duration <= 365) {       // 10 تا 12 ماه (300-365 روز)
-    discount = 0.20;                            // 20 درصد تخفیف
-    } else if (duration >= 180 && duration < 300) { // 6 تا 10 ماه (180-299 روز)
-    discount = 0.15;                            // 15 درصد تخفیف
-    } else if (duration >= 90 && duration < 180) {  // 3 تا 6 ماه (90-179 روز)
-    discount = 0.10;                            // 10 درصد تخفیف
-    }
+        if (duration >= 300 && duration <= 365) {       // 10 تا 12 ماه (300-365 روز)
+        discount = 0.20;                            // 20 درصد تخفیف
+        } else if (duration >= 180 && duration < 300) { // 6 تا 10 ماه (180-299 روز)
+        discount = 0.15;                            // 15 درصد تخفیف
+        } else if (duration >= 90 && duration < 180) {  // 3 تا 6 ماه (90-179 روز)
+        discount = 0.10;                            // 10 درصد تخفیف
+        }
 
-    // اعمال تخفیف
-    finalPrice = finalPrice * (1 - discount);
+        // اعمال تخفیف
+        finalPrice = finalPrice * (1 - discount);
 
-    // گرد کردن قیمت به هزار تومان نزدیک‌تر
-    finalPrice = Math.round(finalPrice / 1000) * 1000;
+        // گرد کردن قیمت به هزار تومان نزدیک‌تر
+        finalPrice = Math.round(finalPrice / 1000) * 1000;
 
-    return { price: finalPrice, discount: discount * 100 };
+        return { price: finalPrice, discount: discount * 100 };
     }
 
     // دریافت قیمت از سرور
     async function getPriceFromServer(traffic, duration) {
-    try {
-    // تغییر آدرس به کنترلر جدید Subscription
-    const response = await fetch('@Url.Action("CalculatePrice", "Subscription", new { area = "UserPanel" })', {
-    method: 'POST',
-    headers: {
-    'Content-Type': 'application/json',
-    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-    },
-    body: JSON.stringify({
-    traffic: traffic,
-    duration: duration
-    })
-    });
+        try {
+            // تغییر آدرس به کنترلر جدید Subscription
+            const response = await fetch('@Url.Action("CalculatePrice", "Subscription", new { area = "UserPanel" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    traffic: traffic,
+                    duration: duration
+                })
+            });
 
-    if (!response.ok) {
-    throw new Error('خطا در دریافت قیمت از سرور');
-    }
+            if (!response.ok) {
+                throw new Error('خطا در دریافت قیمت از سرور');
+            }
 
-    const data = await response.json();
-    return { price: data.price, discount: data.discount };
-    } catch (error) {
-    console.error('خطا:', error);
-    // در صورت خطا، از محاسبه سمت کلاینت استفاده می‌کنیم
-    return calculatePrice();
-    }
+            const data = await response.json();
+            return { price: data.price, discount: data.discount };
+        } catch (error) {
+            console.error('خطا:', error);
+            // در صورت خطا، از محاسبه سمت کلاینت استفاده می‌کنیم
+            return calculatePrice();
+        }
     }
 
     // به‌روزرسانی نمایش مقادیر
     async function updateDisplay() {
-    const traffic = parseInt(trafficRange.value);
-    const duration = parseInt(durationRange.value);
+        const traffic = parseInt(trafficRange.value);
+        const duration = parseInt(durationRange.value);
 
-    // نمایش مقادیر انتخاب شده
-    trafficValue.textContent = `${traffic} GB`;
-    durationValue.textContent = `${duration} روز`;
-    summaryTraffic.textContent = `${traffic} گیگابایت`;
-    summaryDuration.textContent = `${duration} روز`;
+        // نمایش مقادیر انتخاب شده
+        trafficValue.textContent = `${traffic} GB`;
+        durationValue.textContent = `${duration} روز`;
+        summaryTraffic.textContent = `${traffic} گیگابایت`;
+        summaryDuration.textContent = `${duration} روز`;
 
-    // به‌روزرسانی فیلدهای پنهان فرم
-    hiddenTraffic.value = traffic;
-    hiddenDuration.value = duration;
+        // به‌روزرسانی فیلدهای پنهان فرم
+        hiddenTraffic.value = traffic;
+        hiddenDuration.value = duration;
 
-    // نشان دادن "در حال محاسبه..." هنگام درخواست
-    summaryPrice.textContent = "در حال محاسبه...";
+        // نشان دادن "در حال محاسبه..." هنگام درخواست
+        summaryPrice.textContent = "در حال محاسبه...";
 
-    // دریافت قیمت از سرور
-    const result = await getPriceFromServer(traffic, duration);
+        // دریافت قیمت از سرور
+        const result = await getPriceFromServer(traffic, duration);
 
-    // نمایش قیمت
-    summaryPrice.textContent = `${result.price.toLocaleString()} تومان`;
+        // نمایش قیمت
+        summaryPrice.textContent = `${result.price.toLocaleString()} تومان`;
 
-    // نمایش تخفیف اگر وجود داشته باشد
-    if (result.discount > 0) {
-    discountRow.style.display = "table-row";
-    summaryDiscount.textContent = `${result.discount}%`;
-    } else {
-    discountRow.style.display = "none";
-    }
+        // نمایش تخفیف اگر وجود داشته باشد
+        if (result.discount > 0) {
+            discountRow.style.display = "table-row";
+            summaryDiscount.textContent = `${result.discount}%`;
+        } else {
+            discountRow.style.display = "none";
+        }
     }
 
     // رویدادهای تغییر مقادیر
     trafficRange.addEventListener('input', function() {
-    // به‌روزرسانی سریع مقادیر نمایشی بدون انتظار برای پاسخ سرور
-    trafficValue.textContent = `${this.value} GB`;
-    summaryTraffic.textContent = `${this.value} گیگابایت`;
-    hiddenTraffic.value = this.value;
+        // به‌روزرسانی سریع مقادیر نمایشی بدون انتظار برای پاسخ سرور
+        trafficValue.textContent = `${this.value} GB`;
+        summaryTraffic.textContent = `${this.value} گیگابایت`;
+        hiddenTraffic.value = this.value;
 
-    // با تأخیر کوتاه، قیمت را از سرور دریافت می‌کنیم
-    clearTimeout(this.timer);
-    this.timer = setTimeout(updateDisplay, 300);
+        // با تأخیر کوتاه، قیمت را از سرور دریافت می‌کنیم
+        clearTimeout(this.timer);
+        this.timer = setTimeout(updateDisplay, 300);
     });
 
     durationRange.addEventListener('input', function() {
-    // به‌روزرسانی سریع مقادیر نمایشی بدون انتظار برای پاسخ سرور
-    durationValue.textContent = `${this.value} روز`;
-    summaryDuration.textContent = `${this.value} روز`;
-    hiddenDuration.value = this.value;
+        // به‌روزرسانی سریع مقادیر نمایشی بدون انتظار برای پاسخ سرور
+        durationValue.textContent = `${this.value} روز`;
+        summaryDuration.textContent = `${this.value} روز`;
+        hiddenDuration.value = this.value;
 
-    // با تأخیر کوتاه، قیمت را از سرور دریافت می‌کنیم
-    clearTimeout(this.timer);
-    this.timer = setTimeout(updateDisplay, 300);
+        // با تأخیر کوتاه، قیمت را از سرور دریافت می‌کنیم
+        clearTimeout(this.timer);
+        this.timer = setTimeout(updateDisplay, 300);
     });
 
     // مقداردهی اولیه
@@ -240,7 +342,7 @@
     });
 </script>
 
-<!-- اضافه کردن استایل برای عرض ثابت badge -->
+<!-- استایل بدون تغییر -->
 <style>
     .min-w-60px {
         min-width: 60px;

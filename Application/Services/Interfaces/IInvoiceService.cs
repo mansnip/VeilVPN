@@ -10,7 +10,7 @@ namespace Application.Services.Interfaces
 {
     public interface IInvoiceService
     {
-        Task<InvoiceViewModel> CreateInvoiceAsync(string userId, int traffic, int duration, SubscriptionPriceDetails priceDetails);
+        Task<InvoiceViewModel> CreateInvoiceAsync(string userId, int traffic, int duration, SubscriptionPriceDetails priceDetails, string remarkName, string renewalId = null);
         Task<InvoiceViewModel> GetByIdAsync(string id);
         Task<List<InvoiceViewModel>> GetUserInvoicesAsync(string userId);
 

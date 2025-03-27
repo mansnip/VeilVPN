@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using Domain.ViewModels.UserPanel;
 using System;
 using System.Threading.Tasks;
+using VeilVPN.App.Controllers;
 
 namespace VeilVPN.App.Areas.UserPanel.Controllers
 {

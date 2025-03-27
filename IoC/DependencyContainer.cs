@@ -1,4 +1,6 @@
-﻿using Application.Security;
+﻿using Application.API;
+using Application.Manager;
+using Application.Security;
 using Application.Services.Implementations;
 using Application.Services.Implimentation;
 using Application.Services.Interfaces;
@@ -21,13 +23,18 @@ namespace IoC
 
             service.AddScoped<IUserService, UserService>();
             service.AddSingleton<PasswordHasher>();
+            service.AddScoped<ApiManager>();
+            service.AddScoped<IServerVPNService, ServerVPNService>();
+            service.AddMemoryCache();
+            service.AddHttpClient();
+            service.AddSingleton<VPNSessionManager>();
 
             #endregion
 
             #region Repositories
 
             service.AddScoped<IUserRepository, UserRepository>();
-
+            service.AddScoped<IServerVPNRepository, ServerVPNRepository>();
 
             #endregion
 
@@ -37,7 +44,6 @@ namespace IoC
             service.AddScoped<IInvoiceService, InvoiceService>();
             service.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 
-            service.AddHttpClient("VpnApi");
         }
     }
 }

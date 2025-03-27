@@ -1,4 +1,4 @@
-﻿@model Domain.ViewModels.UserPanel.SubscriptionViewModel
+﻿@model Domain.ViewModels.UserPanel.SubscriptionnViewModel
 @{
     ViewData["Title"] = "وضعیت اشتراک";
     Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
@@ -146,7 +146,7 @@
                         </div>
                     </div>
                     <h4 class="text-warning">شما اشتراک فعالی ندارید!</h4>
-                    <p class="text-muted mx-4 mb-4">برای استفاده از خدمات VeilVPN، لازم است یک اشتراک خریداری کنید.</p>
+                    <p class="text-muted mx-4 mb-4">برای استفاده از خدمات RahaGozar، لازم است یک اشتراک خریداری کنید.</p>
                     <div class="mt-4">
                         <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-success">خرید اشتراک</a>
                         <a href="@Url.Action("MySubscriptions", "Subscription", new { area = "UserPanel" })" class="btn btn-light ms-2">تاریخچه اشتراک‌ها</a>
@@ -164,7 +164,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">راهنمای استفاده از VeilVPN</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">راهنمای استفاده از RahaGozar</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -232,7 +232,7 @@
                             <p class="card-text mb-1">
                                 @if (Model == null || !Model.IsActive)
                                 {
-                                    <span>هم‌اکنون اشتراک فعالی ندارید. برای استفاده از خدمات VeilVPN یک اشتراک خریداری کنید.</span>
+                                    <span>هم‌اکنون اشتراک فعالی ندارید. برای استفاده از خدمات RahaGozar یک اشتراک خریداری کنید.</span>
                                 }
                                 else if (Model.DaysRemaining < 7)
                                 {
@@ -282,12 +282,12 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                چگونه از VeilVPN در چند دستگاه استفاده کنم؟
+                                چگونه از RahaGozar در چند دستگاه استفاده کنم؟
                             </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                شما می‌توانید با یک اشتراک، همزمان در چند دستگاه از VeilVPN استفاده کنید. کافی است نرم‌افزار را در دستگاه‌های مختلف نصب کرده و با اطلاعات کاربری خود وارد شوید. توجه داشته باشید که میزان ترافیک مصرفی در همه دستگاه‌ها محاسبه می‌شود.
+                                شما می‌توانید با یک اشتراک، همزمان در چند دستگاه از RahaGozar استفاده کنید. کافی است نرم‌افزار را در دستگاه‌های مختلف نصب کرده و با اطلاعات کاربری خود وارد شوید. توجه داشته باشید که میزان ترافیک مصرفی در همه دستگاه‌ها محاسبه می‌شود.
                             </div>
                         </div>
                     </div>

@@ -89,5 +89,34 @@ namespace DataLayer.Repositories
                 .OrderByDescending(s => s.EndDate)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<Subscription> GetSubscriptionById(string subscriptionId)
+        {
+            var xxx = await _context.Subscriptions.FirstOrDefaultAsync(a => a.Id == subscriptionId);
+            if (xxx == null)
+            {
+                xxx = new Subscription();
+            }
+            return xxx;
+        }
+
+        // اضافه کردن متد جدید برای دریافت تمام اشتراک‌ها همراه با اطلاعات کاربر
+        public async Task<List<Subscription>> GetAllWithUserAsync()
+        {
+            return await _context.Subscriptions
+                .Include(s => s.User)
+                .Include(s => s.Invoice)
+                .OrderByDescending(s => s.StartDate)
+                .ToListAsync();
+        }
+
+        // اضافه کردن متد جدید برای دریافت اشتراک با اطلاعات کاربر و سرور
+        public async Task<Subscription> GetSubscriptionWithUserAndServerAsync(string id)
+        {
+            return await _context.Subscriptions
+                .Include(s => s.User)
+                .Include(s => s.Invoice)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
     }
 }

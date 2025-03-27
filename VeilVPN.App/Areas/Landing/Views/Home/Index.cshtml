@@ -1,56 +1,52 @@
-﻿
-@{
-    ViewData["Title"] = "صفحه اصلی ";
+﻿@{
     Layout = "~/Areas/Landing/Views/Shared/_Layout.cshtml";
 }
 
 <div class="layout-wrapper landing">
-    <nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar">
+    <nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar" itemscope itemtype="https://schema.org/SiteNavigationElement">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <img src="~/assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="آرم تیره" height="17">
-                <img src="~/assets/images/logo-light.png" class="card-logo card-logo-light" alt="نور لوگو" height="17">
+            <a class="navbar-brand" href="/" title="RahaGozar">
+                <img src="/assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="لوگوی RahaGozar - حالت روشن" height="17">
+                <img src="/assets/images/logo-light.png" class="card-logo card-logo-light" alt="لوگوی RahaGozar - حالت تاریک" height="17">
             </a>
-            <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="تغییر ناوبری">
                 <i class="mdi mdi-menu"></i>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-auto mt-2 mt-lg-0" id="navbar-example">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#hero">صفحه اصلی</a>
+                        <a class="nav-link active" href="#hero" title="صفحه اصلی">صفحه اصلی</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#services">خدمات</a>
+                        <a class="nav-link" href="#services" title="خدمات RahaGozar">خدمات</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#features">ویژگی ها</a>
+                        <a class="nav-link" href="#features" title="ویژگی‌های RahaGozar">ویژگی‌ها</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#plans">طرح ها</a>
+                        <a class="nav-link" href="#plans" title="طرح‌های اشتراک RahaGozar">طرح‌ها</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#reviews">بررسی ها</a>
+                        <a class="nav-link" href="#reviews" title="نظرات کاربران RahaGozar">بررسی‌ها</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">تماس بگیرید</a>
+                        <a class="nav-link" href="#contact" title="تماس با پشتیبانی RahaGozar">تماس با ما</a>
                     </li>
                 </ul>
 
                 <div class="">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a href="~/UserPanel/Panel/Index" class="btn btn-soft-success material-shadow-none">پنل کاربری</a>
+                        <a href="/UserPanel/Panel/Index" class="btn btn-soft-success material-shadow-none" title="پنل کاربری">پنل کاربری</a>
                     }
                     else
                     {
-                        <a href="~/Authentication/Auth/SignIn" class="btn btn-link fw-medium text-decoration-none text-body">وارد شوید</a>
-                        <a href="~/Authentication/Auth/SignUp" class="btn btn-primary">ثبت نام کنید</a>
+                        <a href="/authentication/signin" class="btn btn-link fw-medium text-decoration-none text-body" title="ورود به حساب کاربری">ورود</a>
+                        <a href="/authentication/signup" class="btn btn-primary" title="ثبت‌نام در RahaGozar">ثبت‌نام کنید</a>
                     }
-                    
                 </div>
             </div>
-
         </div>
     </nav>
     <!-- end navbar -->
@@ -63,12 +59,12 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-sm-10">
                     <div class="text-center mt-lg-5 pt-5">
-                        <h1 class="display-6 fw-semibold mb-3 lh-base">راه بهتر برای امنیت و آزادی آنلاین با <span class="text-success"> VeilVPN </span></h1>
-                        <p class="lead text-muted lh-base">VeilVPN یک سرویس VPN پرسرعت، امن و قابل اعتماد است که به شما امکان دسترسی به اینترنت بدون محدودیت و با حریم خصوصی کامل را می‌دهد. با VeilVPN، از هر جای دنیا به محتوای مورد علاقه‌ات دسترسی داشته باش و اطلاعاتت را از دسترسی‌های ناخواسته محافظت کن.</p>
+                        <h1 class="display-6 fw-semibold mb-3 lh-base">راه بهتر برای امنیت و آزادی آنلاین با <span class="text-success">RahaGozar</span></h1>
+                        <p class="lead text-muted lh-base">RahaGozar یک سرویس VPN پرسرعت، امن و قابل اعتماد است که به شما امکان دسترسی به اینترنت بدون محدودیت و با حریم خصوصی کامل را می‌دهد. با RahaGozar، از هر جای دنیا به محتوای مورد علاقه‌ات دسترسی داشته باش و اطلاعاتت را از دسترسی‌های ناخواسته محافظت کن.</p>
 
                         <div class="d-flex gap-2 justify-content-center mt-4">
-                            <a href="~/Authentication/Auth/SignUp" class="btn btn-primary">شروع کنید<i class="ri-arrow-left-line align-middle ms-1"></i></a>
-                            <a href="pages-pricing.html" class="btn btn-danger">مشاهده پلان ها<i class="ri-eye-line align-middle ms-1"></i></a>
+                            <a href="/authentication/signup" class="btn btn-primary" title="شروع استفاده از RahaGozar">شروع کنید<i class="ri-arrow-left-line align-middle ms-1"></i></a>
+                            <a href="#plans" class="btn btn-danger" title="مشاهده طرح‌های اشتراک">مشاهده پلان‌ها<i class="ri-eye-line align-middle ms-1"></i></a>
                         </div>
                     </div>
 
@@ -107,24 +103,17 @@
                     </div>
                 </div>
             </div>
-            <!-- end row -->
         </div>
-        <!-- end container -->
+        <!-- Hero shape SVG -->
         <div class="position-absolute start-0 end-0 bottom-0 hero-shape-svg">
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 1440 120">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 1440 120" aria-hidden="true">
                 <g mask='url("#SvgjsMask1003")' fill="none">
-                    <path d="M 0,118 C 288,98.6 1152,40.4 1440,21L1440 140L0 140z">
-                    </path>
+                    <path d="M 0,118 C 288,98.6 1152,40.4 1440,21L1440 140L0 140z"></path>
                 </g>
             </svg>
         </div>
-        <!-- end shape -->
     </section>
     <!-- end hero section -->
-    <!-- start client section -->
-    <div class="pt-5 mt-5">
-    </div>
-    <!-- end client section -->
     <!-- start services -->
     <section class="section" id="services">
         <div class="container">
@@ -132,7 +121,7 @@
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
                         <h1 class="mb-3 ff-secondary fw-semibold lh-base">یک سرویس VPN پیشرفته که امنیت و آزادی آنلاین را برای شما فراهم می‌کند</h1>
-                        <p class="text-muted">با VeilVPN، از اینترنت بدون محدودیت و با حریم خصوصی کامل لذت ببرید. ما با استفاده از فناوری‌های پیشرفته، اتصالی سریع و امن را برای شما تضمین می‌کنیم.</p>
+                        <p class="text-muted">با RahaGozar، از اینترنت بدون محدودیت و با حریم خصوصی کامل لذت ببرید. ما با استفاده از فناوری‌های پیشرفته، اتصالی سریع و امن را برای شما تضمین می‌کنیم.</p>
                     </div>
                 </div>
                 <!-- end col -->
@@ -151,7 +140,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">سرعت بالا و عدم افت کیفیت</h5>
-                            <p class="text-muted my-3 ff-secondary">با VeilVPN، از سرعت بالا لذت ببرید. ما اتصالی سریع و پایدار را برای شما تضمین می‌کنیم.</p>
+                            <p class="text-muted my-3 ff-secondary">با RahaGozar، از سرعت بالا لذت ببرید. ما اتصالی سریع و پایدار را برای شما تضمین می‌کنیم.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -170,7 +159,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">فناوری پیشرفته و امن</h5>
-                            <p class="text-muted my-3 ff-secondary">VeilVPN از آخرین فناوری‌های امنیتی استفاده می‌کند تا اتصالی سریع، پایدار و بدون نفوذ را برای شما فراهم کند.</p>
+                            <p class="text-muted my-3 ff-secondary">RahaGozar از آخرین فناوری‌های امنیتی استفاده می‌کند تا اتصالی سریع، پایدار و بدون نفوذ را برای شما فراهم کند.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -189,7 +178,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">گارانتی بازگشت وجه</h5>
-                            <p class="text-muted my-3 ff-secondary">با خیال راحت خرید کنید! اگر از VeilVPN راضی نبودید، امکان بازگشت وجه وجود دارد.</p>
+                            <p class="text-muted my-3 ff-secondary">با خیال راحت خرید کنید! اگر از RahaGozar راضی نبودید، امکان بازگشت وجه وجود دارد.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -208,7 +197,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">همه‌جا، سریع‌ترین و با پشتیبانی عالی</h5>
-                            <p class="text-muted my-3 ff-secondary">VeilVPN با سرعت بالا و پشتیبانی 24/7، ما همیشه کنار شما هستیم تا بهترین تجربه را برایتان فراهم کنیم.</p>
+                            <p class="text-muted my-3 ff-secondary">RahaGozar با سرعت بالا و پشتیبانی 24/7، ما همیشه کنار شما هستیم تا بهترین تجربه را برایتان فراهم کنیم.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -227,7 +216,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">پروتکل‌های امنیتی پیشرفته</h5>
-                            <p class="text-muted my-3 ff-secondary">VeilVPN از پروتکل‌های امنیتی پیشرفته مانند SSL استفاده می‌کند تا اتصالی امن و بدون نفوذ را برای شما تضمین کند.</p>
+                            <p class="text-muted my-3 ff-secondary">RahaGozar از پروتکل‌های امنیتی پیشرفته مانند SSL استفاده می‌کند تا اتصالی امن و بدون نفوذ را برای شما تضمین کند.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -246,7 +235,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">سازگار با تمام دستگاه‌ها</h5>
-                            <p class="text-muted my-3 ff-secondary">VeilVPN روی همه‌ی دستگاه‌ها کار می‌کند! از کامپیوتر تا موبایل، امنیت و آزادی آنلاین را تجربه کنید.</p>
+                            <p class="text-muted my-3 ff-secondary">RahaGozar روی همه‌ی دستگاه‌ها کار می‌کند! از کامپیوتر تا موبایل، امنیت و آزادی آنلاین را تجربه کنید.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -285,7 +274,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">طیف وسیعی از سرورهای جهانی</h5>
-                            <p class="text-muted my-3 ff-secondary">با VeilVPN، به سرورهای پرسرعت در سراسر جهان دسترسی داشته باشید و بدون محدودیت به اینترنت متصل شوید.</p>
+                            <p class="text-muted my-3 ff-secondary">با RahaGozar، به سرورهای پرسرعت در سراسر جهان دسترسی داشته باشید و بدون محدودیت به اینترنت متصل شوید.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -304,7 +293,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="fs-18">آپتایم بالا و بدون قطعی</h5>
-                            <p class="text-muted my-3 ff-secondary">VeilVPN با آپتایم 99.9%، اتصالی پایدار و بدون قطعی را برای شما تضمین می‌کند.</p>
+                            <p class="text-muted my-3 ff-secondary">RahaGozar با آپتایم 99.9%، اتصالی پایدار و بدون قطعی را برای شما تضمین می‌کند.</p>
                             <div>
                                 <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
                             </div>
@@ -335,7 +324,7 @@
                             </div>
                         </div>
                         <h3 class="mb-3 fs-20">امنیت و حریم خصوصی بی‌نظیر</h3>
-                        <p class="mb-4 ff-secondary fs-16">با VeilVPN، از اینترنت بدون محدودیت و با حریم خصوصی کامل لذت ببرید. ما با استفاده از فناوری‌های پیشرفته، اتصالی سریع و امن را برای شما تضمین می‌کنیم.</p>
+                        <p class="mb-4 ff-secondary fs-16">با RahaGozar، از اینترنت بدون محدودیت و با حریم خصوصی کامل لذت ببرید. ما با استفاده از فناوری‌های پیشرفته، اتصالی سریع و امن را برای شما تضمین می‌کنیم.</p>
 
                         <div class="row pt-3">
                             <div class="col-3">
@@ -373,7 +362,7 @@
             <div class="row align-items-center gy-4">
                 <div class="col-sm">
                     <div>
-                        <h4 class="text-white mb-0 fw-semibold">امنیت و آزادی آنلاین را با VeilVPN تجربه کنید</h4>
+                        <h4 class="text-white mb-0 fw-semibold">امنیت و آزادی آنلاین را با RahaGozar تجربه کنید</h4>
                     </div>
                 </div>
                 <!-- end col -->
@@ -397,7 +386,7 @@
                     <div class="text-muted">
                         <h5 class="fs-12 text-uppercase text-success">Cross Platform</h5>
                         <h4 class="mb-3">طراحی چندپلتفرمی و سازگار با همه دستگاه‌ها</h4>
-                        <p class="mb-4 ff-secondary">VeilVPN به‌گونه‌ای طراحی شده که روی تمام دستگاه‌ها و سیستم‌عامل‌ها کار می‌کند. از ویندوز و مک گرفته تا اندروید و iOS، شما می‌تونید در هر دستگاهی از امنیت و آزادی آنلاین لذت ببرید.</p>
+                        <p class="mb-4 ff-secondary">RahaGozar به‌گونه‌ای طراحی شده که روی تمام دستگاه‌ها و سیستم‌عامل‌ها کار می‌کند. از ویندوز و مک گرفته تا اندروید و iOS، شما می‌تونید در هر دستگاهی از امنیت و آزادی آنلاین لذت ببرید.</p>
 
                         <div class="row">
                             <div class="col-sm-5">
@@ -494,7 +483,7 @@
                     <div class="text-muted ps-lg-5">
                         <h5 class="fs-12 text-uppercase text-success">پلن‌ها</h5>
                         <h4 class="mb-3">پلن‌های متنوع و انعطاف‌پذیر</h4>
-                        <p class="mb-4">VeilVPN پلن‌های متنوعی را برای نیازهای مختلف شما ارائه می‌دهد. چه برای استفاده شخصی و چه برای کسب‌وکار، می‌توانید پلنی را انتخاب کنید که بهترین تناسب را با نیازهایتان دارد.</p>
+                        <p class="mb-4">RahaGozar پلن‌های متنوعی را برای نیازهای مختلف شما ارائه می‌دهد. چه برای استفاده شخصی و چه برای کسب‌وکار، می‌توانید پلنی را انتخاب کنید که بهترین تناسب را با نیازهایتان دارد.</p>
 
                         <div class="vstack gap-2">
                             <div class="d-flex align-items-center">
@@ -815,150 +804,79 @@
         <!-- end container -->
     </section>
     <!-- end plan -->
-    <!-- start faqs -->
-    <section class="section">
+    <!-- start faqs section -->
+    <section class="section" id="faqs">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
-                        <h3 class="mb-3 fw-semibold">سوالات متداول</h3>
-                        <p class="text-muted mb-4 ff-secondary">اگر نمی توانید پاسخ سؤال خود را در سؤالات متداول ما پیدا کنید، همیشه می توانید با ما تماس بگیرید یا به ما ایمیل بزنید. ما به زودی به شما پاسخ خواهیم داد!</p>
+                        <h2 class="mb-3 fw-semibold">سوالات متداول</h2>
+                        <p class="text-muted mb-4 ff-secondary">اگر پاسخ سؤال خود را در اینجا نیافتید، می‌توانید با تیم پشتیبانی ما تماس بگیرید.</p>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="hstack gap-2 justify-content-center">
-                            <button type="button" class="btn btn-primary btn-label rounded-pill"><i class="ri-mail-line label-icon align-middle rounded-pill fs-16 me-2"></i>به ما ایمیل بزنید</button>
-                            <button type="button" class="btn btn-info btn-label rounded-pill"><i class="ri-twitter-line label-icon align-middle rounded-pill fs-16 me-2"></i>برای ما توییت بفرستید</button>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="accordion custom-accordionwithicon accordion-info" id="accordionFAQ">
+                        <!-- Question 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    چگونه اشتراک RahaGozar را خریداری کنم؟
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>برای خرید اشتراک RahaGozar، به سادگی یکی از طرح‌های ما را انتخاب کرده و فرآیند پرداخت را تکمیل کنید. پس از تأیید پرداخت، سرویس شما بلافاصله فعال خواهد شد.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Question 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    آیا می‌توانم طرح اشتراک خود را ارتقا دهم؟
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>بله، می‌توانید هر زمان که بخواهید طرح اشتراک خود را ارتقا دهید. کافیست به پنل کاربری خود مراجعه کرده و طرح جدیدی خریداری کنید. فقط تفاوت قیمت از شما دریافت خواهد شد.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Question 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    چگونه می‌توانم از RahaGozar در چند دستگاه استفاده کنم؟
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>پس از خرید اشتراک، می‌توانید اپلیکیشن RahaGozar را روی سیستم‌عامل‌های مختلف دانلود کرده و با استفاده از اطلاعات حساب کاربری خود وارد شوید. توجه داشته باشید که مصرف ترافیک در همه دستگاه‌ها محاسبه می‌شود.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Question 4 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    آیا استفاده از RahaGozar قانونی است؟
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>استفاده از VPN در اکثر کشورها قانونی است، اما قوانین در هر کشور متفاوت است. RahaGozar بر حفظ حریم خصوصی و امنیت آنلاین تمرکز دارد و ما توصیه می‌کنیم با قوانین محلی خود آشنا شوید.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end row -->
-
-            <div class="row g-lg-5 g-4">
-                <!-- سوالات عمومی -->
-                <div class="col-lg-6">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="flex-shrink-0 me-1">
-                            <i class="ri-question-line fs-24 align-middle text-success me-1"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="mb-0 fw-semibold">سوالات عمومی</h5>
-                        </div>
-                    </div>
-                    <div class="accordion custom-accordionwithicon custom-accordion-border accordion-border-box" id="genques-accordion">
-                        <!-- سوال ۱ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="genques-headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#genques-collapseOne" aria-expanded="true" aria-controls="genques-collapseOne">VeilVPN چیست و چگونه کار می‌کند؟</button>
-                            </h2>
-                            <div id="genques-collapseOne" class="accordion-collapse collapse show" aria-labelledby="genques-headingOne" data-bs-parent="#genques-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    VeilVPN یک سرویس VPN است که با ایجاد یک تونل امن و رمزنگاری‌شده بین دستگاه شما و اینترنت، از حریم خصوصی و امنیت شما محافظت می‌کند. این سرویس به شما امکان می‌دهد تا به صورت ناشناس و بدون محدودیت جغرافیایی به اینترنت دسترسی داشته باشید.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- سوال ۲ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="genques-headingTwo">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#genques-collapseTwo" aria-expanded="false" aria-controls="genques-collapseTwo">آیا استفاده از VeilVPN قانونی است؟</button>
-                            </h2>
-                            <div id="genques-collapseTwo" class="accordion-collapse collapse" aria-labelledby="genques-headingTwo" data-bs-parent="#genques-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    بله، استفاده از VPN در اکثر کشورها کاملاً قانونی است. VeilVPN برای محافظت از حریم خصوصی و امنیت شما طراحی شده و از آن می‌توانید برای دسترسی به محتوای مسدود شده یا افزایش امنیت آنلاین خود استفاده کنید.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- سوال ۳ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="genques-headingThree">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#genques-collapseThree" aria-expanded="false" aria-controls="genques-collapseThree">آیا VeilVPN سرعت اینترنت من را کاهش می‌دهد؟</button>
-                            </h2>
-                            <div id="genques-collapseThree" class="accordion-collapse collapse" aria-labelledby="genques-headingThree" data-bs-parent="#genques-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    VeilVPN با استفاده از سرورهای پرسرعت و فناوری‌های بهینه‌سازی، کمترین تأثیر را روی سرعت اینترنت شما دارد. در برخی موارد، حتی ممکن است سرعت شما افزایش یابد، به‌ویژه اگر ISP شما ترافیک شما را محدود کرده باشد.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- سوال ۴ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="genques-headingFour">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#genques-collapseFour" aria-expanded="false" aria-controls="genques-collapseFour">آیا می‌توانم از VeilVPN روی چند دستگاه استفاده کنم؟</button>
-                            </h2>
-                            <div id="genques-collapseFour" class="accordion-collapse collapse" aria-labelledby="genques-headingFour" data-bs-parent="#genques-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    بله، VeilVPN از اتصال هم‌زمان روی چند دستگاه پشتیبانی می‌کند. شما می‌توانید از یک حساب کاربری برای محافظت از تمام دستگاه‌های خود، از جمله کامپیوتر، موبایل و تبلت استفاده کنید.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end accordion-->
-                </div>
-                <!-- end col -->
-                <!-- حریم خصوصی و امنیت -->
-                <div class="col-lg-6">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="flex-shrink-0 me-1">
-                            <i class="ri-shield-keyhole-line fs-24 align-middle text-success me-1"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="mb-0 fw-semibold">حریم خصوصی و امنیت</h5>
-                        </div>
-                    </div>
-
-                    <div class="accordion custom-accordionwithicon custom-accordion-border accordion-border-box" id="privacy-accordion">
-                        <!-- سوال ۱ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="privacy-headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#privacy-collapseOne" aria-expanded="false" aria-controls="privacy-collapseOne">آیا VeilVPN لاگ فعالیت‌های من را ذخیره می‌کند؟</button>
-                            </h2>
-                            <div id="privacy-collapseOne" class="accordion-collapse collapse" aria-labelledby="privacy-headingOne" data-bs-parent="#privacy-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    خیر، VeilVPN به هیچ‌وجه لاگ فعالیت‌های شما را ذخیره نمی‌کند. ما به حریم خصوصی شما احترام می‌گذاریم و هیچ اطلاعاتی از فعالیت‌های آنلاین شما ثبت نمی‌شود.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- سوال ۲ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="privacy-headingTwo">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#privacy-collapseTwo" aria-expanded="true" aria-controls="privacy-collapseTwo">چگونه می‌توانم پلن مناسب خود را انتخاب کنم؟</button>
-                            </h2>
-                            <div id="privacy-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="privacy-headingTwo" data-bs-parent="#privacy-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    پلن مناسب به نیازهای شما بستگی دارد. اگر استفاده شخصی و سبک دارید، پلن پایه برای شما کافی است. برای استفاده متوسط، پلن استاندارد و برای کسب‌وکارهای بزرگ، پلن سازمانی پیشنهاد می‌شود. می‌توانید از صفحه قیمت‌گذاری ما دیدن کنید یا با پشتیبانی تماس بگیرید تا راهنمایی شوید.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- سوال ۳ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="privacy-headingThree">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#privacy-collapseThree" aria-expanded="false" aria-controls="privacy-collapseThree">آیا می‌توانم پلن خود را بعداً ارتقا دهم؟</button>
-                            </h2>
-                            <div id="privacy-collapseThree" class="accordion-collapse collapse" aria-labelledby="privacy-headingThree" data-bs-parent="#privacy-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    بله، شما می‌توانید در هر زمان پلن خود را ارتقا دهید. کافی است به پنل کاربری خود مراجعه کرده و پلن جدید را انتخاب کنید. تفاوت قیمت به صورت خودکار محاسبه می‌شود.
-                                </div>
-                            </div>
-                        </div>
-                        <!-- سوال ۴ -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="privacy-headingFour">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#privacy-collapseFour" aria-expanded="false" aria-controls="privacy-collapseFour">اگر از VeilVPN راضی نباشم، آیا می‌توانم هزینه‌ام را پس بگیرم؟</button>
-                            </h2>
-                            <div id="privacy-collapseFour" class="accordion-collapse collapse" aria-labelledby="privacy-headingFour" data-bs-parent="#privacy-accordion">
-                                <div class="accordion-body ff-secondary">
-                                    بله، VeilVPN دارای گارانتی بازگشت وجه است. اگر در مدت مشخص شده از سرویس ما راضی نبودید، می‌توانید درخواست بازگشت وجه دهید و هزینه شما بازگردانده می‌شود.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end accordion-->
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
         </div>
-        <!-- end container -->
     </section>
-    <!-- end faqs -->
+    <!-- end faqs section -->
     <!-- start features -->
     <section class="py-5 position-relative bg-light">
         <div class="container">
@@ -1023,11 +941,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-10">
                                             <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"VeilVPN واقعاً عالیه! سرعتش باورنکردنیه و هیچ‌وقت قطع نمی‌شه. حالا می‌تونم به راحتی به سایت‌های مسدود شده دسترسی داشته باشم. ممنون VeilVPN!"</p>
+                                                <p class="fs-20 ff-secondary mb-4">"RahaGozar واقعاً عالیه! سرعتش باورنکردنیه و هیچ‌وقت قطع نمی‌شه. حالا می‌تونم به راحتی به سایت‌های کشورم رو تحریم کردن دسترسی داشته باشم. ممنون RahaGozar!"</p>
 
                                                 <div>
                                                     <h5 class="text-white">محمد رضایی</h5>
-                                                    <p>- کاربر VeilVPN</p>
+                                                    <p>- کاربر RahaGozar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1039,11 +957,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-10">
                                             <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"من از VeilVPN برای کارم استفاده می‌کنم و واقعاً راضیم. پشتیبانی 24/7 عالیه و همیشه سریع پاسخ می‌دن. به همه توصیه می‌کنم!"</p>
+                                                <p class="fs-20 ff-secondary mb-4">"من از RahaGozar برای کارم استفاده می‌کنم و واقعاً راضیم. پشتیبانیشون واقعا عالیه و همیشه سریع پاسخ می‌دن. به همه توصیه می‌کنم!"</p>
 
                                                 <div>
                                                     <h5 class="text-white">فاطمه حسینی</h5>
-                                                    <p>- کاربر VeilVPN</p>
+                                                    <p>- کاربر RahaGozar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1055,11 +973,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-10">
                                             <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"قیمت‌ها واقعاً منصفانه‌ست و کیفیت سرویس عالیه. من از پلن سالانه استفاده می‌کنم و تا حالا هیچ مشکلی نداشتم. VeilVPN بهترینه!"</p>
+                                                <p class="fs-20 ff-secondary mb-4">"قیمت‌ها واقعاً منصفانه‌ست و کیفیت سرویس عالیه. من از پلن سالانه استفاده می‌کنم و تا حالا هیچ مشکلی نداشتم. RahaGozar بهترینه!"</p>
 
                                                 <div>
                                                     <h5 class="text-white">علی محمدی</h5>
-                                                    <p>- کاربر VeilVPN</p>
+                                                    <p>- کاربر RahaGozar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1071,11 +989,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-10">
                                             <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"من قبلاً از چند VPN دیگه استفاده کرده بودم، اما VeilVPN واقعاً برتره. سرعتش عالیه و هیچ‌وقت لاگ فعالیت‌هام رو ذخیره نمی‌کنه. به همه پیشنهاد می‌کنم!"</p>
+                                                <p class="fs-20 ff-secondary mb-4">"من قبلاً از چند VPN دیگه استفاده کرده بودم، اما RahaGozar واقعاً برتره. سرعتش عالیه و هیچ‌وقت تا به حال مشکلی باهاش نداشتم. به همه پیشنهاد می‌کنم!"</p>
 
                                                 <div>
                                                     <h5 class="text-white">زهرا کریمی</h5>
-                                                    <p>- کاربر VeilVPN</p>
+                                                    <p>- کاربر RahaGozar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1087,11 +1005,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-10">
                                             <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"VeilVPN زندگی من رو راحت‌تر کرده! حالا می‌تونم بدون نگرانی از حریم خصوصی‌م، از اینترنت استفاده کنم. ممنون از تیم پشتیبانی عالی‌تون!"</p>
+                                                <p class="fs-20 ff-secondary mb-4">"RahaGozar زندگی من رو راحت‌تر کرده! حالا می‌تونم بدون نگرانی از حریم خصوصی‌م، از اینترنت استفاده کنم. ممنون از تیم پشتیبانی عالی‌تون!"</p>
 
                                                 <div>
                                                     <h5 class="text-white">رضا احمدی</h5>
-                                                    <p>- کاربر VeilVPN</p>
+                                                    <p>- کاربر RahaGozar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1103,11 +1021,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-10">
                                             <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"من از VeilVPN برای دسترسی به محتوای آموزشی استفاده می‌کنم و واقعاً راضیم. سرعتش عالیه و هیچ‌وقت قطع نمی‌شه. به همه توصیه می‌کنم!"</p>
+                                                <p class="fs-20 ff-secondary mb-4">"من از RahaGozar برای دسترسی به محتوای آموزشی استفاده می‌کنم و واقعاً راضیم. سرعتش عالیه و هیچ‌وقت قطع نمی‌شه. به همه توصیه می‌کنم!"</p>
 
                                                 <div>
                                                     <h5 class="text-white">سارا نوروزی</h5>
-                                                    <p>- کاربر VeilVPN</p>
+                                                    <p>- کاربر RahaGozar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1136,7 +1054,7 @@
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
                         <h3 class="mb-3 fw-semibold">تماس بگیرید</h3>
-                        <p class="text-muted mb-4 ff-secondary">ما اینجا هستیم تا به سوالات شما پاسخ بدیم و راه‌حل‌های امنیتی مناسب رو پیشنهاد بدیم. اگر سوالی دارید یا نیاز به راهنمایی دارید، تیم پشتیبانی VeilVPN آماده کمک به شماست.</p>
+                        <p class="text-muted mb-4 ff-secondary">ما اینجا هستیم تا به سوالات شما پاسخ بدیم و راه‌حل‌های امنیتی مناسب رو پیشنهاد بدیم. اگر سوالی دارید یا نیاز به راهنمایی دارید، تیم پشتیبانی RahaGozar آماده کمک به شماست.</p>
                     </div>
                 </div>
             </div>
@@ -1151,7 +1069,7 @@
                         </div>
                         <div class="mt-4">
                             <h5 class="fs-13 text-muted text-uppercase">ایمیل:</h5>
-                            <div class="ff-secondary fw-semibold">support@veilvpn.com</div>
+                            <div class="ff-secondary fw-semibold">support@RahaGozar.com</div>
                         </div>
                         <div class="mt-4">
                             <h5 class="fs-13 text-muted text-uppercase">ساعت کاری:</h5>
@@ -1214,7 +1132,7 @@
             <div class="row align-items-center gy-4">
                 <div class="col-sm">
                     <div>
-                        <h4 class="text-white mb-0 fw-semibold">امنیت و آزادی آنلاین را با VeilVPN تجربه کنید</h4>
+                        <h4 class="text-white mb-0 fw-semibold">امنیت و آزادی آنلاین را با RahaGozar تجربه کنید</h4>
                     </div>
                 </div>
                 <!-- end col -->
@@ -1230,101 +1148,57 @@
         <!-- end container -->
     </section>
     <!-- end cta -->
-    <!-- Start footer -->
+    <!-- Footer Section -->
     <footer class="custom-footer bg-dark py-5 position-relative">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 mt-4">
-                    <div>
-                        <div>
-                            <img src="~/assets/images/logo-light.png" alt="نور لوگو" height="17">
-                        </div>
-                        <div class="mt-4 fs-13">
-                            <p>امنیت و آزادی آنلاین با VeilVPN</p>
-                            <p class="ff-secondary">VeilVPN یک سرویس VPN پیشرفته است که امنیت و حریم خصوصی شما را در اینترنت تضمین می‌کند. با سرورهای پرسرعت و پشتیبانی 24/7، از اینترنت بدون محدودیت لذت ببرید.</p>
-                        </div>
+                <div class="col-lg-4">
+                    <div class="mb-4">
+                        <a href="/" class="d-inline-block">
+                            <img src="/assets/images/logo-light.png" alt="لوگوی RahaGozar" height="30">
+                        </a>
+                        <p class="text-muted mt-3">RahaGozar، سرویس وی‌پی‌ان امن و پرسرعت برای دسترسی آزاد به اینترنت بدون محدودیت.</p>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-reset" aria-label="فیسبوک"><i class="ri-facebook-line fs-16"></i></a>
+                        <a href="#" class="text-reset" aria-label="توییتر"><i class="ri-twitter-line fs-16"></i></a>
+                        <a href="#" class="text-reset" aria-label="اینستاگرام"><i class="ri-instagram-line fs-16"></i></a>
+                        <a href="#" class="text-reset" aria-label="تلگرام"><i class="ri-telegram-line fs-16"></i></a>
                     </div>
                 </div>
-
-                <div class="col-lg-7 ms-lg-auto">
-                    <div class="row">
-                        <div class="col-sm-4 mt-4">
-                            <h5 class="text-white mb-0">دسترسی سریع</h5>
-                            <div class="text-muted mt-3">
-                                <ul class="list-unstyled ff-secondary footer-list">
-                                    <li><a href="#about">درباره ما</a></li>
-                                    <li><a href="#features">ویژگی‌ها</a></li>
-                                    <li><a href="#plans">پلن‌ها</a></li>
-                                    <li><a href="#faq">سوالات متداول</a></li>
-                                </ul>
-                            </div>
+                <div class="col-lg-2 col-6">
+                    <h5 class="text-white mb-3">خدمات</h5>
+                    <ul class="list-unstyled footer-link-list">
+                        <li><a href="/features" title="ویژگی‌های RahaGozar">ویژگی‌ها</a></li>
+                        <li><a href="/pricing" title="قیمت‌گذاری RahaGozar">قیمت‌گذاری</a></li>
+                        <li><a href="/servers" title="سرورهای RahaGozar">سرورها</a></li>
+                        <li><a href="/download" title="دانلود RahaGozar">دانلود</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h5 class="text-white mb-3">پشتیبانی</h5>
+                    <ul class="list-unstyled footer-link-list">
+                        <li><a href="/faq" title="سوالات متداول">راهنما</a></li>
+                        <li><a href="/support" title="پشتیبانی RahaGozar">تماس با ما</a></li>
+                        <li><a href="/terms" title="شرایط استفاده">شرایط استفاده</a></li>
+                        <li><a href="/privacy" title="حریم خصوصی">حریم خصوصی</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="text-white mb-3">خبرنامه</h5>
+                    <p class="text-muted">برای دریافت آخرین اخبار و تخفیف‌های ویژه در خبرنامه ما عضو شوید.</p>
+                    <form class="mt-3">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید" aria-label="ایمیل خبرنامه" required>
+                            <button class="btn btn-primary" type="submit">عضویت</button>
                         </div>
-                        <div class="col-sm-4 mt-4">
-                            <h5 class="text-white mb-0">پشتیبانی</h5>
-                            <div class="text-muted mt-3">
-                                <ul class="list-unstyled ff-secondary footer-list">
-                                    <li><a href="mailto:support@veilvpn.com">پشتیبانی ایمیل</a></li>
-                                    <li><a href="#contact">تماس با ما</a></li>
-                                    <li><a href="#privacy">حریم خصوصی</a></li>
-                                    <li><a href="#terms">قوانین و شرایط</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 mt-4">
-                            <h5 class="text-white mb-0">شبکه‌های اجتماعی</h5>
-                            <div class="text-muted mt-3">
-                                <ul class="list-unstyled ff-secondary footer-list">
-                                    <li><a href="https://twitter.com/veilvpn" target="_blank">توییتر</a></li>
-                                    <li><a href="https://instagram.com/veilvpn" target="_blank">اینستاگرام</a></li>
-                                    <li><a href="https://linkedin.com/company/veilvpn" target="_blank">لینکدین</a></li>
-                                    <li><a href="https://t.me/veilvpn" target="_blank">تلگرام</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="row text-center text-sm-start align-items-center mt-5">
-                <div class="col-sm-6">
-                    <div>
-                        <p class="copy-rights mb-0">
-                            <script> document.write(new Date().getFullYear()) </script>© VeilVPN - تمام حقوق محفوظ است.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end mt-3 mt-sm-0">
-                        <ul class="list-inline mb-0 footer-social-link">
-                            <li class="list-inline-item">
-                                <a href="https://twitter.com/veilvpn" target="_blank" class="avatar-xs d-block">
-                                    <div class="avatar-title rounded-circle">
-                                        <i class="ri-twitter-fill"></i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="https://instagram.com/veilvpn" target="_blank" class="avatar-xs d-block">
-                                    <div class="avatar-title rounded-circle">
-                                        <i class="ri-instagram-line"></i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="https://linkedin.com/company/veilvpn" target="_blank" class="avatar-xs d-block">
-                                    <div class="avatar-title rounded-circle">
-                                        <i class="ri-linkedin-fill"></i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="https://t.me/veilvpn" target="_blank" class="avatar-xs d-block">
-                                    <div class="avatar-title rounded-circle">
-                                        <i class="ri-telegram-line"></i>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="text-center text-muted">
+                        <p>© 2023 RahaGozar. تمامی حقوق محفوظ است.</p>
                     </div>
                 </div>
             </div>

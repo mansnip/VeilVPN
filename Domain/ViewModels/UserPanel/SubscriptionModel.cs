@@ -18,5 +18,13 @@ namespace Domain.ViewModels.UserPanel
         [Required(ErrorMessage = "{0} را باید وارد نمایید.")]
         [Range(15, 365)]
         public int Duration { get; set; } = 30;
+        [Display(Name = "نام")]
+        [MaxLength(20, ErrorMessage = "{0} را باید وارد نمایید.")]
+        public string? RemarkName { get; set; }
+
+        // پراپرتی‌های جدید برای تمدید
+        public bool IsRenewal { get; set; } = false;
+        public string RenewalSubscriptionId { get; set; }
+        public string RenewalSubscriptionName { get; set; }
     }
 }
