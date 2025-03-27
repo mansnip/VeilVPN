@@ -23,7 +23,7 @@ namespace DataLayer.Context
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<VPNServer> VPNServers { get; set; }
-
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

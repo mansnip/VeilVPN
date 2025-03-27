@@ -3,6 +3,7 @@ using DataLayer.Context;
 using IoC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using VeilVPN.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,8 @@ builder.Services.AddAuthentication(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(1);
 });
 #endregion
+
+builder.Services.AddSignalR(); // اضافه کردن سرویس‌های SignalR
 
 // اضافه کردن تنظیمات کش برای فایل‌های استاتیک SEO
 builder.Services.AddResponseCaching();
@@ -113,7 +116,12 @@ app.MapAreaControllerRoute(
     name: "UserPanelArea",
     areaName: "UserPanel",
     pattern: "UserPanel/{controller=Panel}/{action=Index}/{id?}");
+
+// اضافه کردن Endpoint برای Hub
+app.MapHub<ChatHub>("/chatHub"); // آدرس URL که کلاینت به آن وصل می‌شود
+
 app.Run();
+
 
 // کلاس تنظیمات سایت
 public class SiteSettings

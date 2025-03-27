@@ -11,7 +11,7 @@
     <meta content="Mordad" name="author">
     <!-- App favicon -->
     <link rel="shortcut icon" href="~/assets/images/favicon.ico">
-
+    @await RenderSectionAsync("Styles", required: false)
     <!-- Layout config Js -->
     <script src="~/assets/js/layout.js"></script>
     <!-- Bootstrap Css -->
@@ -475,23 +475,6 @@
 
             <div class="page-content">
                 <div class="container-fluid">
-
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
-                                <h4 class="mb-sm-0">استارتر</h4>
-
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript:%20void(0);">صفحات</a></li>
-                                        <li class="breadcrumb-item active">استارتر</li>
-                                    </ol>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
                     <!-- end page title -->
                     @RenderBody()
                 </div>
@@ -513,7 +496,7 @@
             </footer>
         </div>
         <!-- end main content-->
-
+        @await RenderSectionAsync("chat", required: false)
     </div>
     <!-- END layout-wrapper -->
     <!--start back-to-top-->
