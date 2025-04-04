@@ -21,7 +21,7 @@ services:
     # به جای 'image'، از 'build' استفاده می‌کنیم تا از Dockerfile شما ایمیج بسازد
     build:
       context: . # مسیر پوشه‌ای که Dockerfile شما در آن قرار دارد (معمولاً ریشه پروژه)
-      dockerfile: Dockerfile # نام فایل Dockerfile (اگر نامش متفاوت است)
+      dockerfile: VeilVPN.Dockerfile # نام فایل Dockerfile (اگر نامش متفاوت است)
     container_name: veilvpn_app
     ports:
       # پورت 8080 داخل کانتینر (که در Dockerfile شما EXPOSE شده)
