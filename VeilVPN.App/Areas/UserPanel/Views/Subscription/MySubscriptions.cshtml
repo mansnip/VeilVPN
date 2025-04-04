@@ -140,7 +140,7 @@
                                 <!-- دکمه های عملیات -->
                                 <div class="mt-4 d-flex justify-content-between">
                                     <div>
-                                        <a href="@Url.Action("SupportRequest", "Panel", new { area = "UserPanel", subscriptionId = activeSubscription.Id })" class="btn btn-outline-warning">
+                                        <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-outline-warning">
                                             <i class="ri-customer-service-2-line align-bottom me-1"></i> گزارش مشکل
                                         </a>
                                     </div>
@@ -235,7 +235,7 @@
                                                     </a>
                                                 }
 
-                                                <a href="@Url.Action("SupportRequest", "Panel", new { area = "UserPanel", subscriptionId = subscription.Id })" class="btn btn-sm btn-outline-warning">
+                                                <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-sm btn-outline-warning">
                                                     <i class="ri-customer-service-2-line align-bottom me-1"></i> پشتیبانی
                                                 </a>
                                             </div>
@@ -256,14 +256,24 @@
                                                         </div>
                                                         <div class="modal-body text-center">
                                                             <!-- QR Code -->
-                                                            <div id="qrcode-@subscription.Id" class="mb-3 d-flex justify-content-center"></div>
-                                                            <p class="text-muted">(برای کپی لینک بر روی QR Code کلیک کنید)</p>
+                                                            <div id="qrcode-@subscription.Id"
+                                                                 class="mb-3 d-flex justify-content-center qrcode-container" @* کلاس qrcode-container اضافه شد *@
+                                                                 data-link="@subscription.SubscriptionLink" @* لینک اشتراک به عنوان دیتا اتریبیوت اضافه شد *@
+                                                                 data-subid="@subscription.Id">
+                                                                @* آی‌دی اشتراک برای لاگ و اشکال‌زدایی *@
+                                                                <!-- QR Code توسط جاوا اسکریپت در اینجا ایجاد می‌شود -->
+                                                                <div class="spinner-border text-primary" role="status">
+                                                                    <span class="visually-hidden">در حال بارگذاری QR Code...</span>
+                                                                </div>
+                                                            </div>
+                                                            <p class="text-muted small">(برای کپی لینک بر روی QR Code کلیک کنید)</p> @* راهنمای بهتر *@
 
                                                             <!-- دکمه‌های آموزشی -->
                                                             <div class="tutorial-buttons d-flex flex-column gap-2 mt-4">
-                                                                <button class="btn btn-info btn-lg" onclick="window.open('YOUR_WINDOWS_TUTORIAL_URL', '_blank')">آموزش ویندوز</button>
-                                                                <button class="btn btn-success btn-lg" onclick="window.open('YOUR_ANDROID_TUTORIAL_URL', '_blank')">آموزش اندروید</button>
-                                                                <button class="btn btn-secondary btn-lg" onclick="window.open('YOUR_IOS_TUTORIAL_URL', '_blank')">آموزش iOS</button>
+                                                                @* لینک‌های آموزشی خود را اینجا قرار دهید *@
+                                                                <button class="btn btn-info btn-lg" onclick="window.open('YOUR_WINDOWS_TUTORIAL_URL', '_blank')"> <i class="ri-windows-fill align-middle"></i> آموزش ویندوز</button>
+                                                                <button class="btn btn-success btn-lg" onclick="window.open('YOUR_ANDROID_TUTORIAL_URL', '_blank')"><i class="ri-android-fill align-middle"></i> آموزش اندروید</button>
+                                                                <button class="btn btn-secondary btn-lg" onclick="window.open('YOUR_IOS_TUTORIAL_URL', '_blank')"><i class="ri-apple-fill align-middle"></i> آموزش iOS</button>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -272,39 +282,6 @@
                                                     </div>
                                                 </div>
 
-                                                <script>
-                                                    document.addEventListener('DOMContentLoaded', function () {
-                                                        // لیست اشتراک‌ها داینامیک از Razor به صورت JSON
-                                                        const subscriptions = @Html.Raw(Json.Serialize(Model.Select(s => new { Id = s.Id, Link = System.Net.WebUtility.UrlEncode(s.SubscriptionLink) })));
-
-                                                        subscriptions.forEach(subscription => {
-                                                            const qrCodeContainer = document.getElementById(`qrcode-${subscription.id}`);
-                                                            if (qrCodeContainer) {
-                                                                // Decode کردن لینک اشتراک
-                                                                const decodedLink = decodeURIComponent(subscription.link); // دی‌کد کردن کاراکترهای خاص
-
-                                                                // ایجاد QR Code با لینک دی‌کد‌شده
-                                                                new QRCode(qrCodeContainer, {
-                                                                    text: decodedLink, // از لینک دی‌کد‌شده استفاده کنید
-                                                                    width: 400,
-                                                                    height: 400,
-                                                                    colorDark: "#000000",
-                                                                    colorLight: "#ffffff"
-                                                                });
-
-                                                                // افزودن قابلیت کلیک و کپی کردن لینک دی‌کد‌شده
-                                                                qrCodeContainer.onclick = async () => {
-                                                                    try {
-                                                                        await navigator.clipboard.writeText(decodedLink); // کپی لینک دی‌کد‌شده در کلیپ‌بورد
-                                                                        alert('لینک با موفقیت کپی شد!');
-                                                                    } catch (error) {
-                                                                        console.error('خطا در کپی کردن لینک:', error);
-                                                                    }
-                                                                };
-                                                            }
-                                                        });
-                                                    });
-                                                </script>
 
                                             </div>
 
@@ -500,7 +477,88 @@
 </div>
 <!-- پایان راهنمای اشتراک -->
 @section Scripts {
-    <script src="~/lib/qrcode/qrcode.min.js" type="text/javascript"></script>
+    @* <script src="~/lib/qrcode/qrcode.min.js" type="text/javascript"></script> *@
+@* کتابخانه qrcode.js از CDN *@
+    <script src="~/lib/qrcode.min.js" type="text/javascript"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // انتخاب همه مودال‌های لینک اتصال با استفاده از بخشی از ID
+            const subscriptionModals = document.querySelectorAll('[id^="connectionLinkModal-"]');
+
+            subscriptionModals.forEach(modalElement => {
+                // اضافه کردن Listener برای رویداد 'show.bs.modal' (زمانی که مودال شروع به باز شدن می‌کند)
+                modalElement.addEventListener('show.bs.modal', function (event) {
+                    const modal = event.target; // مودالی که در حال باز شدن است
+                    // پیدا کردن محفظه QR Code *داخل* این مودال خاص
+                    const qrContainer = modal.querySelector('.qrcode-container');
+
+                    if (!qrContainer) {
+                        console.error("محفظه QR Code با کلاس '.qrcode-container' در مودال پیدا نشد:", modal.id);
+                        return; // خروج از تابع اگر محفظه پیدا نشد
+                    }
+
+                    // بررسی اینکه آیا QR Code قبلاً تولید شده است (برای جلوگیری از تولید مجدد)
+                    // qrcode.js معمولا یک تگ <canvas> یا <img> ایجاد می‌کند.
+                    if (qrContainer.querySelector('canvas') || qrContainer.querySelector('img')) {
+                        // console.log("QR Code قبلاً برای این مودال تولید شده است:", qrContainer.id);
+                        return; // اگر از قبل وجود دارد، کاری انجام نده
+                    }
+
+                    // خواندن لینک از data attribute
+                    const link = qrContainer.getAttribute('data-link');
+                    const subId = qrContainer.getAttribute('data-subid'); // برای لاگ
+
+                    if (link && link.trim() !== '') {
+                        try {
+                            // پاک کردن محتوای قبلی (مثل اسپینر لودینگ یا پیام خطا)
+                            qrContainer.innerHTML = '';
+
+                            // ایجاد QR Code جدید
+                            var qrcode = new QRCode(qrContainer, {
+                                text: link,        // لینک اشتراک
+                                width: 300,        // عرض QR Code به پیکسل
+                                height: 300,       // ارتفاع QR Code به پیکسل
+                                colorDark: "#000000", // رنگ اصلی کد
+                                colorLight: "#ffffff", // رنگ پس‌زمینه
+                                correctLevel: QRCode.CorrectLevel.M // سطح تصحیح خطا (H بالاترین و برای اسکن از صفحه بهتر است)
+                            });
+
+                            // --- افزودن قابلیت کپی با کلیک ---
+                            qrContainer.style.cursor = 'pointer';
+                            // حذف listener قبلی اگر وجود داشت (برای اطمینان)
+                            qrContainer.onclick = null;
+                            // اضافه کردن listener جدید
+                            qrContainer.onclick = function() {
+                                navigator.clipboard.writeText(link).then(function() {
+                                    // *** نمایش ALERT موفقیت آمیز ***
+                                    alert('لینک اتصال با موفقیت در کلیپ‌بورد کپی شد!');
+                                    // ******************************
+
+                                }, function(err) {
+                                    console.error('خطا در کپی لینک اتصال: ', err);
+                                    // *** نمایش ALERT خطا ***
+                                    alert('خطا در کپی لینک. لطفا بررسی کنید مرورگر شما اجازه دسترسی به کلیپ‌بورد را می‌دهد یا به صورت دستی لینک را از بخش مربوطه کپی کنید.');
+                                    // *************************
+                                });
+                            };
+                            // --- پایان قابلیت کپی با کلیک ---
+
+                        } catch (e) {
+                            console.error(`خطا در تولید QR Code برای اشتراک ${subId}:`, e);
+                            // نمایش پیام خطا در محفظه QR Code
+                            qrContainer.innerHTML = '<p class="text-danger small mt-2">خطا در نمایش QR Code</p>';
+                        }
+                    } else {
+                        // اگر لینک خالی یا ناموجود بود
+                        console.warn(`لینک اتصال برای QR Code اشتراک ${subId} یافت نشد یا خالی است.`);
+                        qrContainer.innerHTML = '<p class="text-muted small mt-2">لینک اتصال برای این اشتراک موجود نیست.</p>';
+                    }
+                });
+            });
+        });
+    </script>
+
     <!-- سفارشی کردن متن آکاردئون -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {

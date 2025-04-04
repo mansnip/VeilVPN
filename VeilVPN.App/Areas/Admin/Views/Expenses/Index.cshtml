@@ -1,0 +1,367 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@model IEnumerable<Domain.DTOs.Expense.ExpenseViewModel>
+@using Domain.DTOs.Expense; // برای دسترسی به EnumExtensions
+@using Domain.Entities; // برای دسترسی به Enum
+
+@{
+    ViewData["Title"] = "مدیریت هزینه‌ها";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">@ViewData["Title"]</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home" asp-area="Admin">داشبورد</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card" id="expenseList">
+            <div class="card-header border-0">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">لیست هزینه‌ها</h5>
+                    <div class="flex-shrink-0">
+                        <a asp-action="Create" class="btn btn-primary"><i class="ri-add-line align-bottom me-1"></i> افزودن هزینه جدید</a>
+                        @* دکمه‌های دیگر مثل Export و ... را می‌توانید اینجا اضافه کنید *@
+                    </div>
+                </div>
+            </div>
+            <div class="card-body border border-dashed border-end-0 border-start-0">
+                @* بخش فیلتر و جستجو *@
+                <form>
+                    <div class="row g-3">
+                        <div class="col-xxl-5 col-sm-6">
+                            <div class="search-box">
+                                <input type="text" class="form-control search" placeholder="جستجو در توضیحات، دسته‌بندی یا مبلغ...">
+                                <i class="ri-search-line search-icon"></i>
+                            </div>
+                        </div>
+                        @* سایر فیلترها (مثلا بر اساس تاریخ، دسته بندی، تناوب)
+                         <div class="col-xxl-2 col-sm-6">
+                             <input type="text" class="form-control" data-provider="flatpickr" data-date-format="Y/m/d" data-range-date="true" id="demo-datepicker" placeholder="انتخاب بازه تاریخ">
+                         </div>
+                         <div class="col-xxl-2 col-sm-4">
+                              <select class="form-control" data-choices data-choices-search-false name="choices-single-default" id="idStatus">
+                                   <option value="">دسته‌بندی</option>
+                                   <option value="all" selected>همه</option>
+                                   <option value="Host">هاست</option>
+                                   <option value="Server">سرور</option>
+                                   <option value="Traffic">ترافیک</option>
+                                </select>
+                         </div>
+                         <div class="col-xxl-1 col-sm-4">
+                             <button type="button" class="btn btn-primary w-100"> <i class="ri-equalizer-fill me-1 align-bottom"></i> فیلترها </button>
+                         </div>
+                         *@
+                    </div>
+                </form>
+            </div>
+            <div class="card-body pt-0">
+                <div>
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-info text-center mt-3" role="alert">
+                            هنوز هیچ هزینه‌ای ثبت نشده است. برای شروع <a asp-action="Create" class="alert-link">یک هزینه جدید اضافه کنید</a>.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive table-card mb-1">
+                            <table class="table table-nowrap align-middle" id="expensesTable">
+                                <thead class="text-muted table-light">
+                                    <tr class="text-uppercase">
+                                        @* ستون چک باکس برای عملیات گروهی (در صورت نیاز)
+                                        <th scope="col" style="width: 25px;">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                            </div>
+                                        </th>
+                                        *@
+                                        <th class="sort" data-sort="description">توضیحات</th>
+                                        <th class="sort" data-sort="category">دسته‌بندی</th>
+                                        <th class="sort" data-sort="amount">مبلغ</th>
+                                        <th class="sort" data-sort="frequency">تناوب</th>
+                                        <th class="sort" data-sort="expense_date">تاریخ هزینه</th>
+                                        <th>یادداشت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list form-check-all">
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            @*
+                                            <th scope="row">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="chk_child" value="@item.Id">
+                                                </div>
+                                            </th>
+                                             *@
+                                            <td class="description">@item.Description</td>
+                                            <td class="category">@item.Category</td>
+                                            <td class="amount" data-sort="@item.Amount">@item.Amount.ToString("N0") ریال</td> @* فرمت‌دهی مبلغ *@
+                                            <td class="frequency">@item.FrequencyDisplayName</td>
+                                            <td class="expense_date" data-sort="@item.ExpenseDate.ToString("o")">@item.ExpenseDate.ToString("yyyy/MM/dd")</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Notes))
+                                                {
+                                                    <span title="@item.Notes" data-bs-toggle="tooltip" data-bs-placement="top">
+                                                        <i class="ri-information-line text-muted"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span>-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <ul class="list-inline hstack gap-2 mb-0">
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="ویرایش">
+                                                        <a asp-action="Edit" asp-route-id="@item.Id" class="text-primary d-inline-block edit-item-btn">
+                                                            <i class="ri-pencil-fill fs-16"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="حذف">
+                                                        @*
+                                                            این لینک مودال حذف را باز می‌کند و data-expense-id آی‌دی هزینه را به جاوا اسکریپت می‌دهد
+                                                        *@
+                                                        <a href="#deleteExpenseModal" data-bs-toggle="modal" class="text-danger d-inline-block remove-item-btn" data-expense-id="@item.Id">
+                                                            <i class="ri-delete-bin-5-fill fs-16"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="noresult" style="display: none">
+                            <div class="text-center">
+                                <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                <h5 class="mt-2">متاسفانه، نتیجه‌ای یافت نشد</h5>
+                                <p class="text-muted mb-0">ما نتوانستیم هیچ هزینه‌ای مطابق با عبارت جستجوی شما پیدا کنیم.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <div class="pagination-wrap hstack gap-2">
+                                <a class="page-item pagination-prev disabled" href="#">
+                                    قبلی
+                                </a>
+                                <ul class="pagination listjs-pagination mb-0"></ul>
+                                <a class="page-item pagination-next" href="#">
+                                    بعدی
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Modal Delete Confirmation -->
+                        <div class="modal fade flip" id="deleteExpenseModal" tabindex="-1" aria-labelledby="deleteExpenseModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body p-5 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#405189,secondary:#f06548" style="width:90px;height:90px"></lord-icon>
+                                        <div class="mt-4 text-center">
+                                            <h4 id="deleteExpenseModalLabel">آیا از حذف این هزینه مطمئن هستید؟</h4>
+                                            <p class="text-muted fs-15 mb-4">حذف این هزینه به معنی پاک شدن دائمی آن از سیستم است و قابل بازگردانی نیست.</p>
+                                            <div class="hstack gap-2 justify-content-center remove">
+                                                <button class="btn btn-link link-success fw-medium text-decoration-none" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> انصراف</button>
+                                                <form asp-action="DeleteConfirmed" asp-controller="Expenses" asp-area="Admin" method="post" id="deleteExpenseForm" style="display:inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    @* آی‌دی هزینه برای ارسال به اکشن کنترلر در اینجا قرار می‌گیرد *@
+                                                    <input type="hidden" name="id" id="expenseIdToDelete" value="" />
+                                                    <button type="submit" class="btn btn-danger">بله، حذف کن</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end modal -->
+                    }
+                </div><!-- end .table-responsive or alert -->
+            </div> <!-- end card-body -->
+        </div> <!-- end card -->
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@section Scripts {
+    <!-- list.js-->
+    <script src="~/assets/libs/list.js/list.min.js"></script>
+    <script src="~/assets/libs/list.pagination.js/list.pagination.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    @* اگر از SweetAlert2 برای نمایش پیام‌ها استفاده می‌کنید، آن را اینجا اضافه کنید *@
+    @* <script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script> *@
+    @* <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" /> *@
+
+
+    <script>
+        $(document).ready(function () {
+
+            // --== List.js Initialization ==--
+            var expenseList; // Define it outside to access later if needed
+
+           if (document.getElementById("expensesTable")) { // مطمئن شوید ID جدول درست است
+            var tableElement = document.getElementById("expensesTable");
+            var listElement = tableElement.querySelector('tbody'); // List.js معمولا روی tbody کار می‌کند
+
+            // ===>>> اطمینان از وجود کلاس list روی tbody <<<===
+            if (listElement && !listElement.classList.contains('list')) {
+                 listElement.classList.add('list');
+            }
+
+
+            var options = {
+                // valueNames حالا هم نام کلاس را برای جستجو (اگر فعال باشد) و هم اتریبیوت data-sort را برای مرتب‌سازی مشخص می‌کند
+                valueNames: [
+                    'description', // فقط کلاس برای جستجو
+                    'category',    // فقط کلاس برای جستجو
+                    'frequency',   // فقط کلاس برای جستجو
+                    { name: 'amount', attr: 'data-sort' },       // نام کلاس amount، مرتب‌سازی با data-sort
+                    { name: 'expense_date', attr: 'data-sort' }  // نام کلاس expense_date، مرتب‌سازی با data-sort
+                    // ستون‌های عملیات و یادداشت را معمولا در valueNames نمی‌گذاریم چون قابل جستجو یا مرتب‌سازی نیستند
+                ],
+                page: 10,
+                pagination: true // فعال کردن صفحه‌بندی
+            };
+
+            // مقداردهی اولیه List.js
+            // ID کانتینر اصلی (معمولاً div دور table یا خود table)
+            // List.js به دنبال کلاسی به نام 'list' در داخل این کانتینر می‌گردد (که ما روی tbody گذاشتیم)
+            expenseList = new List('expenseList', options);
+
+             // مرتب‌سازی اولیه بر اساس تاریخ هزینه (نزولی)
+             if(expenseList.items.length > 0){
+                  // حالا باید بر اساس نامی که در valueNames تعریف کردید (expense_date) مرتب کند
+                  // و چون attr: 'data-sort' تعریف شده، از مقدار آن اتریبیوت استفاده خواهد کرد
+                  expenseList.sort('expense_date', { order: "desc" });
+             }
+
+             // ... بقیه کد آپدیت و مدیریت پیام "نتیجه‌ای یافت نشد" ...
+              expenseList.on('updated', function (list) {
+                    var noResult = list.matchingItems.length === 0 && list.items.length > 0;
+                    var tableVisible = list.items.length > 0;
+
+                    // اطمینان از انتخابگرهای صحیح
+                    var noResultElement = document.querySelector('.noresult'); // یا ID خاص اگر دارید
+                    var tableResponsiveElement = document.querySelector('.table-responsive'); // یا ID خاص اگر دارید
+                    var paginationWrapElement = document.querySelector('.pagination-wrap'); // یا ID خاص اگر دارید
+
+                    if (noResultElement) noResultElement.style.display = noResult ? 'block' : 'none';
+                    if (tableResponsiveElement) tableResponsiveElement.style.display = tableVisible ? 'block' : 'none';
+                    // نمایش صفحه بندی: اگر آیتم وجود دارد و تعداد آیتم‌های منطبق بیشتر از تعداد در هر صفحه است
+                    if (paginationWrapElement) paginationWrapElement.style.display = (list.matchingItems.length > list.page) ? 'block' : 'none';
+
+
+                    // اگر هیچ آیتمی در کل وجود ندارد
+                    if (list.items.length === 0) {
+                         if (tableResponsiveElement) tableResponsiveElement.style.display = 'none';
+                         if (paginationWrapElement) paginationWrapElement.style.display = 'none';
+                         if (noResultElement) noResultElement.style.display = 'none';
+                         // پیام "هیچ داده‌ای وجود ندارد" باید توسط Razor نمایش داده شود
+                    } else if(list.matchingItems.length > 0 && noResultElement) {
+                        noResultElement.style.display = 'none'; // اگر نتیجه پیدا شد، پیام "نتیجه‌ای یافت نشد" را مخفی کن
+                    }
+
+                    // راه اندازی مجدد tooltip ها
+                     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                         // Handle potential disposal if needed
+                         var existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                         if (existingTooltip) {
+                             existingTooltip.dispose();
+                         }
+                         return new bootstrap.Tooltip(tooltipTriggerEl);
+                     });
+                });
+
+        }
+
+            // --== Delete Modal Handler ==--
+            $('#deleteExpenseModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // دکمه‌ای که مودال را باز کرد (لینک حذف)
+                var expenseId = button.data('expense-id'); // گرفتن ID از data-expense-id
+
+                // آپدیت کردن مقدار input پنهان در فرم حذف
+                var modal = $(this);
+                modal.find('#expenseIdToDelete').val(expenseId);
+            });
+
+             // --== Tooltip Initialization ==--
+             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                 return new bootstrap.Tooltip(tooltipTriggerEl);
+             });
+
+        }); // End of document ready
+
+    </script>
+
+    @* نمایش پیام‌های TempData (موفقیت/خطا) *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            // استفاده از console.log برای تست اولیه
+            console.log("Success: @Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["SuccessMessage"]!.ToString()))");
+
+            // مثال با SweetAlert2 (اگر نصب و فعال شده باشد)
+            // Swal.fire({
+            //     title: 'موفقیت!',
+            //     text: '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["SuccessMessage"]!.ToString()))',
+            //     icon: 'success',
+            //     confirmButtonText: 'باشه',
+            //     customClass: {
+            //          confirmButton: 'btn btn-primary me-2', // کلاس‌های Velzon
+            //     },
+            //     buttonsStyling: false // برای استفاده از کلاس‌های خودتان
+            // });
+
+            // مثال با Toastr (اگر نصب و فعال شده باشد)
+            // toastr.success('@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["SuccessMessage"]!.ToString()))', 'موفقیت');
+
+        </script>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            // استفاده از console.error برای تست اولیه
+            console.error("Error: @Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["ErrorMessage"]!.ToString()))");
+
+            // مثال با SweetAlert2
+            // Swal.fire({
+            //     title: 'خطا!',
+            //     text: '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["ErrorMessage"]!.ToString()))',
+            //     icon: 'error',
+            //     confirmButtonText: 'باشه',
+            //      customClass: {
+            //          confirmButton: 'btn btn-primary me-2',
+            //      },
+            //      buttonsStyling: false
+            // });
+
+            // مثال با Toastr
+            // toastr.error('@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(TempData["ErrorMessage"]!.ToString()))', 'خطا');
+        </script>
+    }
+}
+
+

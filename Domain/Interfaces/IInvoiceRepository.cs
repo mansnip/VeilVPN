@@ -14,5 +14,6 @@ namespace Domain.Interfaces
         Task<List<Invoice>> GetUserInvoicesAsync(string userId);
         Task<Invoice> CreateAsync(Invoice invoice);
         Task<bool> UpdateAsync(Invoice invoice);
+        Task<List<Invoice>> GetAllInvoicesWithUserAsync();
     }
 }

@@ -15,6 +15,10 @@ namespace Application.Services.Interfaces
         Task<bool> IsExistUserByEmail(string email);
         Task<bool> IsExistUserById(string id);
 
+        // *** متد جدید برای چک کردن نقش کاربر ***
+        Task<bool> IsUserInRoleAsync(string userId, string roleName);
 
+        // *** متد جدید برای گرفتن کاربران با نقش خاص ***
+        Task<List<User>> GetUsersInRoleAsync(string roleName);
     }
 }

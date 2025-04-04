@@ -1,10 +1,4 @@
 ﻿using Domain.Entities.Account;
-using Domain.ViewModels.UserPanel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
@@ -21,6 +15,9 @@ namespace Domain.Entities
         public int DiscountPercent { get; set; }
         public decimal FinalPrice { get; set; }
         public string? RemarkName { get; set; }
+        public string? PaymentToken { get; set; } = Guid.NewGuid().ToString();
+        public bool IsComplate { get; set; }
+
 
         // فیلدهای جدید برای تمدید
         public bool IsRenewal { get; set; }
@@ -30,7 +27,7 @@ namespace Domain.Entities
         public string Status { get; set; } = "در انتظار پرداخت"; // مقادیر: "در انتظار پرداخت"، "پرداخت شده"، "لغو شده"
 
         public DateTime? PaidDate { get; set; }
-        public string? PaymentRefId { get; set; }
+        public long? PaymentRefId { get; set; }
 
         // Navigation properties
         public virtual User User { get; set; }

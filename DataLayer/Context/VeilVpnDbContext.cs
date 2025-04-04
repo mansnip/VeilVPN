@@ -2,13 +2,6 @@
 using Domain.Entities.Account;
 using Domain.Entities.VPN;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DataLayer.Context
 {
@@ -24,6 +17,8 @@ namespace DataLayer.Context
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<VPNServer> VPNServers { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+        public DbSet<Tutorial> Tutorials { get; set; } // اضافه کردن این خط
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -78,6 +73,33 @@ namespace DataLayer.Context
                 .WithMany()
                 .HasForeignKey(vs => vs.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                // رابطه با کاربر فرستنده
+                entity.HasOne(d => d.SenderUser) // فرض: پراپرتی ناوبری به نام SenderUser دارید
+                      .WithMany() // اگر در User پراپرتی Collection برای پیام‌های ارسالی ندارید
+                                  // .WithMany(p => p.SentMessages) // اگر پراپرتی Collection دارید
+                      .HasForeignKey(d => d.SenderUserId)
+                      .OnDelete(DeleteBehavior.Restrict); // <--- تغییر کلیدی: جلوگیری از Cascade
+
+                // رابطه با کاربر گیرنده
+                entity.HasOne(d => d.RecipientUser) // فرض: پراپرتی ناوبری به نام RecipientUser دارید
+                      .WithMany() // اگر در User پراپرتی Collection برای پیام‌های دریافتی ندارید
+                                  // .WithMany(p => p.ReceivedMessages) // اگر پراپرتی Collection دارید
+                      .HasForeignKey(d => d.RecipientUserId)
+                      .OnDelete(DeleteBehavior.Restrict); // <--- تغییر کلیدی: جلوگیری از Cascade
+
+                // رابطه برای ریپلای (که قبلاً احتمالاً تنظیم شده)
+                // اطمینان حاصل کنید که این هم Cascade نیست، معمولاً Restrict مناسب است
+                entity.HasOne(m => m.ReplyToMessage)
+                      .WithMany(m => m.Replies)
+                      .HasForeignKey(m => m.ReplyToMessageId)
+                      .OnDelete(DeleteBehavior.Restrict); // یا .SetNull بسته به نیاز
+
+                // سایر پیکربندی‌های احتمالی برای ChatMessage...
+                // entity.Property(e => e.SenderName).IsRequired(); // مثال
+            });
         }
 
     }

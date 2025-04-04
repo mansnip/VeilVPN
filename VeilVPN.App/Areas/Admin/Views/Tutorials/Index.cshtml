@@ -1,0 +1,128 @@
+﻿@model IEnumerable<Domain.ViewModels.UserPanel.Tutorials.TutorialGridViewModel>
+@{
+    ViewData["Title"] = "لیست آموزش‌ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">@ViewData["Title"]</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">آموزش‌ها</a></li>
+                    <li class="breadcrumb-item active">نمای شبکه</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row g-4 mb-3">
+    <div class="col-sm-auto">
+        <div>
+            @* --- دکمه افزودن جدید --- *@
+            <a asp-action="Create" asp-controller="Tutorials" class="btn btn-success"><i class="ri-add-line align-bottom me-1"></i>افزودن آموزش جدید</a>
+        </div>
+    </div>
+    <div class="col-sm">
+        @* --- بخش جستجو و فیلتر (نیازمند پیاده‌سازی بک‌اند) --- *@
+        <div class="d-flex justify-content-sm-end gap-2">
+            <div class="search-box ms-2">
+                <input type="text" class="form-control" placeholder="جستجو آموزش...">
+                <i class="ri-search-line search-icon"></i>
+            </div>
+
+            <select class="form-control w-md" data-choices data-choices-search-false>
+                <option value="All">همه دسته‌بندی‌ها</option>
+                @* می‌توانید دسته‌بندی‌ها را داینامیک لود کنید *@
+                <option value="Android">اندروید</option>
+                <option value="iOS">iOS</option>
+                <option value="Windows">ویندوز</option>
+                <option value="Other">سایر</option>
+            </select>
+        </div>
+        @* --- پایان بخش جستجو و فیلتر --- *@
+    </div>
+</div>
+
+<div class="row">
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                هیچ آموزشی برای نمایش یافت نشد.
+            </div>
+        </div>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col-xxl-3 col-lg-4 col-md-6">
+                @* ستون بندی را تنظیم کنید *@
+                <div class="card overflow-hidden blog-grid-card">
+                    <div class="position-relative overflow-hidden">
+                        <img src="@item.CoverImagePath" alt="@item.Title" class="blog-img object-fit-cover" style="height: 200px;"> @* ارتفاع ثابت برای عکس *@
+                        @if (!string.IsNullOrEmpty(item.Category))
+                        {
+                            <div class="bg-primary-subtle text-primary Svg-primary ribbon-box"><span class="ribbon-content">@item.Category</span></div>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fs-16"><a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id" class="text-reset">@item.Title</a></h5>
+                        <p class="text-muted mb-2 clamp-lines-3">@item.ShortDescription</p> @* نمایش 3 خط *@
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id" class="link link-primary text-decoration-underline link-offset-1">مشاهده آموزش<i class="ri-arrow-right-up-line"></i></a>
+                            @* می‌توانید دکمه‌های ویرایش و حذف را اینجا برای ادمین اضافه کنید *@
+                            @* <div class="fs-12 text-muted">
+                                        <i class="ri-calendar-event-line align-bottom me-1"></i> @item.CreatedAt.ToString("yyyy/MM/dd")
+                                    </div> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--end col-->
+        }
+    }
+</div><!--end row-->
+@* --- بخش صفحه‌بندی (نیازمند پیاده‌سازی بک‌اند با PagedList یا مشابه) --- *@
+@* <div class="row g-0 text-center text-sm-start align-items-center mb-4">
+            <div class="col-sm-6">
+                <div>
+                    <p class="mb-sm-0 text-muted"> در حال نمایش <span class="fw-semibold"> 1 </span> به <span class="fw-semibold"> @Model.Count() </span> از <span class="fw-semibold text-decoration-underline"> @Model.Count() </span> ورودی ها</p>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                     Pagination links here
+                </ul>
+            </div>
+        </div> *@
+@* --- پایان بخش صفحه‌بندی --- *@
+
+@section Styles {
+    <style>
+        .clamp-lines-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: calc(1.5em * 3); /* حداقل ارتفاع برای 3 خط */
+        }
+
+        .blog-img.object-fit-cover {
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
+    }
+
+
+

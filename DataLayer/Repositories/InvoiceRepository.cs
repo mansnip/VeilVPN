@@ -27,6 +27,15 @@ namespace DataLayer.Repositories
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
 
+        public async Task<List<Invoice>> GetAllInvoicesWithUserAsync()
+        {
+            return await _context.Invoices
+                                 .Include(i => i.User) // الحاق اطلاعات کاربر
+                                 .OrderByDescending(i => i.CreatedDate) // مرتب‌سازی بر اساس تاریخ (جدیدترین اول)
+                                 .AsNoTracking() // برای عملیات فقط خواندنی
+                                 .ToListAsync();
+        }
+
         public async Task<Invoice> GetByInvoiceNumberAsync(string invoiceNumber)
         {
             return await _context.Invoices

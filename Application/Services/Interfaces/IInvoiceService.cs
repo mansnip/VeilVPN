@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.ViewModels.Admin;
 using Domain.ViewModels.UserPanel;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,10 @@ namespace Application.Services.Interfaces
 
         // متد جدید
         Task<bool> UpdateInvoiceStatusAsync(string invoiceId, string newStatus);
+        Task<List<AdminInvoiceListViewModel>> GetAllInvoicesForAdminAsync();
+
+        Task<Invoice> GetOrginalInvoiceById(string id);
+        Task UpdateInvoice(Invoice invoice);
     }
 
 }

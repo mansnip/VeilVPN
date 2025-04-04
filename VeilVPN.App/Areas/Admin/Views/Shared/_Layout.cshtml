@@ -12,6 +12,8 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="~/assets/images/favicon.ico">
 
+    @await RenderSectionAsync("Styles", required: false)
+
     <!-- Layout config Js -->
     <script src="~/assets/js/layout.js"></script>
     <!-- Bootstrap Css -->
@@ -22,6 +24,7 @@
     <link href="~/assets/css/app-rtl.min.css" rel="stylesheet" type="text/css">
     <!-- custom Css-->
     <link href="~/assets/css/custom-rtl.min.css" rel="stylesheet" type="text/css">
+
 
 </head>
 
@@ -176,13 +179,13 @@
 
                                 <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item language py-2" data-lang="fa" title="Persian">
-                                    <img src="~/assets/images/flags/ir.svg" alt="تصویر کاربر" class="me-2 rounded" height="18">
+                                    <img src="/assets/images/flags/ir.svg" alt="فارسی" class="me-2 rounded" height="18">
                                     <span class="align-middle">فارسی</span>
                                 </a>
 
                                 <!-- item-->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item language py-2" data-lang="en" title="English">
-                                    <img src="~/assets/images/flags/us.svg" alt="تصویر کاربر" class="me-2 rounded" height="18">
+                                    <img src="~/assets/images/flags/us.svg" alt="انگلیسی" class="me-2 rounded" height="18">
                                     <span class="align-middle">انگلیسی</span>
                                 </a>
 
@@ -409,13 +412,7 @@
                             <div class="collapse menu-dropdown" id="sidebarSubscriptions">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/Admin/Plans/Index" class="nav-link" data-key="t-subscription-plans">طرح‌های اشتراک</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="~/Admin/Plans/Create" class="nav-link" data-key="t-create-plan">ایجاد طرح جدید</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="~/Admin/Subscriptions/Index" class="nav-link" data-key="t-active-subscriptions">اشتراک‌های فعال</a>
+                                        <a href="~/Admin/Subscription/Index" class="nav-link" data-key="t-subscription-plans">نمایش اشتراک ها</a>
                                     </li>
                                 </ul>
                             </div>
@@ -465,6 +462,7 @@
                         </li>
 
                         <!-- پشتیبانی -->
+                        
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarSupport" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSupport">
                                 <i class="ri-customer-service-2-line"></i> <span data-key="t-support">پشتیبانی کاربران</span>
@@ -472,27 +470,43 @@
                             <div class="collapse menu-dropdown" id="sidebarSupport">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/Admin/Tickets/Index" class="nav-link" data-key="t-all-tickets">همه تیکت‌ها</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="~/Admin/Tickets/Open" class="nav-link" data-key="t-open-tickets">تیکت‌های باز</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="~/Admin/Tickets/Closed" class="nav-link" data-key="t-closed-tickets">تیکت‌های بسته</a>
+                                        <a href="~/Admin/Chat/Index" class="nav-link" data-key="t-all-tickets">چت زنده</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
 
+                        <!-- راهنما -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarTutorials" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTutorials">
+                                <i class="ri-server-line"></i> <span data-key="t-servers">بخش آموزش ها</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarTutorials">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="~/Admin/Tutorials/Index" class="nav-link" data-key="t-add-Tutorials">آموزش ها</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Admin/Servers/Create" class="nav-link" data-key="t-add-Tutorials">ایجاد آموزش جدید</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="~/Admin/Tutorials/Index">
+                                <i class="ri-question-line"></i> <span data-key="t-help">آموزش ها</span>
+                            </a>
+                        </li>
+
                         <!-- گزارشات -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarReports" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarReports">
-                                <i class="ri-bar-chart-line"></i> <span data-key="t-reports">گزارشات</span>
+                                <i class="ri-bar-chart-line"></i> <span data-key="t-reports">گزارشات و هزینه ها</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarReports">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/Admin/Reports/Sales" class="nav-link" data-key="t-sales-reports">گزارش فروش</a>
+                                        <a href="~/Admin/Expenses/Index" class="nav-link" data-key="t-sales-reports">هزینه ها</a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="~/Admin/Reports/Usage" class="nav-link" data-key="t-usage-reports">گزارش مصرف</a>
@@ -576,7 +590,7 @@
             </footer>
         </div>
         <!-- end main content-->
-
+        @await RenderSectionAsync("chat", required: false)
     </div>
     <!-- END layout-wrapper -->
     <!--start back-to-top-->

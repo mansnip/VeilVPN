@@ -1,0 +1,253 @@
+﻿@model Domain.ViewModels.UserPanel.Tutorials.TutorialDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">جزئیات آموزش</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Tutorials">آموزش‌ها</a></li>
+                    <li class="breadcrumb-item active">@Model.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row justify-content-center">
+    <div class="col-xxl-10">
+        @* می‌توانید عرض محتوا را تنظیم کنید *@
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    @if (!string.IsNullOrEmpty(Model.Category))
+                    {
+                        <p class="text-primary text-uppercase fw-medium mb-2">@Model.Category</p>
+                    }
+                    <h3 class="mb-3">@Model.Title</h3>
+                    @if (Model.Tags.Any())
+                    {
+                        <div class="d-flex align-items-center justify-content-center flex-wrap gap-2 mb-3">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <span class="badge bg-info-subtle text-info"><i class="ri-price-tag-3-line align-middle me-1"></i>@tag</span>
+                            }
+                        </div>
+                    }
+                    <p class="text-muted mb-4">
+                        <i class="ri-calendar-line align-middle me-1"></i> تاریخ انتشار: @Model.CreatedAt.ToPersianDate()
+                        @* در صورت نیاز می‌توانید اطلاعات بیشتری مثل نام نویسنده را اینجا اضافه کنید *@
+                    </p>
+                </div>
+
+                @* نمایش تصویر کاور اصلی *@
+                @if (!string.IsNullOrEmpty(Model.CoverImagePath) && !Model.CoverImagePath.Contains("placeholder"))
+                {
+                    <div class="mb-4 text-center">
+                        <img src="@Model.CoverImagePath" alt="کاور آموزش @Model.Title" class="img-fluid rounded" style="max-height: 400px;">
+                    </div>
+                }
+
+                @* نمایش محتوای HTML از ویرایشگر *@
+                <div class="tutorial-content ck-content mb-4">
+                    @* کلاس ck-content برای استایل‌دهی بهتر محتوای CKEditor *@
+                    @Html.Raw(Model.Content)
+                </div>
+
+                @* بخش لینک‌های دانلود *@
+                @if (Model.DownloadLinks.Any())
+                {
+                    <hr class="my-4 border-top-dashed">
+                    <h5 class="fw-semibold mb-3"><i class="ri-download-cloud-2-line align-middle me-1"></i> لینک‌های دانلود</h5>
+                    <div class="d-flex flex-wrap gap-3">
+                        @* gap-3 برای فاصله بیشتر *@
+                        @foreach (var link in Model.DownloadLinks)
+                        {
+                            <a href="@link.Url" target="_blank" rel="noopener noreferrer" class="btn btn-success">
+                                @* رنگ دکمه را می‌توانید تغییر دهید *@
+                                <i class="ri-download-2-fill align-middle me-1"></i> @link.Text
+                            </a>
+                        }
+                    </div>
+                }
+                @* --- پایان بخش لینک‌های دانلود --- *@
+
+
+            </div><!--end card-body-->
+        </div><!--end card-->
+
+        @* دکمه بازگشت یا ویرایش (اختیاری) *@
+        <div class="text-center mb-4">
+            <a asp-action="Index" asp-controller="Tutorials" class="btn btn-outline-secondary">
+                <i class="ri-arrow-left-line align-bottom me-1"></i> بازگشت به لیست آموزش‌ها
+            </a>
+            @* --- دکمه ویرایش (فقط برای ادمین) --- *@
+            @*
+             @if (User.IsInRole("Admin")) // چک کردن نقش کاربر
+             {
+                <a asp-action="Edit" asp-controller="Tutorials" asp-route-id="@Model.Id" class="btn btn-outline-warning ms-2">
+                    <i class="ri-pencil-line align-bottom me-1"></i> ویرایش آموزش
+                </a>
+             }
+             *@
+            @* --- پایان دکمه ویرایش --- *@
+        </div>
+
+    </div><!--end col-->
+</div><!--end row-->
+@section Styles {
+@*
+        استایل‌های زیر برای بهبود نمایش محتوایی که از CKEditor می‌آید، مناسب است.
+        می‌توانید این استایل‌ها را در فایل CSS اصلی خود یا در همین بخش قرار دهید.
+        *@
+    <style>
+        .tutorial-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: block; /* برای جلوگیری از فضای اضافه زیر عکس */
+            margin-left: auto;
+            margin-right: auto; /* مرکز کردن عکس */
+        }
+
+        .tutorial-content h1,
+        .tutorial-content h2,
+        .tutorial-content h3,
+        .tutorial-content h4,
+        .tutorial-content h5,
+        .tutorial-content h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .tutorial-content h1 {
+            font-size: 2em;
+        }
+
+        .tutorial-content h2 {
+            font-size: 1.75em;
+        }
+
+        .tutorial-content h3 {
+            font-size: 1.5em;
+        }
+
+        .tutorial-content h4 {
+            font-size: 1.25em;
+        }
+
+        .tutorial-content p {
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            text-align: justify; /* برای متن‌های فارسی */
+        }
+
+        .tutorial-content ul,
+        .tutorial-content ol {
+            padding-right: 2rem; /* برای زبان فارسی */
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .tutorial-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .tutorial-content code:not(pre code) { /* کد داخل خط */
+            background-color: rgba(var(--vz-primary-rgb), 0.1); /* استفاده از متغیر رنگ قالب */
+            color: var(--vz-primary);
+            padding: 0.2em 0.5em;
+            border-radius: 4px;
+            font-size: 0.875em;
+            direction: ltr; /* کدها معمولا چپ‌چین هستند */
+            display: inline-block; /* برای نمایش بهتر */
+        }
+
+        .tutorial-content pre { /* بلوک کد */
+            background-color: var(--vz-light); /* رنگ پس‌زمینه روشن */
+            border: 1px solid var(--vz-border-color);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto; /* اسکرول افقی برای کدهای طولانی */
+            margin-bottom: 1.2rem;
+            direction: ltr; /* کدها چپ‌چین هستند */
+            font-family: 'Courier New', Courier, monospace; /* فونت مناسب کد */
+        }
+
+            .tutorial-content pre code {
+                background-color: transparent !important; /* حذف پس‌زمینه پیش‌فرض کد داخل pre */
+                padding: 0;
+                font-size: inherit;
+                color: var(--vz-dark); /* رنگ متن کد */
+            }
+
+        .tutorial-content blockquote {
+            border-right: 4px solid var(--vz-primary); /* خط کنار نقل‌قول */
+            padding-right: 1.5rem;
+            margin-right: 0;
+            margin-bottom: 1.2rem;
+            color: var(--vz-secondary-color); /* رنگ متن نقل‌قول */
+            font-style: italic;
+        }
+
+            .tutorial-content blockquote p {
+                margin-bottom: 0; /* حذف فاصله پایین پاراگراف داخل نقل قول */
+            }
+
+        .tutorial-content table {
+            width: 100%;
+            margin-bottom: 1.2rem;
+            color: var(--vz-body-color);
+            border-collapse: collapse;
+            border: 1px solid var(--vz-border-color);
+        }
+
+        .tutorial-content th,
+        .tutorial-content td {
+            padding: 0.8rem 1rem;
+            vertical-align: top;
+            border: 1px solid var(--vz-border-color);
+        }
+
+        .tutorial-content thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid var(--vz-border-color);
+            background-color: var(--vz-light);
+            font-weight: 600;
+        }
+
+        .tutorial-content a {
+            color: var(--vz-link-color);
+            text-decoration: underline;
+        }
+
+            .tutorial-content a:hover {
+                color: var(--vz-link-hover-color);
+            }
+    </style>
+}
+
+@section Scripts {
+@* اسکریپت‌های خاص این صفحه *@
+@*
+        اگر از کتابخانه‌های Syntax Highlighting مثل highlight.js یا Prism.js استفاده می‌کنید،
+        اسکریپت‌های آن را اینجا فراخوانی کنید تا بلوک‌های کد <pre><code> در محتوا رنگی شوند.
+        مثال با highlight.js:
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        *@
+}
+
+
+

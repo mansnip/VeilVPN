@@ -4,6 +4,8 @@ using Application.Services.Interfaces;
 using Domain.Interfaces;
 using Application.API;
 using VeilVPN.App.Controllers;
+using Application.Services.Implementations;
+using Domain.Entities.Account;
 
 namespace VeilVPN.App.Areas.Admin.Controllers
 {
@@ -16,19 +18,23 @@ namespace VeilVPN.App.Areas.Admin.Controllers
         private readonly IServerVPNService _serverVPNService;
         private readonly ApiManager _apiManager;
         private readonly ILogger<SubscriptionController> _logger;
+        private readonly ISubscriptionService _subscriptionService;
+
 
         public SubscriptionController(
             ISubscriptionRepository subscriptionRepository,
             IUserRepository userRepository,
             IServerVPNService serverVPNService,
             ApiManager apiManager,
-            ILogger<SubscriptionController> logger)
+            ILogger<SubscriptionController> logger,
+            ISubscriptionService subscriptionService)
         {
             _subscriptionRepository = subscriptionRepository;
             _userRepository = userRepository;
             _serverVPNService = serverVPNService;
             _apiManager = apiManager;
             _logger = logger;
+            _subscriptionService = subscriptionService;
         }
 
         public async Task<IActionResult> Index()
@@ -41,16 +47,21 @@ namespace VeilVPN.App.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
+                // از متد RedirectWithError یا معادل آن استفاده کنید
                 return this.RedirectWithError("شناسه اشتراک نامعتبر است", nameof(Index));
             }
 
-            var subscription = await _subscriptionRepository.GetSubscriptionWithUserAndServerAsync(id);
-            if (subscription == null)
+            // فراخوانی متد سرویس جدید
+            var viewModel = await _subscriptionService.GetSubscriptionDetailsForAdminAsync(id);
+
+            if (viewModel == null)
             {
-                return this.RedirectWithError("اشتراک مورد نظر یافت نشد", nameof(Index));
+                // مدیریت حالتی که اشتراک یافت نشد یا خطای API رخ داد
+                return this.RedirectWithError("شناسه اشتراک نامعتبر است", nameof(Index));
             }
 
-            return View(subscription);
+            // ارسال ViewModel به View
+            return View(viewModel);
         }
 
         [HttpPost]

@@ -59,12 +59,29 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-sm-10">
                     <div class="text-center mt-lg-5 pt-5">
-                        <h1 class="display-6 fw-semibold mb-3 lh-base">راه بهتر برای امنیت و آزادی آنلاین با <span class="text-success">RahaGozar</span></h1>
-                        <p class="lead text-muted lh-base">RahaGozar یک سرویس VPN پرسرعت، امن و قابل اعتماد است که به شما امکان دسترسی به اینترنت بدون محدودیت و با حریم خصوصی کامل را می‌دهد. با RahaGozar، از هر جای دنیا به محتوای مورد علاقه‌ات دسترسی داشته باش و اطلاعاتت را از دسترسی‌های ناخواسته محافظت کن.</p>
+                        <h1 class="display-6 fw-semibold mb-3 lh-base">
+                            اینترنت آزاد، امن و پرسرعت با <span class="text-success">RahaGozar</span>
+                            <br>
+                            <span class="text-primary">اشتراک VPN خود را بسازید!</span>
+                        </h1>
+                        <p class="lead text-muted lh-lg px-lg-5">
+                            با RahaGozar محدودیت‌ها را کنار بزنید و با خیالی آسوده وب‌گردی کنید. سرویس VPN ما با رمزنگاری قوی، سرعت بالا و قابلیت تنظیم اشتراک، تجربه‌ای بی‌نظیر از اینترنت را برای شما رقم می‌زند.
+                        </p>
 
-                        <div class="d-flex gap-2 justify-content-center mt-4">
-                            <a href="/authentication/signup" class="btn btn-primary" title="شروع استفاده از RahaGozar">شروع کنید<i class="ri-arrow-left-line align-middle ms-1"></i></a>
-                            <a href="#plans" class="btn btn-danger" title="مشاهده طرح‌های اشتراک">مشاهده پلان‌ها<i class="ri-eye-line align-middle ms-1"></i></a>
+                        <div class="d-flex gap-2 justify-content-center mt-4 pt-2">
+                            @* لینک ثبت نام اگر کاربر لاگین نیست *@
+                            @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                            {
+                                <a href="@Url.Action("SignUp", "Authentication", new {area =""})" class="btn btn-primary" title="ایجاد حساب کاربری و شروع استفاده">
+                                    <i class="ri-user-add-line align-middle me-1"></i> ثبت‌نام و شروع
+                                </a>
+                            }
+                            <a href="#plans" class="btn btn-outline-success" title="ساخت اشتراک VPN دلخواه">
+                                <i class="ri-tools-line align-middle me-1"></i> ساخت اشتراک دلخواه
+                            </a>
+                            <a href="#features" class="btn btn-link text-secondary" title="آشنایی با ویژگی‌های RahaGozar">
+                                آشنایی با ویژگی‌ها <i class="ri-arrow-left-line align-middle"></i>
+                            </a>
                         </div>
                     </div>
 
@@ -120,183 +137,109 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
-                        <h1 class="mb-3 ff-secondary fw-semibold lh-base">یک سرویس VPN پیشرفته که امنیت و آزادی آنلاین را برای شما فراهم می‌کند</h1>
-                        <p class="text-muted">با RahaGozar، از اینترنت بدون محدودیت و با حریم خصوصی کامل لذت ببرید. ما با استفاده از فناوری‌های پیشرفته، اتصالی سریع و امن را برای شما تضمین می‌کنیم.</p>
+                        <h2 class="mb-3 fw-semibold lh-base">چرا RahaGozar بهترین انتخاب برای شماست؟</h2>
+                        <p class="text-muted">ما مجموعه‌ای از خدمات و ویژگی‌ها را گرد هم آورده‌ایم تا مطمئن شویم شما بهترین، امن‌ترین و سریع‌ترین اتصال VPN را تجربه می‌کنید.</p>
                     </div>
                 </div>
                 <!-- end col -->
             </div>
             <!-- end row -->
 
-            <div class="row g-3">
-                <div class="col-lg-4">
+            <div class="row g-4">
+                @* افزایش فاصله بین کارت‌ها با g-4 *@
+                <div class="col-lg-4 col-md-6">
+                    @* بهبود ریسپانسیو برای تبلت *@
                     <div class="d-flex p-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="avatar-sm icon-effect">
                                 <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-pencil-ruler-2-line fs-36"></i>
+                                    <i class="ri-rocket-line fs-36"></i> @* آیکن مرتبط با سرعت *@
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-18">سرعت بالا و عدم افت کیفیت</h5>
-                            <p class="text-muted my-3 ff-secondary">با RahaGozar، از سرعت بالا لذت ببرید. ما اتصالی سریع و پایدار را برای شما تضمین می‌کنیم.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
+                            <h5 class="fs-17">سرعت فوق‌العاده بالا</h5>
+                            <p class="text-muted my-3 ff-secondary">با سرورهای بهینه‌سازی شده ما، وب‌گردی، استریم و دانلود را بدون هیچ‌گونه افت سرعتی تجربه کنید.</p>
                         </div>
                     </div>
                 </div>
                 <!-- end col -->
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="d-flex p-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="avatar-sm icon-effect">
                                 <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-palette-line fs-36"></i>
+                                    <i class="ri-shield-check-line fs-36"></i> @* آیکن مرتبط با امنیت *@
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-18">فناوری پیشرفته و امن</h5>
-                            <p class="text-muted my-3 ff-secondary">RahaGozar از آخرین فناوری‌های امنیتی استفاده می‌کند تا اتصالی سریع، پایدار و بدون نفوذ را برای شما فراهم کند.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
+                            <h5 class="fs-17">امنیت و رمزنگاری قوی</h5>
+                            <p class="text-muted my-3 ff-secondary">با استفاده از پروتکل‌های امنیتی پیشرفته و رمزنگاری AES-256، اطلاعات شما همیشه محفوظ خواهد ماند.</p>
                         </div>
                     </div>
                 </div>
                 <!-- end col -->
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="d-flex p-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="avatar-sm icon-effect">
                                 <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-lightbulb-flash-line fs-36"></i>
+                                    <i class="ri-earth-line fs-36"></i> @* آیکن مرتبط با دسترسی جهانی *@
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-18">گارانتی بازگشت وجه</h5>
-                            <p class="text-muted my-3 ff-secondary">با خیال راحت خرید کنید! اگر از RahaGozar راضی نبودید، امکان بازگشت وجه وجود دارد.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
+                            <h5 class="fs-17">عبور از محدودیت‌ها</h5>
+                            <p class="text-muted my-3 ff-secondary">به راحتی به وب‌سایت‌ها، سرویس‌ها و محتوای مورد علاقه خود در سراسر جهان دسترسی پیدا کنید.</p>
                         </div>
                     </div>
                 </div>
                 <!-- end col -->
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="d-flex p-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="avatar-sm icon-effect">
                                 <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-customer-service-line fs-36"></i>
+                                    <i class="ri-tools-line fs-36"></i> @* آیکن مرتبط با سفارشی‌سازی *@
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-18">همه‌جا، سریع‌ترین و با پشتیبانی عالی</h5>
-                            <p class="text-muted my-3 ff-secondary">RahaGozar با سرعت بالا و پشتیبانی 24/7، ما همیشه کنار شما هستیم تا بهترین تجربه را برایتان فراهم کنیم.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
+                            <h5 class="fs-17">اشتراک انعطاف‌پذیر و دلخواه</h5>
+                            <p class="text-muted my-3 ff-secondary">طرح اشتراک خود را دقیقاً مطابق با نیازتان بسازید! مدت زمان و حجم ترافیک را خودتان انتخاب کنید.</p>
                         </div>
                     </div>
                 </div>
                 <!-- end col -->
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="d-flex p-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="avatar-sm icon-effect">
                                 <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-stack-line fs-36"></i>
+                                    <i class="ri-customer-service-2-line fs-36"></i> @* آیکن مرتبط با پشتیبانی *@
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-18">پروتکل‌های امنیتی پیشرفته</h5>
-                            <p class="text-muted my-3 ff-secondary">RahaGozar از پروتکل‌های امنیتی پیشرفته مانند SSL استفاده می‌کند تا اتصالی امن و بدون نفوذ را برای شما تضمین کند.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
+                            <h5 class="fs-17">پشتیبانی ۲۴/۷ فارسی</h5>
+                            <p class="text-muted my-3 ff-secondary">تیم پشتیبانی متخصص ما در تمام ساعات شبانه‌روز آماده پاسخگویی به سوالات و رفع مشکلات شماست.</p>
                         </div>
                     </div>
                 </div>
                 <!-- end col -->
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="d-flex p-3">
                         <div class="flex-shrink-0 me-3">
                             <div class="avatar-sm icon-effect">
                                 <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-settings-2-line fs-36"></i>
+                                    <i class="ri-refund-2-line fs-36"></i> @* آیکن مرتبط با گارانتی *@
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-18">سازگار با تمام دستگاه‌ها</h5>
-                            <p class="text-muted my-3 ff-secondary">RahaGozar روی همه‌ی دستگاه‌ها کار می‌کند! از کامپیوتر تا موبایل، امنیت و آزادی آنلاین را تجربه کنید.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
-
-                <div class="col-lg-4">
-                    <div class="d-flex p-3">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="avatar-sm icon-effect">
-                                <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-slideshow-line fs-36"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="fs-18">متخصصان امنیت سایبری</h5>
-                            <p class="text-muted my-3 ff-secondary">تیم ما از متخصصان امنیت سایبری تشکیل شده تا بهترین راه‌حل‌های امنیتی را برای شما فراهم کند.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
-                <div class="col-lg-4">
-                    <div class="d-flex p-3">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="avatar-sm icon-effect">
-                                <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-google-fill fs-36"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="fs-18">طیف وسیعی از سرورهای جهانی</h5>
-                            <p class="text-muted my-3 ff-secondary">با RahaGozar، به سرورهای پرسرعت در سراسر جهان دسترسی داشته باشید و بدون محدودیت به اینترنت متصل شوید.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
-                <div class="col-lg-4">
-                    <div class="d-flex p-3">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="avatar-sm icon-effect">
-                                <div class="avatar-title bg-transparent text-success rounded-circle">
-                                    <i class="ri-briefcase-5-line fs-36"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="fs-18">آپتایم بالا و بدون قطعی</h5>
-                            <p class="text-muted my-3 ff-secondary">RahaGozar با آپتایم 99.9%، اتصالی پایدار و بدون قطعی را برای شما تضمین می‌کند.</p>
-                            <div>
-                                <a href="#" class="fs-13 fw-medium">بیشتر بدانید<i class="ri-arrow-right-s-line align-bottom"></i></a>
-                            </div>
+                            <h5 class="fs-17">گارانتی بازگشت وجه</h5>
+                            <p class="text-muted my-3 ff-secondary">با اطمینان خرید کنید. در صورت عدم رضایت طی ۷ روز اول، تمام وجه پرداختی شما بازگردانده می‌شود.</p>
                         </div>
                     </div>
                 </div>
@@ -323,26 +266,26 @@
                                 <i class="ri-shield-keyhole-line fs-36"></i>
                             </div>
                         </div>
-                        <h3 class="mb-3 fs-20">امنیت و حریم خصوصی بی‌نظیر</h3>
-                        <p class="mb-4 ff-secondary fs-16">با RahaGozar، از اینترنت بدون محدودیت و با حریم خصوصی کامل لذت ببرید. ما با استفاده از فناوری‌های پیشرفته، اتصالی سریع و امن را برای شما تضمین می‌کنیم.</p>
+                        <h3 class="mb-3 fs-22">حریم خصوصی شما، اولویت ماست</h3>
+                        <p class="mb-4 ff-secondary fs-16">ما هیچ‌گونه گزارشی از فعالیت‌های آنلاین شما ذخیره نمی‌کنیم (No-Log Policy). با RahaGozar، هویت و اطلاعات شما کاملاً ناشناس و امن باقی می‌ماند.</p>
 
                         <div class="row pt-3">
                             <div class="col-3">
                                 <div class="text-center">
                                     <h4>50+</h4>
-                                    <p>سرورها</p>
+                                    <p>سرور در لوکیشن‌های کلیدی</p>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="text-center">
                                     <h4>99.9%</h4>
-                                    <p>آپتایم</p>
+                                    <p>آپتایم و پایداری</p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="text-center">
                                     <h4>24/7</h4>
-                                    <p>پشتیبانی</p>
+                                    <p>پشتیبانی آنلاین</p>
                                 </div>
                             </div>
                         </div>
@@ -362,13 +305,13 @@
             <div class="row align-items-center gy-4">
                 <div class="col-sm">
                     <div>
-                        <h4 class="text-white mb-0 fw-semibold">امنیت و آزادی آنلاین را با RahaGozar تجربه کنید</h4>
+                        <h4 class="text-white mb-0 fw-semibold">آماده‌اید دنیای بدون مرز اینترنت را تجربه کنید؟</h4>
                     </div>
                 </div>
                 <!-- end col -->
                 <div class="col-sm-auto">
                     <div>
-                        <a href="#plans" class="btn bg-gradient btn-danger"><i class="ri-shield-keyhole-line align-middle me-1"></i>همین حالا شروع کنید</a>
+                        <a href="#plans" class="btn bg-gradient btn-danger"><i class="ri-rocket-line align-middle me-1"></i>همین حالا اشتراک خود را بسازید!</a>
                     </div>
                 </div>
                 <!-- end col -->
@@ -384,9 +327,9 @@
             <div class="row align-items-center gy-4">
                 <div class="col-lg-6 order-2 order-lg-1">
                     <div class="text-muted">
-                        <h5 class="fs-12 text-uppercase text-success">Cross Platform</h5>
-                        <h4 class="mb-3">طراحی چندپلتفرمی و سازگار با همه دستگاه‌ها</h4>
-                        <p class="mb-4 ff-secondary">RahaGozar به‌گونه‌ای طراحی شده که روی تمام دستگاه‌ها و سیستم‌عامل‌ها کار می‌کند. از ویندوز و مک گرفته تا اندروید و iOS، شما می‌تونید در هر دستگاهی از امنیت و آزادی آنلاین لذت ببرید.</p>
+                        <h5 class="fs-12 text-uppercase text-success">سازگاری کامل</h5>
+                        <h3 class="mb-3 fs-22">یک اشتراک، برای تمام دستگاه‌های شما</h3>
+                        <p class="mb-4 ff-secondary">با یک حساب کاربری RahaGozar، می‌توانید روی تمامی دستگاه‌های خود از جمله ویندوز، مک، اندروید، iOS و لینوکس به صورت همزمان متصل شوید و از اینترنت امن لذت ببرید.</p>
 
                         <div class="row">
                             <div class="col-sm-5">
@@ -394,9 +337,7 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
                                             <div class="avatar-xs icon-effect">
-                                                <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                                    <i class="ri-check-fill"></i>
-                                                </div>
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
@@ -406,9 +347,7 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
                                             <div class="avatar-xs icon-effect">
-                                                <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                                    <i class="ri-check-fill"></i>
-                                                </div>
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
@@ -418,25 +357,22 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
                                             <div class="avatar-xs icon-effect">
-                                                <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                                    <i class="ri-check-fill"></i>
-                                                </div>
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h5 class="fs-14 mb-0">Mac</h5>
+                                            <h5 class="fs-14 mb-0">Mac OS</h5>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-5">
+                                @* ستون دوم برای پلتفرم‌ها *@
                                 <div class="vstack gap-2">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
                                             <div class="avatar-xs icon-effect">
-                                                <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                                    <i class="ri-check-fill"></i>
-                                                </div>
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
@@ -446,24 +382,33 @@
                                     <div class="d-flex align-items-center">
                                         <div class="flex-shrink-0 me-2">
                                             <div class="avatar-xs icon-effect">
-                                                <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                                    <i class="ri-check-fill"></i>
-                                                </div>
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h5 class="fs-14 mb-0">IOS</h5>
+                                            <h5 class="fs-14 mb-0">iOS</h5>
                                         </div>
                                     </div>
+                                    @* <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">روترها (به زودی)</h5>
+                                        </div>
+                                    </div> *@
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-4">
-                            <a href="index.html" class="btn btn-primary">بیشتر بدانید<i class="ri-arrow-left-line align-middle ms-1"></i></a>
-                        </div>
+                        @* دکمه "بیشتر بدانید" که می‌تواند به صفحه راهنما یا دانلود اپ‌ها لینک شود *@
+                        @* <div class="mt-4">
+                            <a href="/downloads" class="btn btn-primary">دانلود اپلیکیشن‌ها <i class="ri-download-2-line align-middle ms-1"></i></a>
+                         </div> *@
                     </div>
-                </div>
+                </div><!-- end col -->
                 <!-- end col -->
                 <div class="col-lg-6 col-sm-7 col-10 ms-auto order-1 order-lg-2">
                     <div>
@@ -481,47 +426,54 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="text-muted ps-lg-5">
-                        <h5 class="fs-12 text-uppercase text-success">پلن‌ها</h5>
-                        <h4 class="mb-3">پلن‌های متنوع و انعطاف‌پذیر</h4>
-                        <p class="mb-4">RahaGozar پلن‌های متنوعی را برای نیازهای مختلف شما ارائه می‌دهد. چه برای استفاده شخصی و چه برای کسب‌وکار، می‌توانید پلنی را انتخاب کنید که بهترین تناسب را با نیازهایتان دارد.</p>
+                        <h5 class="fs-12 text-uppercase text-success">انعطاف‌پذیری بی‌نظیر</h5>
+                        <h3 class="mb-3 fs-22">کنترل کامل بر اشتراک VPN شما</h3>
+                        <p class="mb-4 ff-secondary fs-16">دیگر نیازی به انتخاب پلن‌های از پیش تعریف شده نیست! با RahaGozar، شما تصمیم می‌گیرید چه مدت و با چه حجمی از سرویس استفاده کنید. اشتراک خود را دقیقاً متناسب با نیاز و بودجه‌تان بسازید.</p>
 
                         <div class="vstack gap-2">
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0 me-2">
                                     <div class="avatar-xs icon-effect">
-                                        <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                            <i class="ri-check-fill"></i>
-                                        </div>
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <p class="mb-0">پلن‌های ماهانه، سه‌ماهه و سالانه</p>
+                                    <p class="mb-0">انتخاب مدت زمان دلخواه (۱ ماهه تا ۱ ساله)</p>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0 me-2">
                                     <div class="avatar-xs icon-effect">
-                                        <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                            <i class="ri-check-fill"></i>
-                                        </div>
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <p class="mb-0">پشتیبانی از کاربران شخصی و سازمان‌ها</p>
+                                    <p class="mb-0">انتخاب حجم ترافیک از محدود تا نامحدود</p>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0 me-2">
                                     <div class="avatar-xs icon-effect">
-                                        <div class="avatar-title bg-transparent text-success rounded-circle h2">
-                                            <i class="ri-check-fill"></i>
-                                        </div>
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <p class="mb-0">قیمت‌های مناسب و رقابتی</p>
+                                    <p class="mb-0">شروع قیمت از <span class="fw-semibold text-success">۴۸,۰۰۰ تومان</span></p>
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                    <div class="avatar-xs icon-effect">
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0">فعالسازی آنی پس از پرداخت</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#plans" class="btn btn-primary">ساخت اشتراک دلخواه <i class="ri-tools-line align-middle ms-1"></i></a>
                         </div>
                     </div>
                 </div>
@@ -532,289 +484,236 @@
         <!-- end container -->
     </section>
     <!-- end features -->
-    <!-- start plan -->
+    <!-- start plan / Interactive Calculator -->
     <section class="section bg-light" id="plans">
         <div class="bg-overlay bg-overlay-pattern"></div>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
-                        <h3 class="mb-3 fw-semibold">طرحی را انتخاب کنید که برای شما مناسب است</h3>
-                        <p class="text-muted mb-4">قیمت‌گذاری ساده بدون هزینه‌های پنهان. ویژگی‌های پیشرفته برای نیازهای شما.</p>
-
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div>
-                                <h5 class="fs-14 mb-0">ماه</h5>
-                            </div>
-                            <div class="form-check form-switch fs-20 ms-3 " onclick="check()">
-                                <input class="form-check-input" type="checkbox" id="plan-switch">
-                                <label class="form-check-label" for="plan-switch"></label>
-                            </div>
-                            <div>
-                                <h5 class="fs-14 mb-0">سالانه<span class="badge bg-success-subtle text-success">20% صرفه‌جویی کنید</span></h5>
-                            </div>
-                        </div>
+                        @* عنوان اصلی بخش محاسبه‌گر *@
+                        <h2 class="mb-3 fw-semibold lh-base">اشتراک VPN سفارشی خود را بسازید!</h2>
+                        @* توضیحات برای راهنمایی کاربر *@
+                        <p class="text-muted mb-4">
+                            با استفاده از اسلایدرهای زیر، حجم ترافیک و مدت زمان اعتبار مورد نیاز خود را مشخص کنید. قیمت اشتراک به صورت خودکار محاسبه و نمایش داده می‌شود.
+                            با افزایش مدت زمان، از تخفیف‌های پلکانی بهره‌مند شوید!
+                        </p>
                     </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
+                </div><!-- end col -->
+            </div><!-- end row -->
 
-            <div class="row gy-4">
-                <!-- پلن پایه (یک ماهه) -->
-                <div class="col-lg-4">
-                    <div class="card plan-box mb-0">
-                        <div class="card-body p-4 m-2">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1">
-                                    <h5 class="mb-1 fw-semibold">پلن پایه</h5>
-                                    <p class="text-muted mb-0">برای استفاده شخصی</p>
-                                </div>
-                                <div class="avatar-sm">
-                                    <div class="avatar-title bg-light rounded-circle text-primary">
-                                        <i class="ri-user-line fs-20"></i>
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-xl-9">
+                    @* کمی عریض‌تر برای جا دادن بهتر محتوا *@
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-body p-4 p-md-5">
+                            @* فرم برای ارسال اطلاعات به سرور (مهم) *@
+                            @* اکشن فرم باید به کنترلر و اکشنی اشاره کند که سفارش را پردازش می‌کند *@
+                            @* مثال: <form id="customPlanForm" asp-area="UserPanel" asp-controller="Subscription" asp-action="CreateCustomSubscription" method="post"> *@
+                            <form id="customPlanForm" action="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" method="post">
+                                @* توکن ضد جعل برای امنیت فرم *@
+                                @Html.AntiForgeryToken()
+
+                                @* فیلدهای پنهان برای ارسال مقادیر نهایی به سرور *@
+                                <input type="hidden" id="hiddenTraffic" name="TrafficGB" value="50" /> @* مقدار پیش‌فرض *@
+                                <input type="hidden" id="hiddenDuration" name="DurationDays" value="30" /> @* مقدار پیش‌فرض *@
+                                <input type="hidden" id="hiddenRemarkName" name="RemarkName" value="" />
+
+                                <div class="row gy-4 gy-md-5">
+                                    @* افزایش فاصله عمودی در سایز md به بالا *@
+
+                                    <div class="col-md-6">
+                                        @* --- انتخاب حجم ترافیک --- *@
+                                        <div class="mb-4 pb-2">
+                                            @* افزودن فاصله پایین *@
+                                            <h5 class="fs-16 mb-3">
+                                                <i class="ri-database-2-line align-bottom me-1 text-primary"></i> حجم ترافیک (GB)
+                                            </h5>
+                                            <input type="range" class="form-range" id="trafficRange" name="trafficRangeSlider" min="10" max="500" step="10" value="50"> @* محدوده 1 تا 500 گیگ *@
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <span class="fs-13 text-muted">10 GB</span>
+                                                <span class="fw-medium fs-15 text-primary" id="trafficValue">50 GB</span> @* نمایش مقدار فعلی *@
+                                                <span class="fs-13 text-muted">500 GB</span>
+                                            </div>
+                                        </div>
+
+                                        @* --- انتخاب مدت زمان --- *@
+                                        <div class="mb-4 pb-2">
+                                            @* افزودن فاصله پایین *@
+                                            <h5 class="fs-16 mb-3">
+                                                <i class="ri-calendar-2-line align-bottom me-1 text-primary"></i> مدت زمان (روز)
+                                            </h5>
+                                            <input type="range" class="form-range" id="durationRange" name="durationRangeSlider" min="15" max="365" step="5" value="30"> @* محدوده 1 تا 365 روز *@
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <span class="fs-13 text-muted">15 روز</span>
+                                                <span class="fw-medium fs-15 text-primary" id="durationValue">30 روز</span> @* نمایش مقدار فعلی *@
+                                                <span class="fs-13 text-muted">365 روز</span>
+                                            </div>
+                                            <small class="form-text text-muted mt-2 d-block">تخفیف‌ها برای 90 روز به بالا اعمال می‌شود.</small>
+                                        </div>
+
+                                        @* --- نام دلخواه اشتراک (اختیاری) --- *@
+                                        <div>
+                                            <h5 class="fs-16 mb-2">
+                                                <i class="ri-pencil-line align-bottom me-1 text-primary"></i> نام دلخواه اشتراک (اختیاری)
+                                            </h5>
+                                            <input type="text" class="form-control" id="remarkName" placeholder="مثال: اشتراک شخصی من">
+                                            <small class="form-text text-muted mt-1 d-block">این نام به شما کمک می‌کند اشتراک‌های مختلف خود را تشخیص دهید.</small>
+                                        </div>
+
                                     </div>
-                                </div>
-                            </div>
-                            <div class="py-4 text-center">
-                                <h1 class="month"><sup><small>تومان</small></sup><span class="ff-secondary fw-bold">120,000</span> <span class="fs-13 text-muted">/ماه</span></h1>
-                                <h1 class="annual"><sup><small>تومان</small></sup><span class="ff-secondary fw-bold">1,200,000</span> <span class="fs-13 text-muted">/سال</span></h1>
-                            </div>
 
-                            <div>
-                                <ul class="list-unstyled text-muted vstack gap-3 ff-secondary">
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                                    @* --- ستون خلاصه سفارش و پرداخت --- *@
+                                    <div class="col-md-6">
+                                        <div class="bg-soft-primary p-4 rounded-3 h-100 d-flex flex-column shadow-sm">
+                                            @* تغییر رنگ به آبی و افزودن سایه *@
+                                            <h5 class="fs-18 mb-3 text-center"><i class="ri-file-list-3-line align-bottom me-1"></i> خلاصه سفارش شما</h5>
+
+                                            @* جدول نمایش جزئیات سفارش *@
+                                            <div class="table-responsive mb-3">
+                                                <table class="table table-sm table-borderless align-middle ff-secondary mb-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">حجم ترافیک:</th>
+                                                            <td class="text-end fw-medium" id="summaryTraffic">50 گیگابایت</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">مدت زمان:</th>
+                                                            <td class="text-end fw-medium" id="summaryDuration">30 روز</td>
+                                                        </tr>
+                                                        @* ردیف نام اشتراک (در صورت وارد شدن نمایش داده می‌شود) *@
+                                                        <tr id="remarkNameRow" style="display: none;">
+                                                            <th scope="row">نام اشتراک:</th>
+                                                            <td class="text-end fw-medium" id="summaryRemarkName"></td>
+                                                        </tr>
+                                                        @* ردیف تخفیف (در صورت وجود نمایش داده می‌شود) *@
+                                                        <tr id="discountRow" style="display: none;">
+                                                            <th scope="row" class="text-success">تخفیف:</th>
+                                                            <td class="text-end fw-medium text-success" id="summaryDiscount">0%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                            <div class="flex-grow-1">30 گیگابایت ترافیک ماهانه</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+
+                                            <hr class="my-3 border-dashed">
+
+                                            @* نمایش قیمت نهایی *@
+                                            <div class="text-center mb-4">
+                                                <p class="text-muted mb-1">مبلغ قابل پرداخت:</p>
+                                                <h2 class="display-6 fw-bold mb-0 text-primary" id="summaryPrice">
+                                                    در حال محاسبه... @* متن اولیه تا قیمت محاسبه شود *@
+                                                </h2>
+                                                @* واحد پولی را می‌توان خارج از span قیمت گذاشت *@
+                                                <small class="fs-6 text-muted">تومان</small>
                                             </div>
-                                            <div class="flex-grow-1">عدم محدودیت اتصال کاربران</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
+
+                                            @* دکمه نهایی ثبت سفارش *@
+                                            <div class="mt-auto">
+                                                @* دکمه را پایین می‌برد *@
+                                                @*
+                                                این دکمه باید فرم را submit کند یا کاربر را به صفحه پرداخت هدایت کند.
+                                                نوع دکمه به 'submit' تغییر داده شد تا فرم را ارسال کند.
+                                                می‌توان با JS قبل از ارسال، اعتبار سنجی بیشتری انجام داد.
+                                            *@
+                                                <button type="submit" class="btn btn-primary w-100 btn-lg" id="order-button" title="ثبت و پرداخت سفارش">
+                                                    <i class="ri-shopping-cart-2-line align-middle me-1"></i> ثبت و پرداخت سفارش
+                                                </button>
                                             </div>
-                                            <div class="flex-grow-1">پنل مدیریت</div>
                                         </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">پشتیبانی VIP</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">سرعت بالا</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">بدون قطعی</div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="mt-4">
-                                    <a href="javascript:void(0);" class="btn btn-soft-success w-100">شروع کنید</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
-                <!-- پلن استاندارد (سه ماهه) -->
-                <div class="col-lg-4">
-                    <div class="card plan-box mb-0 ribbon-box right">
-                        <div class="card-body p-4 m-2">
-                            <div class="ribbon-two ribbon-two-danger"><span>محبوب</span></div>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1">
-                                    <h5 class="mb-1 fw-semibold">پلن استاندارد</h5>
-                                    <p class="text-muted mb-0">برای استفاده متوسط</p>
-                                </div>
-                                <div class="avatar-sm">
-                                    <div class="avatar-title bg-light rounded-circle text-primary">
-                                        <i class="ri-medal-line fs-20"></i>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="py-4 text-center">
-                                <h1 class="month"><sup><small>تومان</small></sup><span class="ff-secondary fw-bold">300,000</span> <span class="fs-13 text-muted">/3 ماه</span></h1>
-                                <h1 class="annual"><sup><small>تومان</small></sup><span class="ff-secondary fw-bold">1,000,000</span> <span class="fs-13 text-muted">/سال</span></h1>
-                            </div>
-
-                            <div>
-                                <ul class="list-unstyled text-muted vstack gap-3 ff-secondary">
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">100 گیگابایت ترافیک</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">عدم محدودیت اتصال کاربران</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">پنل مدیریت ساده</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">پشتیبانی 24/7</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">سرعت بالا</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">بدون قطعی</div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="mt-4">
-                                    <a href="javascript:void(0);" class="btn btn-soft-success w-100">شروع کنید</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
-                <!-- پلن سازمانی (یک ساله) -->
-                <div class="col-lg-4">
-                    <div class="card plan-box mb-0">
-                        <div class="card-body p-4 m-2">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1">
-                                    <h5 class="mb-1 fw-semibold">پلن سازمانی</h5>
-                                    <p class="text-muted mb-0">برای کسب‌وکارهای بزرگ</p>
-                                </div>
-                                <div class="avatar-sm">
-                                    <div class="avatar-title bg-light rounded-circle text-primary">
-                                        <i class="ri-building-line fs-20"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="py-4 text-center">
-                                <h1 class="month"><sup><small></small></sup><span class="ff-secondary fw-bold">تماس بگیرید</span></h1>
-                            </div>
-
-                            <div>
-                                <ul class="list-unstyled text-muted vstack gap-3 ff-secondary">
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">ترافیک نامحدود</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">عدم محدودیت اتصال کاربران</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">پنل مدیریت حرفه‌ای</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">پشتیبانی VIP 24/7</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">سرورهای اختصاصی</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 text-success me-1">
-                                                <i class="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                            </div>
-                                            <div class="flex-grow-1">پورت قدرتمند 10 گیگابایت</div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="mt-4">
-                                    <a href="javascript:void(0);" class="btn btn-soft-success w-100">تماس بگیرید</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end col-->
-            </div>
-            <!--end row-->
-        </div>
-        <!-- end container -->
+                                </div> @* end row *@
+                            </form> @* end form *@
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                    <p class="text-center text-muted mt-4">نیاز به راهنمایی یا پلن‌های سازمانی دارید؟ <a href="#contact" class="link-primary text-decoration-underline">با ما تماس بگیرید</a>.</p>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
     </section>
-    <!-- end plan -->
+    <!-- end plan / Interactive Calculator -->
+    <!-- start reviews -->
+    <section class="section bg-primary" id="reviews">
+        <div class="bg-overlay bg-overlay-pattern"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center">
+                        <div>
+                            <i class="ri-double-quotes-l text-success display-3"></i>
+                        </div>
+                        <h4 class="text-white mb-5 fw-light"><span class="fw-semibold">مشتریان ما</span> چه می‌گویند</h4>
+
+                        <!-- Swiper -->
+                        <div class="swiper client-review-swiper rounded" dir="ltr">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="row justify-content-center">
+                                        <div class="col-10">
+                                            <div class="text-white-50">
+                                                <p class="fs-20 ff-secondary mb-4">
+                                                    "از وقتی از RahaGozar استفاده می‌کنم، دیگه مشکل قطعی و کندی سرعت ندارم. پشتیبانیشون هم واقعا عالیه و سریع جواب میدن. خیلی راضی‌ام!"
+                                                </p>
+
+                                                <div>
+                                                    <h5 class="text-white">رضا احمدی</h5>
+                                                    <p>- کاربر فعال</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end slide -->
+                                <div class="swiper-slide">
+                                    <div class="row justify-content-center">
+                                        <div class="col-10">
+                                            <div class="text-white-50">
+                                                <p class="fs-20 ff-secondary mb-4">
+                                                    "انعطاف‌پذیری توی انتخاب حجم و مدت زمان عالیه. دقیقا همون چیزی که لازم داشتم رو تونستم تهیه کنم. قیمت‌ها هم منصفانه است."
+                                                </p>
+                                                <div>
+                                                    <h5 class="text-white">مریم حسینی</h5>
+                                                    <p>- توسعه‌دهنده وب</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end slide -->
+                                <div class="swiper-slide">
+                                    <div class="row justify-content-center">
+                                        <div class="col-10">
+                                            <div class="text-white-50">
+                                                <p class="fs-20 ff-secondary mb-4">
+                                                    "برای بازی آنلاین دنبال یه VPN پایدار و سریع بودم. RahaGozar پینگ خوبی میده و قطعی نداره. پیشنهاد می‌کنم."
+                                                </p>
+                                                <div>
+                                                    <h5 class="text-white">علی محمدی</h5>
+                                                    <p>- گیمر</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end slide -->
+                            </div><!-- end wrapper -->
+                            <div class="swiper-button-next bg-white rounded-circle"></div>
+                            <div class="swiper-button-prev bg-white rounded-circle"></div>
+                            <div class="swiper-pagination"></div> @* اضافه کردن پجینیشن *@
+                        </div><!-- end slider -->
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- end reviews -->
     <!-- start faqs section -->
     <section class="section" id="faqs">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
-                        <h2 class="mb-3 fw-semibold">سوالات متداول</h2>
-                        <p class="text-muted mb-4 ff-secondary">اگر پاسخ سؤال خود را در اینجا نیافتید، می‌توانید با تیم پشتیبانی ما تماس بگیرید.</p>
+                        <h3 class="mb-3 fw-semibold">سوالات متداول</h3>
+                        <p class="text-muted mb-4">اگر پاسخ سوال خود را پیدا نکردید، لطفاً از طریق بخش <a href="#contact" class="link-primary text-decoration-underline">تماس با ما</a> با تیم پشتیبانی در ارتباط باشید.</p>
                     </div>
-                </div>
-            </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
 
             <div class="row justify-content-center">
                 <div class="col-lg-10">
@@ -823,12 +722,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    چگونه اشتراک RahaGozar را خریداری کنم؟
+                                    چگونه می‌توانم اشتراک دلخواه خود را بسازم؟
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionFAQ">
                                 <div class="accordion-body">
-                                    <p>برای خرید اشتراک RahaGozar، به سادگی یکی از طرح‌های ما را انتخاب کرده و فرآیند پرداخت را تکمیل کنید. پس از تأیید پرداخت، سرویس شما بلافاصله فعال خواهد شد.</p>
+                                    بسیار ساده! به بخش <a href="#plans" class="link-primary text-decoration-underline">"ساخت اشتراک"</a> در همین صفحه مراجعه کنید. مدت زمان مورد نظرتان (مثلاً ۱ ماهه، ۳ ماهه و ...) و حجم ترافیک ماهانه دلخواه (مثلاً ۵۰ گیگ، نامحدود و ...) را انتخاب کنید. قیمت نهایی بلافاصله محاسبه و نمایش داده می‌شود. سپس می‌توانید روی دکمه "ثبت سفارش" کلیک کرده و مراحل پرداخت را تکمیل کنید.
                                 </div>
                             </div>
                         </div>
@@ -836,12 +735,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    آیا می‌توانم طرح اشتراک خود را ارتقا دهم؟
+                                    چه پروتکل‌هایی توسط RahaGozar پشتیبانی می‌شود؟
                                 </button>
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFAQ">
                                 <div class="accordion-body">
-                                    <p>بله، می‌توانید هر زمان که بخواهید طرح اشتراک خود را ارتقا دهید. کافیست به پنل کاربری خود مراجعه کرده و طرح جدیدی خریداری کنید. فقط تفاوت قیمت از شما دریافت خواهد شد.</p>
+                                    ما از پروتکل‌های امن و پرسرعت متنوعی مانند V2Ray (پروتکل‌های VMess و VLESS)، Cisco AnyConnect و OpenVPN پشتیبانی می‌کنیم. بسته به نیاز و سیستم‌عامل خود می‌توانید از پروتکل مناسب استفاده کنید. آموزش‌های لازم در پنل کاربری شما موجود خواهد بود.
                                 </div>
                             </div>
                         </div>
@@ -849,12 +748,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingThree">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    چگونه می‌توانم از RahaGozar در چند دستگاه استفاده کنم؟
+                                    آیا امکان استفاده همزمان روی چند دستگاه وجود دارد؟
                                 </button>
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFAQ">
                                 <div class="accordion-body">
-                                    <p>پس از خرید اشتراک، می‌توانید اپلیکیشن RahaGozar را روی سیستم‌عامل‌های مختلف دانلود کرده و با استفاده از اطلاعات حساب کاربری خود وارد شوید. توجه داشته باشید که مصرف ترافیک در همه دستگاه‌ها محاسبه می‌شود.</p>
+                                    بله، شما می‌توانید با یک اشتراک RahaGozar به طور همزمان روی چندین دستگاه (مثلاً موبایل، لپ‌تاپ و تبلت) متصل شوید. تعداد دقیق اتصالات همزمان ممکن است بر اساس جزئیات اشتراک انتخابی شما متفاوت باشد که در زمان ساخت اشتراک یا در پنل کاربری قابل مشاهده است. (اگر قابلیت انتخاب تعداد کاربر اضافه شد، این متن باید ویرایش شود).
                                 </div>
                             </div>
                         </div>
@@ -862,12 +761,12 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingFour">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    آیا استفاده از RahaGozar قانونی است؟
+                                    آیا سیاست عدم ذخیره‌سازی لاگ (No-Log Policy) دارید؟
                                 </button>
                             </h2>
                             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFAQ">
                                 <div class="accordion-body">
-                                    <p>استفاده از VPN در اکثر کشورها قانونی است، اما قوانین در هر کشور متفاوت است. RahaGozar بر حفظ حریم خصوصی و امنیت آنلاین تمرکز دارد و ما توصیه می‌کنیم با قوانین محلی خود آشنا شوید.</p>
+                                    بله، ما به حریم خصوصی کاربران خود اهمیت زیادی می‌دهیم و هیچ‌گونه گزارشی از فعالیت‌های آنلاین شما مانند وب‌سایت‌های بازدید شده یا داده‌های تبادل شده را ذخیره نمی‌کنیم. می‌توانید با اطمینان کامل از سرویس ما استفاده کنید.
                                 </div>
                             </div>
                         </div>
@@ -921,288 +820,186 @@
         <!-- end container -->
     </section>
     <!-- end features -->
-    <!-- start review -->
-    <section class="section bg-primary" id="reviews">
-        <div class="bg-overlay bg-overlay-pattern"></div>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="text-center">
-                        <div>
-                            <i class="ri-double-quotes-l text-success display-3"></i>
-                        </div>
-                        <h4 class="text-white mb-5"><span class="text-success">19 هزار</span>+ مشتریان راضی</h4>
-
-                        <!-- Swiper -->
-                        <div class="swiper client-review-swiper rounded" dir="ltr">
-                            <div class="swiper-wrapper">
-                                <!-- نظر ۱ -->
-                                <div class="swiper-slide">
-                                    <div class="row justify-content-center">
-                                        <div class="col-10">
-                                            <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"RahaGozar واقعاً عالیه! سرعتش باورنکردنیه و هیچ‌وقت قطع نمی‌شه. حالا می‌تونم به راحتی به سایت‌های کشورم رو تحریم کردن دسترسی داشته باشم. ممنون RahaGozar!"</p>
-
-                                                <div>
-                                                    <h5 class="text-white">محمد رضایی</h5>
-                                                    <p>- کاربر RahaGozar</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end slide -->
-                                <!-- نظر ۲ -->
-                                <div class="swiper-slide">
-                                    <div class="row justify-content-center">
-                                        <div class="col-10">
-                                            <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"من از RahaGozar برای کارم استفاده می‌کنم و واقعاً راضیم. پشتیبانیشون واقعا عالیه و همیشه سریع پاسخ می‌دن. به همه توصیه می‌کنم!"</p>
-
-                                                <div>
-                                                    <h5 class="text-white">فاطمه حسینی</h5>
-                                                    <p>- کاربر RahaGozar</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end slide -->
-                                <!-- نظر ۳ -->
-                                <div class="swiper-slide">
-                                    <div class="row justify-content-center">
-                                        <div class="col-10">
-                                            <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"قیمت‌ها واقعاً منصفانه‌ست و کیفیت سرویس عالیه. من از پلن سالانه استفاده می‌کنم و تا حالا هیچ مشکلی نداشتم. RahaGozar بهترینه!"</p>
-
-                                                <div>
-                                                    <h5 class="text-white">علی محمدی</h5>
-                                                    <p>- کاربر RahaGozar</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end slide -->
-                                <!-- نظر ۴ -->
-                                <div class="swiper-slide">
-                                    <div class="row justify-content-center">
-                                        <div class="col-10">
-                                            <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"من قبلاً از چند VPN دیگه استفاده کرده بودم، اما RahaGozar واقعاً برتره. سرعتش عالیه و هیچ‌وقت تا به حال مشکلی باهاش نداشتم. به همه پیشنهاد می‌کنم!"</p>
-
-                                                <div>
-                                                    <h5 class="text-white">زهرا کریمی</h5>
-                                                    <p>- کاربر RahaGozar</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end slide -->
-                                <!-- نظر ۵ -->
-                                <div class="swiper-slide">
-                                    <div class="row justify-content-center">
-                                        <div class="col-10">
-                                            <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"RahaGozar زندگی من رو راحت‌تر کرده! حالا می‌تونم بدون نگرانی از حریم خصوصی‌م، از اینترنت استفاده کنم. ممنون از تیم پشتیبانی عالی‌تون!"</p>
-
-                                                <div>
-                                                    <h5 class="text-white">رضا احمدی</h5>
-                                                    <p>- کاربر RahaGozar</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end slide -->
-                                <!-- نظر ۶ -->
-                                <div class="swiper-slide">
-                                    <div class="row justify-content-center">
-                                        <div class="col-10">
-                                            <div class="text-white-50">
-                                                <p class="fs-20 ff-secondary mb-4">"من از RahaGozar برای دسترسی به محتوای آموزشی استفاده می‌کنم و واقعاً راضیم. سرعتش عالیه و هیچ‌وقت قطع نمی‌شه. به همه توصیه می‌کنم!"</p>
-
-                                                <div>
-                                                    <h5 class="text-white">سارا نوروزی</h5>
-                                                    <p>- کاربر RahaGozar</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end slide -->
-                            </div>
-                            <div class="swiper-button-next bg-white rounded-circle"></div>
-                            <div class="swiper-button-prev bg-white rounded-circle"></div>
-                            <div class="swiper-pagination position-relative mt-2"></div>
-                        </div>
-                        <!-- end slider -->
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container -->
-    </section>
-    <!-- end review -->
     <!-- start contact -->
     <section class="section" id="contact">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center mb-5">
-                        <h3 class="mb-3 fw-semibold">تماس بگیرید</h3>
-                        <p class="text-muted mb-4 ff-secondary">ما اینجا هستیم تا به سوالات شما پاسخ بدیم و راه‌حل‌های امنیتی مناسب رو پیشنهاد بدیم. اگر سوالی دارید یا نیاز به راهنمایی دارید، تیم پشتیبانی RahaGozar آماده کمک به شماست.</p>
+                        <h3 class="mb-3 fw-semibold">تماس با ما</h3>
+                        <p class="text-muted mb-4">سوالی دارید یا نیاز به راهنمایی دارید؟ تیم پشتیبانی ما آماده پاسخگویی است. می‌توانید از طریق فرم زیر یا اطلاعات تماس ارائه شده با ما در ارتباط باشید.</p>
                     </div>
                 </div>
-            </div>
-            <!-- end row -->
+            </div><!-- end row -->
 
             <div class="row gy-4">
                 <div class="col-lg-4">
                     <div>
                         <div class="mt-4">
-                            <h5 class="fs-13 text-muted text-uppercase">آدرس دفتر مرکزی:</h5>
-                            <div class="ff-secondary fw-semibold">تهران، خیابان آزادی، پلاک ۱۲۳</div>
+                            <h5 class="fs-14 mb-1">آدرس ایمیل:</h5>
+                            <p class="text-muted">support@rahagozar.com</p> @* ایمیل خود را جایگزین کنید *@
                         </div>
                         <div class="mt-4">
-                            <h5 class="fs-13 text-muted text-uppercase">ایمیل:</h5>
-                            <div class="ff-secondary fw-semibold">support@RahaGozar.com</div>
+                            <h5 class="fs-14 mb-1">پشتیبانی تلگرام:</h5>
+                            <p class="text-muted">@@RahaGozarSupport</p> @* آی‌دی تلگرام خود را جایگزین کنید *@
                         </div>
                         <div class="mt-4">
-                            <h5 class="fs-13 text-muted text-uppercase">ساعت کاری:</h5>
-                            <div class="ff-secondary fw-semibold">شنبه تا پنجشنبه، ۹:۰۰ صبح تا ۶:۰۰ بعد از ظهر</div>
+                            <h5 class="fs-14 mb-1">ساعات کاری پشتیبانی:</h5>
+                            <p class="text-muted">شنبه تا پنج‌شنبه - ۹ صبح تا ۱۱ شب</p>
+                            <p class="text-muted">جمعه و ایام تعطیل - ۱۲ ظهر تا ۱۰ شب</p>
                         </div>
                     </div>
-                </div>
-                <!-- end col -->
+                </div><!-- end col -->
                 <div class="col-lg-8">
-                    <div>
-                        <form>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-4">
-                                        <label for="name" class="form-label fs-13">نام</label>
-                                        <input name="name" id="name" type="text" class="form-control bg-light border-light" placeholder="نام شما*">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-4">
-                                        <label for="email" class="form-label fs-13">ایمیل</label>
-                                        <input name="email" id="email" type="email" class="form-control bg-light border-light" placeholder="ایمیل شما*">
-                                    </div>
+                    @* فرم تماس - نیاز به پیاده‌سازی Backend برای ارسال ایمیل یا ذخیره پیام دارد *@
+                    <form id="contact-form" method="post" action="/Contact/SendMessage">
+                        @* آدرس اکشن کنترلر برای پردازش فرم *@
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="contact-name" class="form-label fs-14">نام شما</label>
+                                    <input name="Name" id="contact-name" type="text" class="form-control bg-light border-light" placeholder="نام خود را وارد کنید" required>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-4">
-                                        <label for="subject" class="form-label fs-13">موضوع</label>
-                                        <input type="text" class="form-control bg-light border-light" id="subject" name="subject" placeholder="موضوع شما..">
-                                    </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="contact-email" class="form-label fs-14">ایمیل</label>
+                                    <input name="Email" id="contact-email" type="email" class="form-control bg-light border-light" placeholder="ایمیل خود را وارد کنید" required>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="comments" class="form-label fs-13">پیام</label>
-                                        <textarea name="comments" id="comments" rows="3" class="form-control bg-light border-light" placeholder="پیام شما..."></textarea>
-                                    </div>
+                            <div class="col-lg-12">
+                                <div class="mb-4">
+                                    <label for="contact-subject" class="form-label fs-14">موضوع</label>
+                                    <input type="text" name="Subject" class="form-control bg-light border-light" id="contact-subject" placeholder="موضوع پیام" required />
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 text-end">
-                                    <input type="submit" id="submit" name="send" class="submitBnt btn btn-primary" value="ارسال پیام">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label for="contact-message" class="form-label fs-14">پیام شما</label>
+                                    <textarea class="form-control bg-light border-light" name="Message" id="contact-message" rows="5" placeholder="پیام خود را بنویسید" required></textarea>
                                 </div>
+                            </div><!--end col-->
+                            <div class="col-lg-12 text-end">
+                                <button type="submit" id="submit-button" class="btn btn-primary"><i class="ri-send-plane-fill align-bottom me-1"></i> ارسال پیام</button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container -->
+                        </div><!--end row-->
+                        @* نمایش پیام موفقیت یا خطا پس از ارسال فرم (نیاز به JS یا TempData) *@
+                        <div id="contact-message-response" class="mt-3"></div>
+                    </form>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
     </section>
     <!-- end contact -->
-    <!-- start cta -->
-    <section class="py-5 bg-primary position-relative">
-        <div class="bg-overlay bg-overlay-pattern opacity-50"></div>
-        <div class="container">
-            <div class="row align-items-center gy-4">
-                <div class="col-sm">
-                    <div>
-                        <h4 class="text-white mb-0 fw-semibold">امنیت و آزادی آنلاین را با RahaGozar تجربه کنید</h4>
-                    </div>
-                </div>
-                <!-- end col -->
-                <div class="col-sm-auto">
-                    <div>
-                        <a href="#plans" class="btn bg-gradient btn-danger"><i class="ri-shield-keyhole-line align-middle me-1"></i>همین حالا شروع کنید</a>
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container -->
-    </section>
-    <!-- end cta -->
-    <!-- Footer Section -->
+    <!-- start footer -->
     <footer class="custom-footer bg-dark py-5 position-relative">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="mb-4">
-                        <a href="/" class="d-inline-block">
-                            <img src="/assets/images/logo-light.png" alt="لوگوی RahaGozar" height="30">
-                        </a>
-                        <p class="text-muted mt-3">RahaGozar، سرویس وی‌پی‌ان امن و پرسرعت برای دسترسی آزاد به اینترنت بدون محدودیت.</p>
-                    </div>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-reset" aria-label="فیسبوک"><i class="ri-facebook-line fs-16"></i></a>
-                        <a href="#" class="text-reset" aria-label="توییتر"><i class="ri-twitter-line fs-16"></i></a>
-                        <a href="#" class="text-reset" aria-label="اینستاگرام"><i class="ri-instagram-line fs-16"></i></a>
-                        <a href="#" class="text-reset" aria-label="تلگرام"><i class="ri-telegram-line fs-16"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-6">
-                    <h5 class="text-white mb-3">خدمات</h5>
-                    <ul class="list-unstyled footer-link-list">
-                        <li><a href="/features" title="ویژگی‌های RahaGozar">ویژگی‌ها</a></li>
-                        <li><a href="/pricing" title="قیمت‌گذاری RahaGozar">قیمت‌گذاری</a></li>
-                        <li><a href="/servers" title="سرورهای RahaGozar">سرورها</a></li>
-                        <li><a href="/download" title="دانلود RahaGozar">دانلود</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-6">
-                    <h5 class="text-white mb-3">پشتیبانی</h5>
-                    <ul class="list-unstyled footer-link-list">
-                        <li><a href="/faq" title="سوالات متداول">راهنما</a></li>
-                        <li><a href="/support" title="پشتیبانی RahaGozar">تماس با ما</a></li>
-                        <li><a href="/terms" title="شرایط استفاده">شرایط استفاده</a></li>
-                        <li><a href="/privacy" title="حریم خصوصی">حریم خصوصی</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4">
-                    <h5 class="text-white mb-3">خبرنامه</h5>
-                    <p class="text-muted">برای دریافت آخرین اخبار و تخفیف‌های ویژه در خبرنامه ما عضو شوید.</p>
-                    <form class="mt-3">
-                        <div class="input-group">
-                            <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید" aria-label="ایمیل خبرنامه" required>
-                            <button class="btn btn-primary" type="submit">عضویت</button>
+                <div class="col-lg-4 mt-4">
+                    <div>
+                        <div>
+                            @* لوگوی روشن برای فوتر تیره *@
+                            <img src="~/assets/images/logo-light.png" alt="لوگوی RahaGozar" height="22">
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="text-center text-muted">
-                        <p>© 2023 RahaGozar. تمامی حقوق محفوظ است.</p>
+                        <div class="mt-4 fs-14">
+                            <p>امنیت، سرعت و آزادی در دنیای دیجیتال</p>
+                            <p class="ff-secondary">
+                                RahaGozar با ارائه سرویس VPN پایدار و انعطاف‌پذیر، به شما کمک می‌کند تا بدون محدودیت و با خیالی آسوده به گشت و گذار در اینترنت بپردازید.
+                            </p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-lg-7 ms-lg-auto">
+                    <div class="row">
+                        <div class="col-sm-4 mt-4">
+                            <h5 class="text-white mb-3">لینک‌های مفید</h5>
+                            <ul class="list-unstyled ff-secondary">
+                                <li><a href="#hero">صفحه اصلی</a></li>
+                                <li><a href="#services">خدمات</a></li>
+                                <li><a href="#features">ویژگی‌ها</a></li>
+                                <li><a href="#plans">ساخت اشتراک</a></li>
+                                <li><a href="#faqs">سوالات متداول</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 mt-4">
+                            <h5 class="text-white mb-3">پشتیبانی</h5>
+                            <ul class="list-unstyled ff-secondary">
+                                @* <li><a href="/knowledge-base">مرکز آموزش</a></li> *@
+                                <li><a href="#contact">تماس با ما</a></li>
+                                <li><a href="/terms-of-service">قوانین و مقررات</a></li>
+                                <li><a href="/privacy-policy">سیاست حفظ حریم خصوصی</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 mt-4">
+                            <h5 class="text-white mb-3">پنل کاربری</h5>
+                            <ul class="list-unstyled ff-secondary">
+                                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                {
+                                    var panelUrl = User.IsInRole("Admin") ? Url.Action("Index", "Home", new { Area = "Admin" }) : Url.Action("Index", "Panel", new { Area = "UserPanel" });
+                                    <li><a href="@panelUrl">ورود به پنل</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("SignIn", "Authentication", new {area =""})">ورود</a></li>
+                                    <li><a href="@Url.Action("SignUp", "Authentication", new {area =""})">ثبت‌نام</a></li>
+                                }
+                                <li><a href="@Url.Action("ChangePassword", "Authentication", new {area =""})">تغییر رمز عبور</a></li> @* لینک تغییر رمز هم اینجا مفید است *@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+
+            <div class="row text-center text-sm-start align-items-center mt-5">
+                <div class="col-sm-6">
+                    <div>
+                        <p class="copy-rights mb-0 fs-14">
+                            @DateTime.Now.Year © RahaGozar - تمام حقوق محفوظ است.
+                            @* طراحی و توسعه توسط YourName/YourCompany (اختیاری) *@
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end mt-3 mt-sm-0">
+                        @* لینک شبکه‌های اجتماعی (اختیاری) *@
+                        <ul class="list-inline mb-0 footer-social-link">
+                            <li class="list-inline-item">
+                                <a href="https://t.me/YourChannel" target="_blank" class="avatar-xs d-block" title="تلگرام">
+                                    <div class="avatar-title rounded bg-soft-primary text-primary fs-16 shadow">
+                                        @* اضافه کردن shadow برای تطابق با قالب *@
+                                        <i class="ri-telegram-fill"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            @* <li class="list-inline-item">
+                                <a href="https://instagram.com/YourProfile" target="_blank" class="avatar-xs d-block" title="اینستاگرام">
+                                    <div class="avatar-title rounded bg-soft-danger text-danger fs-16 shadow">
+                                        <i class="ri-instagram-fill"></i>
+                                    </div>
+                                </a>
+                            </li> *@
+                            @* <li class="list-inline-item">
+                                <a href="javascript:void(0);" class="avatar-xs d-block" title="واتساپ">
+                                    <div class="avatar-title rounded bg-soft-success text-success fs-16 shadow">
+                                        <i class="ri-whatsapp-fill"></i>
+                                    </div>
+                                </a>
+                            </li> *@
+                            <li class="list-inline-item">
+                                <a href="mailto:support@rahagozar.com" class="avatar-xs d-block" title="ایمیل پشتیبانی">
+                                    <div class="avatar-title rounded bg-soft-info text-info fs-16 shadow">
+                                        <i class="ri-mail-line"></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
     </footer>
     <!-- end footer -->
     <!--start back-to-top-->
@@ -1212,3 +1009,316 @@
     <!--end back-to-top-->
 
 </div>
+
+
+@section scripts {
+    <!-- Swiper JS (برای اسلایدر نظرات) -->
+    <script src="~/assets/libs/swiper/swiper-bundle.min.js"></script>
+    <!-- landing init (تنظیمات اولیه صفحه فرود قالب) -->
+    <script src="~/assets/js/pages/landing.init.js"></script>
+
+    @* --- اسکریپت محاسبه‌گر قیمت پلن سفارشی (بر اساس کد جدید شما) --- *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- قیمت‌های پایه (برای محاسبه سمت کلاینت در صورت خطای سرور) ---
+            const pricePerGB = 2500; // قیمت هر گیگابایت: 2500 تومان
+            const pricePerDay = 1500; // قیمت هر روز: 1500 تومان
+
+            // --- المان‌های DOM ---
+            // اسلایدرها
+            const trafficRange = document.getElementById('trafficRange');
+            const durationRange = document.getElementById('durationRange');
+            const remarkNameInput = document.getElementById('remarkName'); // فیلد نام دلخواه اشتراک
+
+            // المان‌های نمایش مقادیر
+            const trafficValue = document.getElementById('trafficValue'); // نمایش مقدار ترافیک کنار اسلایدر
+            const durationValue = document.getElementById('durationValue'); // نمایش مقدار مدت زمان کنار اسلایدر
+            const summaryTraffic = document.getElementById('summaryTraffic'); // نمایش ترافیک در خلاصه سفارش
+            const summaryDuration = document.getElementById('summaryDuration'); // نمایش مدت زمان در خلاصه سفارش
+            const summaryPrice = document.getElementById('summaryPrice');       // نمایش قیمت نهایی در خلاصه سفارش
+            const discountRow = document.getElementById('discountRow');       // ردیف نمایش تخفیف در خلاصه
+            const summaryDiscount = document.getElementById('summaryDiscount');   // نمایش درصد تخفیف
+            const remarkNameRow = document.getElementById('remarkNameRow');     // ردیف نمایش نام اشتراک در خلاصه
+            const summaryRemarkName = document.getElementById('summaryRemarkName'); // نمایش نام اشتراک
+
+            // فیلدهای پنهان فرم (برای ارسال به سرور هنگام ثبت سفارش نهایی)
+            const hiddenTraffic = document.getElementById('hiddenTraffic');
+            const hiddenDuration = document.getElementById('hiddenDuration');
+            const hiddenRemarkName = document.getElementById('hiddenRemarkName');
+
+            // --- Event Listeners ---
+
+            // به‌روزرسانی نام اشتراک در خلاصه سفارش هنگام تایپ
+            if (remarkNameInput) { // بررسی وجود المان قبل از افزودن listener
+                remarkNameInput.addEventListener('input', function() {
+                    const value = this.value.trim();
+                    if (hiddenRemarkName) hiddenRemarkName.value = value;
+
+                    if (remarkNameRow && summaryRemarkName) {
+                        if (value) {
+                            remarkNameRow.style.display = 'table-row'; // یا 'block' یا متناسب با layout
+                            summaryRemarkName.textContent = value;
+                        } else {
+                            remarkNameRow.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            // تابع محاسبه قیمت در سمت کلاینت (فقط برای نمایش اولیه یا در صورت خطای سرور)
+            function calculatePriceClientSide(traffic, duration) {
+                 // محاسبه قیمت پایه
+                const trafficCost = traffic * pricePerGB;
+                const durationCost = duration * pricePerDay;
+
+                // مجموع قیمت پایه
+                let finalPrice = trafficCost + durationCost;
+
+                // اعمال تخفیف بر اساس مدت زمان
+                let discountPercent = 0;
+
+                if (duration >= 300 && duration <= 365) {       // 10 تا 12 ماه (300-365 روز)
+                    discountPercent = 20;                            // 20 درصد تخفیف
+                } else if (duration >= 180 && duration < 300) { // 6 تا 10 ماه (180-299 روز)
+                    discountPercent = 15;                            // 15 درصد تخفیف
+                } else if (duration >= 90 && duration < 180) {  // 3 تا 6 ماه (90-179 روز)
+                    discountPercent = 10;                            // 10 درصد تخفیف
+                }
+
+                // اعمال تخفیف
+                if (discountPercent > 0) {
+                   finalPrice = finalPrice * (1 - (discountPercent / 100));
+                }
+
+
+                // گرد کردن قیمت به هزار تومان نزدیک‌تر
+                finalPrice = Math.round(finalPrice / 1000) * 1000;
+
+                return { price: finalPrice, discount: discountPercent };
+            }
+
+            // دریافت قیمت از سرور با استفاده از Fetch API
+            async function getPriceFromServer(traffic, duration) {
+                // بررسی وجود توکن CSRF قبل از ارسال درخواست
+                const csrfTokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (!csrfTokenInput) {
+                    console.error('CSRF token not found. Cannot make server request.');
+                    // در صورت عدم وجود توکن، از محاسبه سمت کلاینت استفاده می‌کنیم
+                    return calculatePriceClientSide(traffic, duration);
+                }
+                const csrfToken = csrfTokenInput.value;
+
+                try {
+                    // تغییر آدرس به کنترلر جدید Subscription و اکشن CalculatePrice در اریا UserPanel
+                    const url = '@Url.Action("CalculatePrice", "Subscription", new { area = "UserPanel" })';
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': csrfToken // ارسال توکن CSRF
+                        },
+                        body: JSON.stringify({
+                            traffic: traffic, // نام پارامترها باید با مدل ورودی اکشن مطابقت داشته باشد
+                            duration: duration
+                        })
+                    });
+
+                    if (!response.ok) {
+                        // تلاش برای خواندن پیام خطا از سرور (اگر وجود داشته باشد)
+                         const errorText = await response.text();
+                         throw new Error(errorText || `خطا در دریافت قیمت از سرور: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    // فرض می‌کنیم سرور یک آبجکت JSON با پراپرتی‌های price و discount برمی‌گرداند
+                    if (typeof data.price !== 'number' || typeof data.discount !== 'number') {
+                         throw new Error('پاسخ دریافتی از سرور معتبر نیست.');
+                    }
+                    return { price: data.price, discount: data.discount };
+
+                } catch (error) {
+                    console.error('خطا در ارتباط با سرور برای محاسبه قیمت:', error);
+                    // در صورت بروز هرگونه خطا (شبکه، سرور، پاسخ نامعتبر)، از محاسبه سمت کلاینت استفاده می‌کنیم
+                    // می‌توانید یک پیام خطا به کاربر نمایش دهید
+                    if (summaryPrice) summaryPrice.textContent = "خطا در محاسبه";
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // نمایش خطا برای مدت کوتاه
+                    return calculatePriceClientSide(traffic, duration);
+                }
+            }
+
+            // به‌روزرسانی نمایش مقادیر و قیمت در UI
+            async function updateDisplay() {
+                // بررسی وجود المان‌ها قبل از استفاده
+                if (!trafficRange || !durationRange || !trafficValue || !durationValue || !summaryTraffic || !summaryDuration || !hiddenTraffic || !hiddenDuration || !summaryPrice || !discountRow || !summaryDiscount) {
+                    console.error("یکی یا چند المان مورد نیاز برای محاسبه‌گر قیمت یافت نشد.");
+                    return;
+                }
+
+                const traffic = parseInt(trafficRange.value, 10);
+                const duration = parseInt(durationRange.value, 10);
+
+                // نمایش مقادیر انتخاب شده کنار اسلایدرها
+                trafficValue.textContent = `${traffic} GB`;
+                durationValue.textContent = `${duration} روز`;
+
+                // نمایش مقادیر انتخاب شده در خلاصه سفارش
+                summaryTraffic.textContent = `${traffic} گیگابایت`;
+                summaryDuration.textContent = `${duration} روز`;
+
+                // به‌روزرسانی فیلدهای پنهان فرم
+                hiddenTraffic.value = traffic;
+                hiddenDuration.value = duration;
+
+                // نشان دادن "در حال محاسبه..." هنگام درخواست قیمت
+                summaryPrice.textContent = "در حال محاسبه...";
+                discountRow.style.display = "none"; // پنهان کردن تخفیف تا محاسبه انجام شود
+
+                // دریافت قیمت (ترجیحاً از سرور)
+                const result = await getPriceFromServer(traffic, duration);
+
+                // نمایش قیمت نهایی محاسبه شده
+                // استفاده از toLocaleString('fa-IR') برای نمایش اعداد فارسی با جداکننده هزارگان
+                summaryPrice.textContent = `${result.price.toLocaleString('fa-IR')} تومان`;
+
+                // نمایش تخفیف اگر مقدار آن بزرگتر از صفر باشد
+                if (result.discount > 0) {
+                    discountRow.style.display = "table-row"; // یا 'block' یا متناسب با layout
+                    summaryDiscount.textContent = `${result.discount.toLocaleString('fa-IR')}%`;
+                } else {
+                    discountRow.style.display = "none";
+                }
+            }
+
+            // متغیر برای نگهداری تایمر debounce
+             let debounceTimer;
+
+             // تابع debounce برای جلوگیری از فراخوانی مکرر updateDisplay
+             function debouncedUpdateDisplay() {
+                 clearTimeout(debounceTimer);
+                 debounceTimer = setTimeout(updateDisplay, 300); // 300 میلی‌ثانیه تاخیر
+             }
+
+
+            // رویدادهای تغییر مقادیر اسلایدرها
+            if (trafficRange) {
+                trafficRange.addEventListener('input', function() {
+                    // به‌روزرسانی سریع مقادیر نمایشی بدون انتظار برای پاسخ سرور
+                    if(trafficValue) trafficValue.textContent = `${this.value} GB`;
+                    if(summaryTraffic) summaryTraffic.textContent = `${this.value} گیگابایت`;
+                    if(hiddenTraffic) hiddenTraffic.value = this.value;
+
+                    // قیمت را با تاخیر دریافت/محاسبه می‌کنیم
+                    debouncedUpdateDisplay();
+                });
+            }
+
+            if (durationRange) {
+                durationRange.addEventListener('input', function() {
+                    // به‌روزرسانی سریع مقادیر نمایشی بدون انتظار برای پاسخ سرور
+                    if(durationValue) durationValue.textContent = `${this.value} روز`;
+                    if(summaryDuration) summaryDuration.textContent = `${this.value} روز`;
+                    if(hiddenDuration) hiddenDuration.value = this.value;
+
+                    // قیمت را با تاخیر دریافت/محاسبه می‌کنیم
+                     debouncedUpdateDisplay();
+                });
+            }
+
+
+            // مقداردهی اولیه هنگام بارگذاری صفحه
+            // ابتدا بررسی می‌کنیم که آیا المان‌های اصلی وجود دارند
+            if (trafficRange && durationRange) {
+                 updateDisplay(); // محاسبه و نمایش قیمت اولیه
+            } else {
+                 console.warn("اسلایدرهای ترافیک یا مدت زمان یافت نشدند. محاسبه‌گر قیمت غیرفعال است.");
+                 // می‌توانید در اینجا بخش مربوط به محاسبه‌گر را پنهان کنید یا پیام مناسبی نمایش دهید
+            }
+
+        });
+    </script>
+
+    @* --- اسکریپت برای فرم تماس (اختیاری - اگر هنوز از آن استفاده می‌کنید) --- *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const contactForm = document.getElementById('contact-form'); // آیدی فرم تماس
+             const submitButton = document.getElementById('submit-contact-button'); // آیدی دکمه ارسال فرم تماس
+             const responseDiv = document.getElementById('contact-message-response'); // المان نمایش پیام پاسخ
+             const csrfTokenInput = document.querySelector('input[name="__RequestVerificationToken"]'); // توکن CSRF
+
+             if (contactForm && submitButton && responseDiv && csrfTokenInput) {
+                contactForm.addEventListener('submit', function (e) {
+                    e.preventDefault(); // جلوگیری از ارسال پیش‌فرض فرم
+
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...';
+                    responseDiv.innerHTML = ''; // پاک کردن پیام‌های قبلی
+
+                    const formData = new FormData(contactForm);
+                    const csrfToken = csrfTokenInput.value;
+
+                    fetch(contactForm.action, { // URL اکشن از پراپرتی action فرم خوانده می‌شود
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            // مهم: ارسال توکن ضد جعل (CSRF Token)
+                            'RequestVerificationToken': csrfToken
+                        }
+                    })
+                    .then(response => {
+                         if (!response.ok) {
+                             // تلاش برای خواندن پیام خطا از سرور (اگر وجود داشته باشد)
+                              return response.text().then(text => { throw new Error(text || `خطا در ارسال پیام: ${response.statusText}`); });
+                         }
+                         // بررسی کنید که آیا پاسخ JSON است یا خیر
+                         const contentType = response.headers.get("content-type");
+                         if (contentType && contentType.indexOf("application/json") !== -1) {
+                             return response.json(); // فرض بر اینکه سرور JSON برمی‌گرداند
+                         } else {
+                              return response.text().then(text => {
+                                  // اگر پاسخ JSON نبود، آن را به عنوان یک پیام موفقیت متنی در نظر بگیرید
+                                  // یا یک ساختار JSON پیش‌فرض برای موفقیت ایجاد کنید
+                                  console.log("Server response (non-JSON):", text);
+                                  return { success: true, message: text || 'پیام با موفقیت ارسال شد.' };
+                              });
+                         }
+                    })
+                    .then(data => {
+                        // بر اساس ساختار پاسخ JSON از سرور عمل کنید
+                         if (data.success) {
+                             responseDiv.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                     ${data.message || 'پیام شما با موفقیت ارسال شد. به زودی با شما تماس خواهیم گرفت.'}
+                                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                                                  </div>`;
+                             contactForm.reset(); // پاک کردن فرم
+                         } else {
+                             responseDiv.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                     ${data.message || 'خطایی در ارسال پیام رخ داد. لطفا دوباره تلاش کنید.'}
+                                                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                                                  </div>`;
+                         }
+                    })
+                    .catch(error => {
+                        console.error('Error submitting contact form:', error);
+                        responseDiv.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                 خطایی در ارتباط با سرور رخ داد. لطفا اتصال اینترنت خود را بررسی کرده و دوباره تلاش کنید. (${error.message})
+                                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                                             </div>`;
+                    })
+                    .finally(() => {
+                        // فعال کردن مجدد دکمه و بازگرداندن متن اصلی آن
+                        submitButton.disabled = false;
+                        // متن اصلی دکمه ارسال فرم تماس را اینجا قرار دهید
+                        submitButton.innerHTML = '<i class="ri-send-plane-fill align-bottom me-1"></i> ارسال پیام';
+                    });
+                });
+             } else {
+                  // اگر یکی از المان‌های فرم تماس یافت نشد، یک هشدار در کنسول ثبت کنید
+                  if (!contactForm) console.warn("المان فرم تماس (#contact-form) یافت نشد.");
+                  if (!submitButton) console.warn("دکمه ارسال فرم تماس (#submit-contact-button) یافت نشد.");
+                  if (!responseDiv) console.warn("المان نمایش پاسخ فرم تماس (#contact-message-response) یافت نشد.");
+                  if (!csrfTokenInput) console.warn("توکن CSRF در فرم یافت نشد.");
+             }
+        });
+    </script>
+
+}

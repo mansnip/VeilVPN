@@ -19,6 +19,7 @@ namespace Domain.Interfaces
         Task<bool> IsExistUserByEmail(string email);
         Task<bool> IsExistUserById(string id);
 
-
+        // *** متد جدید برای گرفتن کاربران با نقش خاص ***
+        Task<List<User>> GetUsersInRoleAsync(string roleName);
     }
 }

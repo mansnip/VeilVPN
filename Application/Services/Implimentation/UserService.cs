@@ -56,4 +56,25 @@ public class UserService : IUserService
     {
         await _UserReposytory.UpdateUser(user);
     }
+
+    // *** پیاده‌سازی متد جدید چک کردن نقش ***
+    public async Task<bool> IsUserInRoleAsync(string userId, string roleName)
+    {
+        var user = await _UserReposytory.GetUserById(userId);
+        if (user == null)
+        {
+            return false; // کاربر وجود ندارد
+        }
+
+        // فرض: پراپرتی نقش در User اسمش Role هست و از نوع string
+        // به بزرگی/کوچکی حروف دقت کنید
+        // return user.Role == roleName; // حالت ساده
+        return string.Equals(user.Role, roleName, StringComparison.OrdinalIgnoreCase); // مقایسه بدون حساسیت به حروف
+    }
+
+    // *** پیاده‌سازی متد جدید گرفتن کاربران با نقش ***
+    public async Task<List<User>> GetUsersInRoleAsync(string roleName)
+    {
+        return await _UserReposytory.GetUsersInRoleAsync(roleName);
+    }
 }

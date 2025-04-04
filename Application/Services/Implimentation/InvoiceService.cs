@@ -1,12 +1,8 @@
 ﻿using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.ViewModels.Admin;
 using Domain.ViewModels.UserPanel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services.Implimentation
 {
@@ -22,6 +18,27 @@ namespace Application.Services.Implimentation
         }
 
         // سازنده و سایر متدها...
+
+        public async Task<List<AdminInvoiceListViewModel>> GetAllInvoicesForAdminAsync()
+        {
+            var invoices = await _invoiceRepository.GetAllInvoicesWithUserAsync();
+
+            if (invoices == null)
+                return new List<AdminInvoiceListViewModel>();
+
+            return invoices.Select(invoice => new AdminInvoiceListViewModel
+            {
+                Id = invoice.Id,
+                InvoiceNumber = invoice.InvoiceNumber,
+                UserEmail = invoice.User?.Email ?? "کاربر حذف شده", // نمایش ایمیل کاربر و مدیریت حالت null
+                CreatedDate = invoice.CreatedDate,
+                FinalPrice = invoice.FinalPrice,
+                Status = invoice.Status,
+                IsRenewal = invoice.IsRenewal,
+                RemarkName = invoice.RemarkName
+            }).ToList();
+        }
+
 
         public async Task<InvoiceViewModel> CreateInvoiceAsync(string userId, int traffic, int duration, SubscriptionPriceDetails priceDetails, string remarkName, string renewalId = null)
         {
@@ -93,6 +110,8 @@ namespace Application.Services.Implimentation
                 UserFullName = "",
                 UserEmail = user?.Email,
                 UserPhone = user?.PhoneNumber,
+                PaymentToken = invoice.PaymentToken,
+                IsComplate = invoice.IsComplate,
                 Subscription = new SubscriptionDetails
                 {
                     Traffic = invoice.Traffic,
@@ -187,6 +206,16 @@ namespace Application.Services.Implimentation
                 CanceledInvoices = invoices.Count(i => i.Status == "لغو شده"),
                 TotalSpent = invoices.Where(i => i.Status == "پرداخت شده").Sum(i => i.FinalPrice)
             };
+        }
+
+        public async Task<Invoice> GetOrginalInvoiceById(string id)
+        {
+            return await _invoiceRepository.GetByIdAsync(id);
+        }
+
+        public async Task UpdateInvoice(Invoice invoice)
+        {
+            await _invoiceRepository.UpdateAsync(invoice);
         }
     }
 

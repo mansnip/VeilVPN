@@ -1,255 +1,245 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model Domain.ViewModels.UserPanel.Dashboard.DashboardViewModel
+@using Application.Extensions
+@{
+    ViewData["Title"] = "داشبورد کاربری";
     Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row project-wrapper">
-    <div class="col-xxl-8">
-        <div class="row">
-            <!-- کارت وضعیت اشتراک -->
-            <div class="col-xl-4">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-primary-subtle text-primary rounded-2 fs-2">
-                                    <i data-feather="wifi" class="text-primary"></i>
-                                </span>
-                            </div>
-                            <div class="flex-grow-1 overflow-hidden ms-3">
-                                <p class="text-uppercase fw-medium text-muted text-truncate mb-3">وضعیت اشتراک</p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <h4 class="fs-4 flex-grow-1 mb-0" id="subscription-status">فعال</h4>
-                                    <span class="badge bg-success-subtle text-success fs-12">در حال استفاده</span>
-                                </div>
-                                <p class="text-muted text-truncate mb-0">زمان باقیمانده تا اتمام</p>
-                            </div>
-                        </div>
-                    </div><!-- end card body -->
-                </div>
-            </div><!-- end col -->
-            <!-- کارت ترافیک مصرفی -->
-            <div class="col-xl-4">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-warning-subtle text-warning rounded-2 fs-2">
-                                    <i data-feather="download" class="text-warning"></i>
-                                </span>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <p class="text-uppercase fw-medium text-muted mb-3">ترافیک مصرفی</p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="75">0</span> GB</h4>
-                                    <span class="badge bg-warning-subtle text-warning fs-12">از 100 GB</span>
-                                </div>
-                                <p class="text-muted mb-0">75% استفاده شده</p>
-                            </div>
-                        </div>
-                    </div><!-- end card body -->
-                </div>
-            </div><!-- end col -->
-            <!-- کارت زمان اتصال -->
-            <div class="col-xl-4">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-info-subtle text-info rounded-2 fs-2">
-                                    <i data-feather="clock" class="text-info"></i>
-                                </span>
-                            </div>
-                            <div class="flex-grow-1 overflow-hidden ms-3">
-                                <p class="text-uppercase fw-medium text-muted text-truncate mb-3">زمان اتصال کل</p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <h4 class="fs-4 flex-grow-1 mb-0"><span class="counter-value" data-target="168">0</span>ساعت<span class="counter-value" data-target="40">0</span>دقیقه</h4>
-                                </div>
-                                <p class="text-muted text-truncate mb-0">در ماه جاری</p>
-                            </div>
-                        </div>
-                    </div><!-- end card body -->
-                </div>
-            </div><!-- end col -->
-        </div><!-- end row -->
+<!-- Start Content-->
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent mb-4">
+            @* اضافه کردن mb-4 برای فاصله *@
+            <h4 class="mb-sm-0">داشبورد</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">پنل کاربری</a></li>
+                    <li class="breadcrumb-item active">داشبورد</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<!-- نمایش پیام‌های موفقیت و خطا -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>موفقیت!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0 align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">بررسی فعالیت اتصال</h4>
-                        <div>
-                            <button type="button" class="btn btn-soft-secondary btn-sm material-shadow-none">هفته</button>
-                            <button type="button" class="btn btn-soft-secondary btn-sm material-shadow-none">1M</button>
-                            <button type="button" class="btn btn-soft-secondary btn-sm material-shadow-none">3ماهه</button>
-                            <button type="button" class="btn btn-soft-primary btn-sm material-shadow-none">1Y</button>
-                        </div>
-                    </div><!-- end card header -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>خطا!</strong> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-                    <div class="card-header p-0 border-0 bg-light-subtle">
-                        <div class="row g-0 text-center">
-                            <div class="col-6 col-sm-3">
-                                <div class="p-3 border border-dashed border-start-0">
-                                    <h5 class="mb-1"><span class="counter-value" data-target="98">0</span> بار</h5>
-                                    <p class="text-muted mb-0">تعداد اتصال‌ها</p>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-6 col-sm-3">
-                                <div class="p-3 border border-dashed border-start-0">
-                                    <h5 class="mb-1"><span class="counter-value" data-target="75">0</span> GB</h5>
-                                    <p class="text-muted mb-0">ترافیک مصرفی</p>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-6 col-sm-3">
-                                <div class="p-3 border border-dashed border-start-0">
-                                    <h5 class="mb-1"><span class="counter-value" data-target="30">0</span>روز</h5>
-                                    <p class="text-muted mb-0">زمان باقیمانده</p>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-6 col-sm-3">
-                                <div class="p-3 border border-dashed border-start-0 border-end-0">
-                                    <h5 class="mb-1 text-success"><span class="counter-value" data-target="168">0</span>ساعت</h5>
-                                    <p class="text-muted mb-0">زمان اتصال کل</p>
-                                </div>
-                            </div>
-                            <!--end col-->
-                        </div>
-                    </div><!-- end card header -->
-                    <div class="card-body p-0 pb-2">
-                        <div>
-                            <div id="connection-overview-chart" data-colors='["--vz-primary", "--vz-warning", "--vz-success"]' class="apex-charts"></div>
-                        </div>
-                    </div><!-- end card body -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-        </div><!-- end row -->
-    </div><!-- end col -->
-
-    <div class="col-xxl-4">
-        <div class="card">
-            <div class="card-header border-0">
-                <h4 class="card-title mb-0">اطلاعات اشتراک فعال</h4>
-            </div><!-- end cardheader -->
-            <div class="card-body pt-0">
-                <div class="card bg-light-subtle border-0">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="fs-15 mb-3">اشتراک VPN پیشرفته</h5>
-                                <div class="mb-3">
-                                    <span class="badge bg-success-subtle text-success">فعال</span>
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <div class="avatar-sm">
-                                    <div class="avatar-title bg-soft-primary text-primary rounded-circle fs-4">
-                                        <i class="ri-shield-check-line"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <ul class="list-unstyled mb-0">
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ri-time-line text-primary me-1"></i>
-                                <span class="text-muted">شروع: 1402/06/01</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ri-time-line text-primary me-1"></i>
-                                <span class="text-muted">پایان: 1402/09/01</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ri-download-2-line text-primary me-1"></i>
-                                <span class="text-muted">حجم کل: 100 گیگابایت</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ri-download-2-line text-primary me-1"></i>
-                                <span class="text-muted">حجم مصرفی: 75 گیگابایت (75%)</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ri-device-line text-primary me-1"></i>
-                                <span class="text-muted">دستگاه‌های مجاز: 5</span>
-                            </li>
-                            <li class="d-flex align-items-center">
-                                <i class="ri-speed-up-line text-primary me-1"></i>
-                                <span class="text-muted">سرعت: نامحدود</span>
-                            </li>
-                        </ul>
-
-                        <div class="mt-4">
-                            <a href="~/UserPanel/Panel/BuySubscription" class="btn btn-soft-primary w-100">تمدید اشتراک</a>
-                        </div>
-                    </div>
-                </div>
-
-                <h6 class="text-uppercase fw-semibold mt-4 mb-3 text-muted">آخرین اتصال‌ها:</h6>
-                <div class="mini-stats-wid d-flex align-items-center mt-3">
-                    <div class="flex-shrink-0 avatar-sm">
-                        <span class="mini-stat-icon avatar-title rounded-circle text-success bg-success-subtle fs-4">
-                            <i class="ri-smartphone-line"></i>
-                        </span>
+<!-- پیام خوش آمدگویی -->
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-primary text-white border-0 shadow-sm">
+            @* کمی استایل بیشتر *@
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="ri-shield-user-line fs-1"></i> @* آیکون مناسب‌تر *@
                     </div>
                     <div class="flex-grow-1 ms-3">
-                        <h6 class="mb-1">اتصال از تلفن همراه</h6>
-                        <p class="text-muted mb-0">آخرین اتصال: امروز</p>
+                        <h5 class="card-title text-white mb-1">سلام، @Model.UserName عزیز!</h5>
+                        <p class="card-text mb-0">به پنل کاربری خود در رهاگذر خوش آمدید.</p>
                     </div>
-                    <div class="flex-shrink-0">
-                        <p class="text-muted mb-0">09:20<span class="text-uppercase">صبح</span></p>
-                    </div>
-                </div><!-- end -->
-                <div class="mini-stats-wid d-flex align-items-center mt-3">
-                    <div class="flex-shrink-0 avatar-sm">
-                        <span class="mini-stat-icon avatar-title rounded-circle text-success bg-success-subtle fs-4">
-                            <i class="ri-computer-line"></i>
-                        </span>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="mb-1">اتصال از کامپیوتر</h6>
-                        <p class="text-muted mb-0">آخرین اتصال: دیروز</p>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <p class="text-muted mb-0">ساعت 11:30<span class="text-uppercase">صبح</span></p>
-                    </div>
-                </div><!-- end -->
-                <div class="mini-stats-wid d-flex align-items-center mt-3">
-                    <div class="flex-shrink-0 avatar-sm">
-                        <span class="mini-stat-icon avatar-title rounded-circle text-success bg-success-subtle fs-4">
-                            <i class="ri-tablet-line"></i>
-                        </span>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h6 class="mb-1">اتصال از تبلت</h6>
-                        <p class="text-muted mb-0">آخرین اتصال: هفته قبل</p>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <p class="text-muted mb-0">ساعت 02:00<span class="text-uppercase">بعد از ظهر</span></p>
-                    </div>
-                </div><!-- end -->
-
-                <div class="mt-4 text-center">
-                    <a href="~/UserPanel/Subscription/Status" class="btn btn-soft-info btn-sm">مشاهده همه اتصال‌ها</a>
                 </div>
-            </div><!-- end cardbody -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-</div><!-- end row -->
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
-    <div class="col-xl-6">
-        <div class="card card-height-100">
-            <div class="card-header d-flex align-items-center">
-                <h4 class="card-title flex-grow-1 mb-0">فاکتورهای اخیر</h4>
+    <!-- ستون اصلی (بخش اشتراک) -->
+    <div class="col-lg-8">
+        <div class="card card-height-100 shadow-sm">
+            @* افزودن سایه *@
+            <div class="card-header align-items-center d-flex border-bottom-dashed">
+                @* جداکننده خط‌چین *@
+                <h4 class="card-title mb-0 flex-grow-1">
+                    <i class="ri-shield-check-line align-middle me-1 text-primary"></i> وضعیت اشتراک
+                </h4>
+                @if (Model.HasActiveSubscription)
+                {
+                    <div class="flex-shrink-0">
+                        @* دکمه تمدید که به صفحه خرید با ID اشتراک فعلی می‌رود *@
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" asp-route-subscriptionId="@Model.ActiveSubscription.Id" class="btn btn-soft-success btn-sm">
+                            <i class="ri-refresh-line align-bottom me-1"></i> تمدید اشتراک
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex-shrink-0">
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" class="btn btn-success btn-sm">
+                            <i class="ri-shopping-cart-2-line align-bottom me-1"></i> خرید اشتراک جدید
+                        </a>
+                    </div>
+                }
+            </div><!-- end card header -->
+
+            <div class="card-body">
+                @if (Model.HasActiveSubscription)
+                {
+                    var sub = Model.ActiveSubscription;
+                    var progressColor = sub.UsagePercentage < 75 ? "primary" : (sub.UsagePercentage < 90 ? "warning" : "danger");
+
+                    <h5 class="fs-15 mb-3">@sub.RemarkName</h5>
+
+                    <div class="row gy-3">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <i class="ri-calendar-check-line align-middle me-1 text-muted"></i>
+                                <span class="fw-medium">تاریخ انقضا:</span> @sub.ExpiryDate.ToPersianDate()
+                            </p>
+                            <p class="mb-0">
+                                <i class="ri-time-line align-middle me-1 text-muted"></i>
+                                <span class="fw-medium">زمان باقیمانده:</span>
+                                @if (sub.RemainingDays > 0)
+                                {
+                                    <span class="text-success">@sub.RemainingDays روز</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">منقضی شده</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <i class="ri-database-2-line align-middle me-1 text-muted"></i>
+                                <span class="fw-medium">حجم کل:</span> @sub.TotalTrafficGB گیگابایت
+                            </p>
+                            <p class="mb-0">
+                                <i class="ri-download-cloud-2-line align-middle me-1 text-muted"></i>
+                                <span class="fw-medium">باقیمانده:</span> @sub.RemainingTrafficGB گیگابایت
+                                (@if (sub.RemainingTrafficGB <= 0 && sub.TotalTrafficGB > 0)
+                                {
+                                    <span class="text-danger">تمام شده</span>
+                                }
+                                else
+                                {
+                                    <span class="text-success">موجود</span>
+                                })
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="form-label mb-1">میزان مصرف ترافیک (@($"{sub.UsagePercentage:F1}")%)</label>
+                        <div class="progress progress-lg rounded-pill" style="height: 10px;">
+                            <div class="progress-bar bg-@progressColor" role="progressbar" style="width: @($"{sub.UsagePercentage}%")" aria-valuenow="@sub.UsagePercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1 fs-12 text-muted">
+                            <span>@sub.UsedTrafficGB GB مصرف شده</span>
+                            <span>@sub.TotalTrafficGB GB کل</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-top border-dashed">
+                        @* جداکننده *@
+                        <a asp-area="UserPanel" asp-controller="Subscription" asp-action="MySubscriptions" class="btn btn-soft-primary btn-sm">
+                            <i class="ri-eye-line align-middle me-1"></i> مشاهده جزئیات کامل اشتراک
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="ri-error-warning-line fs-1 text-warning mb-3"></i>
+                        <h5 class="text-muted">شما در حال حاضر هیچ اشتراک فعالی ندارید.</h5>
+                        <p class="text-muted">برای استفاده از خدمات، لطفا یک اشتراک جدید خریداری کنید.</p>
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" class="btn btn-success mt-2">
+                            <i class="ri-shopping-cart-2-line align-bottom me-1"></i> خرید اشتراک
+                        </a>
+                    </div>
+                }
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+    <!-- ستون کناری (فاکتورها و لینک‌ها) -->
+    <div class="col-lg-4">
+        <!-- کارت فاکتورهای در انتظار -->
+        <div class="card card-height-100 shadow-sm mb-4">
+            @* افزودن سایه و فاصله پایین *@
+            <div class="card-body text-center">
+                <div class="avatar-sm mx-auto mb-3">
+                    <span class="avatar-title bg-warning-subtle text-warning rounded-circle fs-2">
+                        <i class="ri-file-list-3-line"></i>
+                    </span>
+                </div>
+                <h4 class="fs-4 mb-1">
+                    @Model.PendingInvoicesCount
+                </h4>
+                <p class="text-muted mb-3">فاکتور در انتظار پرداخت</p>
+                <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-soft-warning btn-sm w-100">
+                    مشاهده و پرداخت فاکتورها
+                </a>
+            </div>
+        </div>
+
+        <!-- لینک های سریع (نمونه) -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="ri-links-line align-middle me-1"></i> لینک‌های سریع</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a asp-area="UserPanel" asp-controller="Subscription" asp-action="MySubscriptions">
+                            <i class="ri-list-check-2 align-middle me-2 text-primary"></i> اشتراک‌های من
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices">
+                            <i class="ri-file-text-line align-middle me-2 text-primary"></i> فاکتورهای من
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a asp-area="UserPanel" asp-controller="Tutorials" asp-action="Index">@* لینک به صفحه راهنما یا دانلود *@
+                            <i class="ri-download-2-line align-middle me-2 text-primary"></i> راهنمای اتصال و دانلود
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a asp-area="UserPanel" asp-controller="Chat" asp-action="Index">@* لینک به صفحه تیکت‌ها *@
+                            <i class="ri-customer-service-2-line align-middle me-2 text-primary"></i> پشتیبانی (تیکت)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div><!-- end col -->
+</div><!-- end row -->
+<!-- بخش فاکتورهای اخیر -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            @* افزودن سایه *@
+            <div class="card-header d-flex align-items-center border-bottom-dashed">
+                <h4 class="card-title flex-grow-1 mb-0">
+                    <i class="ri-file-list-2-line align-middle me-1 text-info"></i> فاکتورهای اخیر
+                </h4>
                 <div class="flex-shrink-0">
-                    <a href="~/UserPanel/Panel/Invoices" class="btn btn-soft-info btn-sm material-shadow-none">مشاهده همه</a>
+                    <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-soft-info btn-sm">
+                        مشاهده همه فاکتورها <i class="ri-arrow-left-s-line align-middle"></i>
+                    </a>
                 </div>
             </div><!-- end cardheader -->
             <div class="card-body">
                 <div class="table-responsive table-card">
-                    <table class="table table-nowrap table-centered align-middle">
-                        <thead class="bg-light text-muted">
+                    <table class="table table-hover table-nowrap table-centered align-middle mb-0">
+                        <thead class="table-light text-muted">
+                            @* تغییر رنگ به table-light *@
                             <tr>
                                 <th scope="col">شماره فاکتور</th>
                                 <th scope="col">تاریخ</th>
@@ -260,150 +250,83 @@
                         </thead><!-- thead -->
 
                         <tbody>
-                            <tr>
-                                <td class="fw-medium">INV-001</td>
-                                <td>1402/06/01</td>
-                                <td>۱,۲۰۰,۰۰۰ تومان</td>
-                                <td><span class="badge bg-success-subtle text-success">پرداخت شده</span></td>
-                                <td>
-                                    <a href="~/UserPanel/Panel/ShowInvoice/1" class="btn btn-sm btn-soft-primary">مشاهده</a>
-                                </td>
-                            </tr><!-- end tr -->
-                            <tr>
-                                <td class="fw-medium">INV-002</td>
-                                <td>1402/05/15</td>
-                                <td>۸۰۰,۰۰۰ تومان</td>
-                                <td><span class="badge bg-success-subtle text-success">پرداخت شده</span></td>
-                                <td>
-                                    <a href="~/UserPanel/Panel/ShowInvoice/2" class="btn btn-sm btn-soft-primary">مشاهده</a>
-                                </td>
-                            </tr><!-- end tr -->
-                            <tr>
-                                <td class="fw-medium">INV-003</td>
-                                <td>1402/04/20</td>
-                                <td>۵۰۰,۰۰۰ تومان</td>
-                                <td><span class="badge bg-warning-subtle text-warning">در انتظار پرداخت</span></td>
-                                <td>
-                                    <a href="~/UserPanel/Panel/ProcessPayment/3" class="btn btn-sm btn-soft-success">پرداخت</a>
-                                    <a href="~/UserPanel/Panel/CancelInvoice/3" class="btn btn-sm btn-soft-danger">لغو</a>
-                                </td>
-                            </tr><!-- end tr -->
-                        </tbody><!-- end tbody -->
-                    </table><!-- end table -->
-                </div>
-            </div><!-- end card body -->
-        </div><!-- end card -->
-    </div><!-- end col -->
+                            @if (Model.RecentInvoices != null && Model.RecentInvoices.Any())
+                            {
+                                @foreach (var invoice in Model.RecentInvoices)
+                                {
+                                    <tr>
+                                        <td class="fw-medium">@invoice.InvoiceNumber</td>
+                                        <td>@invoice.InvoiceDate.ToPersianDate()</td>
+                                        <td>@invoice.FinalPrice.ToPrice() تومان</td>
+                                        <td>
+                                            @if (invoice.Status == "پرداخت شده")
+                                            {
+                                                <span class="badge bg-success-subtle text-success">@invoice.Status</span>
+                                            }
+                                            else if (invoice.Status == "در انتظار پرداخت")
+                                            {
+                                                <span class="badge bg-warning-subtle text-warning">@invoice.Status</span>
+                                            }
+                                            else if (invoice.Status == "لغو شده")
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger">@invoice.Status</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-info-subtle text-info">@invoice.Status</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="hstack gap-2">
+                                                <a href="@Url.Action("ShowInvoice", "Panel", new { area = "UserPanel", id = invoice.Id })" class="btn btn-sm btn-soft-primary">
+                                                    <i class="ri-eye-line align-middle"></i> <span class="d-none d-sm-inline-block">مشاهده</span> @* متن در موبایل مخفی شود *@
+                                                </a>
+                                                @if (invoice.Status == "در انتظار پرداخت")
+                                                {
+                                                    <form asp-area="UserPanel" asp-controller="Panel" asp-action="ProcessPayment" method="post" class="d-inline">
+                                                        <input type="hidden" name="invoiceId" value="@invoice.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-soft-success">
+                                                            <i class="ri-bank-card-line align-middle"></i> <span class="d-none d-sm-inline-block">پرداخت</span>
+                                                        </button>
+                                                    </form>
+                                                    @* دکمه لغو در داشبورد شاید ضروری نباشد، برای خلوت شدن حذف شد *@
+                                                    @* <form asp-area="UserPanel" asp-controller="Panel" asp-action="CancelInvoice" method="post" onsubmit="return confirm('آیا از لغو این فاکتور اطمینان دارید؟');" class="d-inline">
+                                                            <input type="hidden" name="invoiceId" value="@invoice.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-soft-danger">
+                                                                <i class="ri-close-circle-line align-middle"></i> <span class="d-none d-sm-inline-block">لغو</span>
+                                                            </button>
+                                                        </form> *@
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
 
-    <div class="col-xl-6">
-        <div class="card card-height-100">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1 py-1">سرورهای موجود</h4>
-                <div class="flex-shrink-0">
-                    <div class="dropdown card-header-dropdown">
-                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="text-muted">همه سرورها<i class="mdi mdi-chevron-down ms-1"></i></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">همه سرورها</a>
-                            <a class="dropdown-item" href="#">اروپا</a>
-                            <a class="dropdown-item" href="#">آمریکا</a>
-                            <a class="dropdown-item" href="#">آسیا</a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- end card header -->
-
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
-                        <thead class="text-muted bg-light-subtle">
-                            <tr>
-                                <th scope="col">نام سرور</th>
-                                <th scope="col">موقعیت</th>
-                                <th scope="col">وضعیت</th>
-                                <th scope="col">پینگ</th>
-                                <th scope="col">اتصال</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-shrink-0 me-2">
-                                            <img src="../../assets/images/flags/de.svg" alt="" class="avatar-xxs rounded-circle">
-                                        </div>
-                                        <div class="flex-grow-1">آلمان - برلین</div>
-                                    </div>
-                                </td>
-                                <td>اروپا</td>
-                                <td><span class="badge bg-success-subtle text-success">آنلاین</span></td>
-                                <td>120ms</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-soft-success">اتصال</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-shrink-0 me-2">
-                                            <img src="../../assets/images/flags/us.svg" alt="" class="avatar-xxs rounded-circle">
-                                        </div>
-                                        <div class="flex-grow-1">آمریکا - نیویورک</div>
-                                    </div>
-                                </td>
-                                <td>آمریکا</td>
-                                <td><span class="badge bg-success-subtle text-success">آنلاین</span></td>
-                                <td>180ms</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-soft-success">اتصال</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-shrink-0 me-2">
-                                            <img src="../../assets/images/flags/sg.svg" alt="" class="avatar-xxs rounded-circle">
-                                        </div>
-                                        <div class="flex-grow-1">سنگاپور</div>
-                                    </div>
-                                </td>
-                                <td>آسیا</td>
-                                <td><span class="badge bg-success-subtle text-success">آنلاین</span></td>
-                                <td>150ms</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-soft-success">اتصال</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-shrink-0 me-2">
-                                            <img src="../../assets/images/flags/jp.svg" alt="" class="avatar-xxs rounded-circle">
-                                        </div>
-                                        <div class="flex-grow-1">ژاپن - توکیو</div>
-                                    </div>
-                                </td>
-                                <td>آسیا</td>
-                                <td><span class="badge bg-danger-subtle text-danger">تعمیرات</span></td>
-                                <td>--</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-soft-secondary" disabled>اتصال</button>
-                                </td>
-                            </tr>
-                        </tbody><!-- end tbody -->
-                    </table><!-- end table -->
-                </div>
-
-                <div class="mt-3 text-center">
-                    <a href="~/UserPanel/Subscription/Servers" class="text-muted text-decoration-underline">مشاهده همه سرورها</a>
-                </div>
-            </div><!-- end card body -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-</div>
-
-@section Scripts {
-    <!-- apexcharts -->
-    <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script>
+                                    <!-- end tr -->
                                 }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <i class="ri-information-line fs-3 text-muted mb-2"></i><br />
+                                        هیچ فاکتور اخیری برای نمایش وجود ندارد.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody><!-- end tbody -->
+                    </table><!-- end table -->
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+</div><!-- end row -->
+@section Scripts {
+    <!-- اینجا می‌توانید اسکریپت‌های خاص این صفحه را اضافه کنید -->
+@* <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script> *@
+@* <script src="~/assets/js/pages/dashboard-projects.init.js"></script> *@ @* اگر نیاز به نمودار یا شمارنده دارید *@
+
+    <script>
+        // کد جاوا اسکریپت اضافی در صورت نیاز
+        // مثال: آپدیت خودکار وضعیت یا...
+    </script>
+}

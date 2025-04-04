@@ -1,0 +1,1118 @@
+﻿@{
+    Layout = "~/Areas/Landing/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    Layout = "~/Areas/Landing/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "RahaGozar - سرویس VPN امن، پرسرعت و قابل تنظیم";
+    // اضافه کردن متا تگ توضیحات برای سئو
+    ViewData["MetaDescription"] = "با RahaGozar به اینترنت آزاد و امن دسترسی پیدا کنید. اشتراک VPN خود را با انتخاب مدت زمان و حجم ترافیک دلخواه، از ۴۸٬۰۰۰ تومان بسازید. سرعت بالا، بدون قطعی، با پشتیبانی ۲۴/۷.";
+}
+
+<div class="layout-wrapper landing">
+    <nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar" itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <div class="container">
+            <a class="navbar-brand" href="/" title="RahaGozar - صفحه اصلی">
+                @* حتما لوگوی خود را جایگزین کنید *@
+                <img src="/assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="لوگوی RahaGozar - حالت روشن" height="19">
+                <img src="/assets/images/logo-light.png" class="card-logo card-logo-light" alt="لوگوی RahaGozar - حالت تاریک" height="19">
+            </a>
+            <button class="navbar-toggler py-0 fs-20 text-body" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="تغییر ناوبری">
+                <i class="mdi mdi-menu"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto mt-2 mt-lg-0" id="navbar-example">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#hero" title="صفحه اصلی">صفحه اصلی</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services" title="خدمات RahaGozar">خدمات ما</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features" title="ویژگی‌های RahaGozar">ویژگی‌ها</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#plans" title="ساخت اشتراک دلخواه RahaGozar">ساخت اشتراک</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reviews" title="نظرات کاربران RahaGozar">نظرات کاربران</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faqs" title="سوالات متداول">سوالات متداول</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact" title="تماس با پشتیبانی RahaGozar">تماس با ما</a>
+                    </li>
+                </ul>
+
+                <div class="">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        var panelUrl = User.IsInRole("Admin") ? Url.Action("Index", "Home", new { Area = "Admin" }) : Url.Action("Index", "Panel", new { Area = "UserPanel" });
+                        <a href="@panelUrl" class="btn btn-soft-success material-shadow-none" title="ورود به پنل کاربری"><i class="ri-dashboard-line align-middle me-1"></i> پنل کاربری</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("SignIn", "Authentication", new {area =""})" class="btn btn-link fw-medium text-decoration-none text-body" title="ورود به حساب کاربری"> <i class="ri-login-box-line align-middle me-1"></i> ورود</a>
+                        <a href="@Url.Action("SignUp", "Authentication", new {area =""})" class="btn btn-primary" title="ایجاد حساب کاربری رایگان در RahaGozar"> <i class="ri-user-add-line align-middle me-1"></i> ثبت‌نام رایگان</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- end navbar -->
+    <div class="vertical-overlay" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent.show"></div>
+
+    <!-- start hero section -->
+    <section class="section pb-0 hero-section" id="hero">
+        <div class="bg-overlay bg-overlay-pattern"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9 col-sm-10">
+                    <div class="text-center mt-lg-5 pt-5">
+                        <h1 class="display-6 fw-semibold mb-3 lh-base">
+                            اینترنت آزاد، امن و پرسرعت با <span class="text-success">RahaGozar</span>
+                            <br>
+                            <span class="text-primary">اشتراک VPN خود را بسازید!</span>
+                        </h1>
+                        <p class="lead text-muted lh-lg px-lg-5">
+                            با RahaGozar محدودیت‌ها را کنار بزنید و با خیالی آسوده وب‌گردی کنید. سرویس VPN ما با رمزنگاری قوی، سرعت بالا و قابلیت تنظیم اشتراک، تجربه‌ای بی‌نظیر از اینترنت را برای شما رقم می‌زند.
+                        </p>
+
+                        <div class="d-flex gap-2 justify-content-center mt-4 pt-2">
+                            @* لینک ثبت نام اگر کاربر لاگین نیست *@
+                            @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                            {
+                                <a href="@Url.Action("SignUp", "Authentication", new {area =""})" class="btn btn-primary" title="ایجاد حساب کاربری و شروع استفاده">
+                                    <i class="ri-user-add-line align-middle me-1"></i> ثبت‌نام و شروع
+                                </a>
+                            }
+                            <a href="#plans" class="btn btn-outline-success" title="ساخت اشتراک VPN دلخواه">
+                                <i class="ri-tools-line align-middle me-1"></i> ساخت اشتراک دلخواه
+                            </a>
+                            <a href="#features" class="btn btn-link text-secondary" title="آشنایی با ویژگی‌های RahaGozar">
+                                آشنایی با ویژگی‌ها <i class="ri-arrow-left-line align-middle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 mt-sm-5 pt-sm-5 mb-sm-n5 demo-carousel">
+                        @* === تصویر اصلی Hero Section === *@
+                        @* حتما یک تصویر جذاب و مرتبط با VPN یا شبکه امن جایگزین کنید *@
+                        <div class="demo-img-patten-top d-none d-sm-block">
+                            <img src="~/assets/images/landing/img-pattern.png" class="d-block img-fluid" alt="الگوی تزئینی بالا">
+                        </div>
+                        <div class="demo-img-patten-bottom d-none d-sm-block">
+                            <img src="~/assets/images/landing/img-pattern.png" class="d-block img-fluid" alt="الگوی تزئینی پایین">
+                        </div>
+                        <div class="carousel slide carousel-fade shadow-lg p-2 bg-white rounded" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active" data-bs-interval="3000">
+                                    @* تصویر مرتبط با امنیت یا سرعت VPN *@
+                                    <img src="~/assets/images/landing/vpn-hero-1.png" class="d-block w-100 rounded" alt="امنیت و سرعت با RahaGozar VPN">
+                                </div>
+                                <div class="carousel-item" data-bs-interval="3000">
+                                    @* تصویر نمایش‌دهنده دسترسی جهانی یا رفع محدودیت *@
+                                    <img src="~/assets/images/landing/vpn-hero-2.png" class="d-block w-100 rounded" alt="دسترسی جهانی با RahaGozar VPN">
+                                </div>
+                                <div class="carousel-item" data-bs-interval="3000">
+                                    @* تصویر نمایش‌دهنده سازگاری با دستگاه‌های مختلف *@
+                                    <img src="~/assets/images/landing/vpn-hero-3.png" class="d-block w-100 rounded" alt="RahaGozar VPN روی همه دستگاه‌ها">
+                                </div>
+                            </div>
+                        </div>
+                        @* === پایان تصویر اصلی Hero Section === *@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero shape SVG -->
+        <div class="position-absolute start-0 end-0 bottom-0 hero-shape-svg">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 1440 120" aria-hidden="true">
+                <g mask='url("#SvgjsMask1003")' fill="none">
+                    <path d="M 0,118 C 288,98.6 1152,40.4 1440,21L1440 140L0 140z" fill="var(--vz-body-bg)"></path> @* رنگ پس‌زمینه بخش بعدی رو می‌گیره *@
+                </g>
+            </svg>
+        </div>
+    </section>
+    <!-- end hero section -->
+
+    @* بخش لوگوی مشتریان یا همکاران (اختیاری) *@
+    @* <div class="pt-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center mt-5">
+                        <h5 class="fs-15 text-muted">مورد اعتماد:</h5>
+                        CLIENT LOGOS HERE
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    <!-- start services -->
+    <section class="section" id="services">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h2 class="mb-3 fw-semibold lh-base">چرا RahaGozar بهترین انتخاب برای شماست؟</h2>
+                        <p class="text-muted">ما مجموعه‌ای از خدمات و ویژگی‌ها را گرد هم آورده‌ایم تا مطمئن شویم شما بهترین، امن‌ترین و سریع‌ترین اتصال VPN را تجربه می‌کنید.</p>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+
+            <div class="row g-4">
+                @* افزایش فاصله بین کارت‌ها با g-4 *@
+                <div class="col-lg-4 col-md-6">
+                    @* بهبود ریسپانسیو برای تبلت *@
+                    <div class="d-flex p-3">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm icon-effect">
+                                <div class="avatar-title bg-transparent text-success rounded-circle">
+                                    <i class="ri-rocket-line fs-36"></i> @* آیکن مرتبط با سرعت *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fs-17">سرعت فوق‌العاده بالا</h5>
+                            <p class="text-muted my-3 ff-secondary">با سرورهای بهینه‌سازی شده ما، وب‌گردی، استریم و دانلود را بدون هیچ‌گونه افت سرعتی تجربه کنید.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex p-3">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm icon-effect">
+                                <div class="avatar-title bg-transparent text-success rounded-circle">
+                                    <i class="ri-shield-check-line fs-36"></i> @* آیکن مرتبط با امنیت *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fs-17">امنیت و رمزنگاری قوی</h5>
+                            <p class="text-muted my-3 ff-secondary">با استفاده از پروتکل‌های امنیتی پیشرفته و رمزنگاری AES-256، اطلاعات شما همیشه محفوظ خواهد ماند.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex p-3">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm icon-effect">
+                                <div class="avatar-title bg-transparent text-success rounded-circle">
+                                    <i class="ri-earth-line fs-36"></i> @* آیکن مرتبط با دسترسی جهانی *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fs-17">عبور از محدودیت‌ها</h5>
+                            <p class="text-muted my-3 ff-secondary">به راحتی به وب‌سایت‌ها، سرویس‌ها و محتوای مورد علاقه خود در سراسر جهان دسترسی پیدا کنید.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex p-3">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm icon-effect">
+                                <div class="avatar-title bg-transparent text-success rounded-circle">
+                                    <i class="ri-tools-line fs-36"></i> @* آیکن مرتبط با سفارشی‌سازی *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fs-17">اشتراک انعطاف‌پذیر و دلخواه</h5>
+                            <p class="text-muted my-3 ff-secondary">طرح اشتراک خود را دقیقاً مطابق با نیازتان بسازید! مدت زمان و حجم ترافیک را خودتان انتخاب کنید.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex p-3">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm icon-effect">
+                                <div class="avatar-title bg-transparent text-success rounded-circle">
+                                    <i class="ri-customer-service-2-line fs-36"></i> @* آیکن مرتبط با پشتیبانی *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fs-17">پشتیبانی ۲۴/۷ فارسی</h5>
+                            <p class="text-muted my-3 ff-secondary">تیم پشتیبانی متخصص ما در تمام ساعات شبانه‌روز آماده پاسخگویی به سوالات و رفع مشکلات شماست.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex p-3">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm icon-effect">
+                                <div class="avatar-title bg-transparent text-success rounded-circle">
+                                    <i class="ri-refund-2-line fs-36"></i> @* آیکن مرتبط با گارانتی *@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fs-17">گارانتی بازگشت وجه</h5>
+                            <p class="text-muted my-3 ff-secondary">با اطمینان خرید کنید. در صورت عدم رضایت طی ۷ روز اول، تمام وجه پرداختی شما بازگردانده می‌شود.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </section>
+    <!-- end services -->
+    <!-- start features -->
+    <section class="section bg-light py-5" id="features">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-6 col-sm-7 mx-auto">
+                    <div>
+                        @* تصویر مرتبط با امنیت و حریم خصوصی *@
+                        <img src="~/assets/images/landing/features/feature-privacy.png" alt="امنیت و حریم خصوصی بی‌نظیر با RahaGozar" class="img-fluid mx-auto">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-muted">
+                        <div class="avatar-sm icon-effect mb-4">
+                            <div class="avatar-title bg-transparent rounded-circle text-success h1">
+                                <i class="ri-shield-keyhole-line fs-36"></i>
+                            </div>
+                        </div>
+                        <h3 class="mb-3 fs-22">حریم خصوصی شما، اولویت ماست</h3>
+                        <p class="mb-4 ff-secondary fs-16">ما هیچ‌گونه گزارشی از فعالیت‌های آنلاین شما ذخیره نمی‌کنیم (No-Log Policy). با RahaGozar، هویت و اطلاعات شما کاملاً ناشناس و امن باقی می‌ماند.</p>
+
+                        <div class="row pt-3">
+                            <div class="col-sm-4 col-6">
+                                @* بهبود ریسپانسیو *@
+                                <div class="text-center border-end border-dashed">
+                                    @* اضافه کردن جداکننده *@
+                                    <h4><span class="counter-value" data-target="50">0</span>+</h4>
+                                    <p>سرور در لوکیشن‌های کلیدی</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-6">
+                                @* بهبود ریسپانسیو *@
+                                <div class="text-center border-end border-dashed">
+                                    @* اضافه کردن جداکننده *@
+                                    <h4><span class="counter-value" data-target="99.9">0</span>%</h4>
+                                    <p>آپتایم و پایداری</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-12 mt-3 mt-sm-0">
+                                @* بهبود ریسپانسیو *@
+                                <div class="text-center">
+                                    <h4>24/7</h4>
+                                    <p>پشتیبانی آنلاین</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </section>
+    <!-- end features -->
+    <!-- start cta -->
+    <section class="py-5 bg-primary position-relative">
+        <div class="bg-overlay bg-overlay-pattern opacity-50"></div>
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-sm">
+                    <div>
+                        <h4 class="text-white mb-0 fw-semibold">آماده‌اید دنیای بدون مرز اینترنت را تجربه کنید؟</h4>
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-sm-auto">
+                    <div>
+                        <a href="#plans" class="btn bg-gradient btn-danger"><i class="ri-rocket-line align-middle me-1"></i>همین حالا اشتراک خود را بسازید!</a>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </section>
+    <!-- end cta -->
+    <!-- start features 2 (Cross-Platform) -->
+    <section class="section">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-6 order-2 order-lg-1">
+                    <div class="text-muted">
+                        <h5 class="fs-12 text-uppercase text-success">سازگاری کامل</h5>
+                        <h3 class="mb-3 fs-22">یک اشتراک، برای تمام دستگاه‌های شما</h3>
+                        <p class="mb-4 ff-secondary">با یک حساب کاربری RahaGozar، می‌توانید روی تمامی دستگاه‌های خود از جمله ویندوز، مک، اندروید، iOS و لینوکس به صورت همزمان متصل شوید و از اینترنت امن لذت ببرید.</p>
+
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="vstack gap-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">ویندوز</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">اندروید</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">Mac OS</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                @* ستون دوم برای پلتفرم‌ها *@
+                                <div class="vstack gap-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">لینوکس</h5>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">iOS</h5>
+                                        </div>
+                                    </div>
+                                    @* <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-2">
+                                            <div class="avatar-xs icon-effect">
+                                                <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fs-14 mb-0">روترها (به زودی)</h5>
+                                        </div>
+                                    </div> *@
+                                </div>
+                            </div>
+                        </div>
+
+                        @* دکمه "بیشتر بدانید" که می‌تواند به صفحه راهنما یا دانلود اپ‌ها لینک شود *@
+                        @* <div class="mt-4">
+                            <a href="/downloads" class="btn btn-primary">دانلود اپلیکیشن‌ها <i class="ri-download-2-line align-middle ms-1"></i></a>
+                         </div> *@
+                    </div>
+                </div><!-- end col -->
+                <div class="col-lg-6 col-sm-7 col-10 ms-auto order-1 order-lg-2">
+                    <div>
+                        @* تصویر مرتبط با سازگاری دستگاه‌ها *@
+                        <img src="~/assets/images/landing/features/feature-cross-platform.png" alt="RahaGozar VPN بر روی تمام دستگاه‌ها" class="img-fluid">
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+
+            @* بخش دوم ویژگی‌ها - تمرکز بر انعطاف‌پذیری و ساخت اشتراک *@
+            <div class="row align-items-center mt-5 pt-lg-5 gy-4">
+                <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                    <div>
+                        @* تصویر مرتبط با سفارشی‌سازی یا پلن‌های انعطاف‌پذیر *@
+                        <img src="~/assets/images/landing/features/feature-flexible-plans.png" alt="ساخت اشتراک VPN دلخواه با RahaGozar" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-muted ps-lg-5">
+                        <h5 class="fs-12 text-uppercase text-success">انعطاف‌پذیری بی‌نظیر</h5>
+                        <h3 class="mb-3 fs-22">کنترل کامل بر اشتراک VPN شما</h3>
+                        <p class="mb-4 ff-secondary fs-16">دیگر نیازی به انتخاب پلن‌های از پیش تعریف شده نیست! با RahaGozar، شما تصمیم می‌گیرید چه مدت و با چه حجمی از سرویس استفاده کنید. اشتراک خود را دقیقاً متناسب با نیاز و بودجه‌تان بسازید.</p>
+
+                        <div class="vstack gap-2">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                    <div class="avatar-xs icon-effect">
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0">انتخاب مدت زمان دلخواه (۱ ماهه تا ۱ ساله)</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                    <div class="avatar-xs icon-effect">
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0">انتخاب حجم ترافیک از محدود تا نامحدود</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                    <div class="avatar-xs icon-effect">
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0">شروع قیمت از <span class="fw-semibold text-success">۴۸,۰۰۰ تومان</span></p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                    <div class="avatar-xs icon-effect">
+                                        <div class="avatar-title bg-transparent text-success rounded-circle h2"><i class="ri-check-fill"></i></div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0">فعالسازی آنی پس از پرداخت</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#plans" class="btn btn-primary">ساخت اشتراک دلخواه <i class="ri-tools-line align-middle ms-1"></i></a>
+                        </div>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- end features -->
+    <!-- start plan / Interactive Calculator -->
+    <section class="section bg-light" id="plans">
+        <div class="bg-overlay bg-overlay-pattern"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h2 class="mb-3 fw-semibold lh-base">اشتراک VPN خود را بسازید!</h2>
+                        <p class="text-muted mb-4">مدت زمان و حجم ترافیک مورد نیاز خود را انتخاب کنید تا قیمت نهایی اشتراک محاسبه شود. <br> شروع قیمت‌ها از <span class="fw-bold text-success">۴۸,۰۰۰ تومان</span>.</p>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="row gy-4">
+                                <div class="col-md-6">
+                                    <h5 class="fs-16 mb-3"><i class="ri-calendar-2-line align-bottom me-1 text-primary"></i> مدت زمان اشتراک</h5>
+                                    <select class="form-select form-select-lg mb-3" id="duration-selector" aria-label="انتخاب مدت زمان اشتراک">
+                                        <option value="1" data-discount="0" selected>۱ ماهه</option>
+                                        <option value="3" data-discount="5">۳ ماهه (۵٪ تخفیف)</option>
+                                        <option value="6" data-discount="10">۶ ماهه (۱۰٪ تخفیف)</option>
+                                        <option value="12" data-discount="20">۱ ساله (۲۰٪ تخفیف)</option>
+                                    </select>
+
+                                    <h5 class="fs-16 mb-3 mt-4"><i class="ri-database-2-line align-bottom me-1 text-primary"></i> حجم ترافیک ماهانه</h5>
+                                    @* استفاده از Range Slider برای جذابیت بیشتر *@
+                                    <div class="position-relative">
+                                        <input type="range" class="form-range" id="traffic-slider" min="0" max="3" step="1" value="1"> @* مقادیر: 0=30GB, 1=50GB, 2=100GB, 3=Unlimited *@
+                                        <div class="d-flex justify-content-between px-1 mt-n1">
+                                            <span class="fs-13 text-muted">۳۰ گیگ</span>
+                                            <span class="fs-13 text-muted">۵۰ گیگ</span>
+                                            <span class="fs-13 text-muted">۱۰۰ گیگ</span>
+                                            <span class="fs-13 text-muted">نامحدود</span>
+                                        </div>
+                                        <p class="text-center mt-2 fw-medium fs-15" id="traffic-display">۵۰ گیگابایت</p> @* نمایش مقدار انتخاب شده *@
+                                    </div>
+
+                                    @* --- اختیاری: انتخاب تعداد کاربر همزمان --- *@
+                                    @* <h5 class="fs-16 mb-3 mt-4"><i class="ri-group-line align-bottom me-1 text-primary"></i> تعداد کاربر همزمان</h5>
+                                    <select class="form-select form-select-lg" id="users-selector">
+                                        <option value="1" selected>۱ کاربر</option>
+                                        <option value="2">۲ کاربر</option>
+                                        <option value="3">۳ کاربر</option>
+                                    </select> *@
+                                    @* --- پایان بخش اختیاری --- *@
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="bg-soft-success p-4 rounded-3 h-100 d-flex flex-column">
+                                        <h5 class="fs-18 mb-3 text-center"><i class="ri-shopping-cart-line align-bottom me-1"></i> پیش‌فاکتور شما</h5>
+                                        <div class="text-center">
+                                            @* نمایش قیمت محاسبه شده - نیاز به JS *@
+                                            <h3 class="display-6 fw-bold mb-0" id="calculated-price">
+                                                <span class="price-value"> -- </span>
+                                                <small class="fs-6 text-muted">تومان</small>
+                                            </h3>
+                                            <p class="text-muted mb-3" id="price-duration">برای ۱ ماه</p>
+                                        </div>
+                                        <hr class="my-3 border-dashed">
+                                        <h6 class="fs-15 mb-3">ویژگی‌های اشتراک شما:</h6>
+                                        <ul class="list-unstyled vstack gap-3 ff-secondary">
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> دسترسی به تمام سرورها</li>
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> پروتکل‌های امن (V2Ray, Cisco, ...)</li>
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> سرعت بالا و بدون محدودیت سرعت</li>
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> رمزنگاری AES-256</li>
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> سازگار با همه دستگاه‌ها</li>
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> پشتیبانی ۲۴/۷ فارسی</li>
+                                            <li><i class="ri-checkbox-circle-line text-success me-1"></i> گارانتی بازگشت وجه ۷ روزه</li>
+                                        </ul>
+                                        <div class="mt-auto">
+                                            @* دکمه را پایین می‌برد *@
+                                            @* این دکمه باید به صفحه ثبت‌نام یا پرداخت هدایت شود *@
+                                            @* لینک می‌تواند بر اساس لاگین بودن کاربر تغییر کند *@
+                                            @{
+                                                var orderUrl = (User.Identity != null && User.Identity.IsAuthenticated)
+                                                ? Url.Action("CreateOrder", "Order", new { area = "UserPanel" }) // فرض: صفحه ایجاد سفارش در پنل
+                                                : Url.Action("SignUp", "Authentication", new { area = "", returnUrl = "/UserPanel/Order/CreateOrder" }); // ریدایرکت به ثبت نام و سپس ایجاد سفارش
+                                            }
+                                            <a href="@orderUrl" class="btn btn-success w-100 btn-lg" id="order-button" title="ثبت سفارش و فعالسازی آنی">
+                                                <i class="ri-shopping-cart-2-line align-middle me-1"></i> ثبت سفارش و فعالسازی آنی
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                    <p class="text-center text-muted mt-4">نیاز به راهنمایی دارید؟ <a href="#contact" class="link-primary text-decoration-underline">با ما تماس بگیرید</a>.</p>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- end plan -->
+    <!-- start reviews -->
+    <section class="section bg-primary" id="reviews">
+        <div class="bg-overlay bg-overlay-pattern"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center">
+                        <div>
+                            <i class="ri-double-quotes-l text-success display-3"></i>
+                        </div>
+                        <h4 class="text-white mb-5 fw-light"><span class="fw-semibold">مشتریان ما</span> چه می‌گویند</h4>
+
+                        <!-- Swiper -->
+                        <div class="swiper client-review-swiper rounded" dir="ltr">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="row justify-content-center">
+                                        <div class="col-10">
+                                            <div class="text-white-50">
+                                                <p class="fs-20 ff-secondary mb-4">
+                                                    "از وقتی از RahaGozar استفاده می‌کنم، دیگه مشکل قطعی و کندی سرعت ندارم. پشتیبانیشون هم واقعا عالیه و سریع جواب میدن. خیلی راضی‌ام!"
+                                                </p>
+
+                                                <div>
+                                                    <h5 class="text-white">رضا احمدی</h5>
+                                                    <p>- کاربر فعال</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end slide -->
+                                <div class="swiper-slide">
+                                    <div class="row justify-content-center">
+                                        <div class="col-10">
+                                            <div class="text-white-50">
+                                                <p class="fs-20 ff-secondary mb-4">
+                                                    "انعطاف‌پذیری توی انتخاب حجم و مدت زمان عالیه. دقیقا همون چیزی که لازم داشتم رو تونستم تهیه کنم. قیمت‌ها هم منصفانه است."
+                                                </p>
+                                                <div>
+                                                    <h5 class="text-white">مریم حسینی</h5>
+                                                    <p>- توسعه‌دهنده وب</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end slide -->
+                                <div class="swiper-slide">
+                                    <div class="row justify-content-center">
+                                        <div class="col-10">
+                                            <div class="text-white-50">
+                                                <p class="fs-20 ff-secondary mb-4">
+                                                    "برای بازی آنلاین دنبال یه VPN پایدار و سریع بودم. RahaGozar پینگ خوبی میده و قطعی نداره. پیشنهاد می‌کنم."
+                                                </p>
+                                                <div>
+                                                    <h5 class="text-white">علی محمدی</h5>
+                                                    <p>- گیمر</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end slide -->
+                            </div><!-- end wrapper -->
+                            <div class="swiper-button-next bg-white rounded-circle"></div>
+                            <div class="swiper-button-prev bg-white rounded-circle"></div>
+                            <div class="swiper-pagination"></div> @* اضافه کردن پجینیشن *@
+                        </div><!-- end slider -->
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- end reviews -->
+    <!-- start faqs -->
+    <section class="section" id="faqs">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h3 class="mb-3 fw-semibold">سوالات متداول</h3>
+                        <p class="text-muted mb-4">اگر پاسخ سوال خود را پیدا نکردید، لطفاً از طریق بخش <a href="#contact" class="link-primary text-decoration-underline">تماس با ما</a> با تیم پشتیبانی در ارتباط باشید.</p>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+
+            <div class="row g-lg-5 g-4 align-items-center">
+                <div class="col-lg-6">
+                    @* تصویر مرتبط با سوالات یا پشتیبانی *@
+                    <img src="~/assets/images/landing/faq-illustration.png" alt="سوالات متداول RahaGozar VPN" class="img-fluid">
+                </div><!-- end col -->
+                <div class="col-lg-6">
+                    <div class="accordion custom-accordionwithicon" id="accordionFaqs">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqHeadingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                                    چگونه می‌توانم اشتراک دلخواه خود را بسازم؟
+                                </button>
+                            </h2>
+                            <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#accordionFaqs">
+                                <div class="accordion-body ff-secondary">
+                                    بسیار ساده! به بخش <a href="#plans" class="link-primary text-decoration-underline">"ساخت اشتراک"</a> در همین صفحه مراجعه کنید. مدت زمان مورد نظرتان (مثلاً ۱ ماهه، ۳ ماهه و ...) و حجم ترافیک ماهانه دلخواه (مثلاً ۵۰ گیگ، نامحدود و ...) را انتخاب کنید. قیمت نهایی بلافاصله محاسبه و نمایش داده می‌شود. سپس می‌توانید روی دکمه "ثبت سفارش" کلیک کرده و مراحل پرداخت را تکمیل کنید.
+                                </div>
+                            </div>
+                        </div><!-- end accordion-item -->
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqHeadingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                                    چه پروتکل‌هایی توسط RahaGozar پشتیبانی می‌شود؟
+                                </button>
+                            </h2>
+                            <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#accordionFaqs">
+                                <div class="accordion-body ff-secondary">
+                                    ما از پروتکل‌های امن و پرسرعت متنوعی مانند V2Ray (پروتکل‌های VMess و VLESS)، Cisco AnyConnect و OpenVPN پشتیبانی می‌کنیم. بسته به نیاز و سیستم‌عامل خود می‌توانید از پروتکل مناسب استفاده کنید. آموزش‌های لازم در پنل کاربری شما موجود خواهد بود.
+                                </div>
+                            </div>
+                        </div><!-- end accordion-item -->
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqHeadingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                                    آیا امکان استفاده همزمان روی چند دستگاه وجود دارد؟
+                                </button>
+                            </h2>
+                            <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#accordionFaqs">
+                                <div class="accordion-body ff-secondary">
+                                    بله، شما می‌توانید با یک اشتراک RahaGozar به طور همزمان روی چندین دستگاه (مثلاً موبایل، لپ‌تاپ و تبلت) متصل شوید. تعداد دقیق اتصالات همزمان ممکن است بر اساس جزئیات اشتراک انتخابی شما متفاوت باشد که در زمان ساخت اشتراک یا در پنل کاربری قابل مشاهده است. (اگر قابلیت انتخاب تعداد کاربر اضافه شد، این متن باید ویرایش شود).
+                                </div>
+                            </div>
+                        </div><!-- end accordion-item -->
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqHeadingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                                    آیا سیاست عدم ذخیره‌سازی لاگ (No-Log Policy) دارید؟
+                                </button>
+                            </h2>
+                            <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#accordionFaqs">
+                                <div class="accordion-body ff-secondary">
+                                    بله، ما به حریم خصوصی کاربران خود اهمیت زیادی می‌دهیم و هیچ‌گونه گزارشی از فعالیت‌های آنلاین شما مانند وب‌سایت‌های بازدید شده یا داده‌های تبادل شده را ذخیره نمی‌کنیم. می‌توانید با اطمینان کامل از سرویس ما استفاده کنید.
+                                </div>
+                            </div>
+                        </div><!-- end accordion-item -->
+                    </div><!-- end accordion -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- end faqs -->
+    <!-- start contact -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h3 class="mb-3 fw-semibold">تماس با ما</h3>
+                        <p class="text-muted mb-4">سوالی دارید یا نیاز به راهنمایی دارید؟ تیم پشتیبانی ما آماده پاسخگویی است. می‌توانید از طریق فرم زیر یا اطلاعات تماس ارائه شده با ما در ارتباط باشید.</p>
+                    </div>
+                </div>
+            </div><!-- end row -->
+
+            <div class="row gy-4">
+                <div class="col-lg-4">
+                    <div>
+                        <div class="mt-4">
+                            <h5 class="fs-14 mb-1">آدرس ایمیل:</h5>
+                            <p class="text-muted">support@rahagozar.com</p> @* ایمیل خود را جایگزین کنید *@
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="fs-14 mb-1">پشتیبانی تلگرام:</h5>
+                            <p class="text-muted">@@RahaGozarSupport</p> @* آی‌دی تلگرام خود را جایگزین کنید *@
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="fs-14 mb-1">ساعات کاری پشتیبانی:</h5>
+                            <p class="text-muted">شنبه تا پنج‌شنبه - ۹ صبح تا ۱۱ شب</p>
+                            <p class="text-muted">جمعه و ایام تعطیل - ۱۲ ظهر تا ۱۰ شب</p>
+                        </div>
+                    </div>
+                </div><!-- end col -->
+                <div class="col-lg-8">
+                    @* فرم تماس - نیاز به پیاده‌سازی Backend برای ارسال ایمیل یا ذخیره پیام دارد *@
+                    <form id="contact-form" method="post" action="/Contact/SendMessage">
+                        @* آدرس اکشن کنترلر برای پردازش فرم *@
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="contact-name" class="form-label fs-14">نام شما</label>
+                                    <input name="Name" id="contact-name" type="text" class="form-control bg-light border-light" placeholder="نام خود را وارد کنید" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <label for="contact-email" class="form-label fs-14">ایمیل</label>
+                                    <input name="Email" id="contact-email" type="email" class="form-control bg-light border-light" placeholder="ایمیل خود را وارد کنید" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mb-4">
+                                    <label for="contact-subject" class="form-label fs-14">موضوع</label>
+                                    <input type="text" name="Subject" class="form-control bg-light border-light" id="contact-subject" placeholder="موضوع پیام" required />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label for="contact-message" class="form-label fs-14">پیام شما</label>
+                                    <textarea class="form-control bg-light border-light" name="Message" id="contact-message" rows="5" placeholder="پیام خود را بنویسید" required></textarea>
+                                </div>
+                            </div><!--end col-->
+                            <div class="col-lg-12 text-end">
+                                <button type="submit" id="submit-button" class="btn btn-primary"><i class="ri-send-plane-fill align-bottom me-1"></i> ارسال پیام</button>
+                            </div>
+                        </div><!--end row-->
+                        @* نمایش پیام موفقیت یا خطا پس از ارسال فرم (نیاز به JS یا TempData) *@
+                        <div id="contact-message-response" class="mt-3"></div>
+                    </form>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+    <!-- end contact -->
+    <!-- start footer -->
+    <footer class="custom-footer bg-dark py-5 position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mt-4">
+                    <div>
+                        <div>
+                            @* لوگوی روشن برای فوتر تیره *@
+                            <img src="~/assets/images/logo-light.png" alt="لوگوی RahaGozar" height="22">
+                        </div>
+                        <div class="mt-4 fs-14">
+                            <p>امنیت، سرعت و آزادی در دنیای دیجیتال</p>
+                            <p class="ff-secondary">
+                                RahaGozar با ارائه سرویس VPN پایدار و انعطاف‌پذیر، به شما کمک می‌کند تا بدون محدودیت و با خیالی آسوده به گشت و گذار در اینترنت بپردازید.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 ms-lg-auto">
+                    <div class="row">
+                        <div class="col-sm-4 mt-4">
+                            <h5 class="text-white mb-3">لینک‌های مفید</h5>
+                            <ul class="list-unstyled ff-secondary">
+                                <li><a href="#hero">صفحه اصلی</a></li>
+                                <li><a href="#services">خدمات</a></li>
+                                <li><a href="#features">ویژگی‌ها</a></li>
+                                <li><a href="#plans">ساخت اشتراک</a></li>
+                                <li><a href="#faqs">سوالات متداول</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 mt-4">
+                            <h5 class="text-white mb-3">پشتیبانی</h5>
+                            <ul class="list-unstyled ff-secondary">
+                                @* <li><a href="/knowledge-base">مرکز آموزش</a></li> *@
+                                <li><a href="#contact">تماس با ما</a></li>
+                                <li><a href="/terms-of-service">قوانین و مقررات</a></li>
+                                <li><a href="/privacy-policy">سیاست حفظ حریم خصوصی</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-4 mt-4">
+                            <h5 class="text-white mb-3">پنل کاربری</h5>
+                            <ul class="list-unstyled ff-secondary">
+                                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                {
+                                    var panelUrl = User.IsInRole("Admin") ? Url.Action("Index", "Home", new { Area = "Admin" }) : Url.Action("Index", "Panel", new { Area = "UserPanel" });
+                                    <li><a href="@panelUrl">ورود به پنل</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("SignIn", "Authentication", new {area =""})">ورود</a></li>
+                                    <li><a href="@Url.Action("SignUp", "Authentication", new {area =""})">ثبت‌نام</a></li>
+                                }
+                                <li><a href="@Url.Action("ChangePassword", "Authentication", new {area =""})">تغییر رمز عبور</a></li> @* لینک تغییر رمز هم اینجا مفید است *@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row text-center text-sm-start align-items-center mt-5">
+                <div class="col-sm-6">
+                    <div>
+                        <p class="copy-rights mb-0 fs-14">
+                            @DateTime.Now.Year © RahaGozar - تمام حقوق محفوظ است.
+                            @* طراحی و توسعه توسط YourName/YourCompany (اختیاری) *@
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end mt-3 mt-sm-0">
+                        @* لینک شبکه‌های اجتماعی (اختیاری) *@
+                        <ul class="list-inline mb-0 footer-social-link">
+                            <li class="list-inline-item">
+                                <a href="https://t.me/YourChannel" target="_blank" class="avatar-xs d-block" title="تلگرام">
+                                    <div class="avatar-title rounded bg-soft-primary text-primary fs-16 shadow">
+                                        @* اضافه کردن shadow برای تطابق با قالب *@
+                                        <i class="ri-telegram-fill"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            @* <li class="list-inline-item">
+                                <a href="https://instagram.com/YourProfile" target="_blank" class="avatar-xs d-block" title="اینستاگرام">
+                                    <div class="avatar-title rounded bg-soft-danger text-danger fs-16 shadow">
+                                        <i class="ri-instagram-fill"></i>
+                                    </div>
+                                </a>
+                            </li> *@
+                            @* <li class="list-inline-item">
+                                <a href="javascript:void(0);" class="avatar-xs d-block" title="واتساپ">
+                                    <div class="avatar-title rounded bg-soft-success text-success fs-16 shadow">
+                                        <i class="ri-whatsapp-fill"></i>
+                                    </div>
+                                </a>
+                            </li> *@
+                            <li class="list-inline-item">
+                                <a href="mailto:support@rahagozar.com" class="avatar-xs d-block" title="ایمیل پشتیبانی">
+                                    <div class="avatar-title rounded bg-soft-info text-info fs-16 shadow">
+                                        <i class="ri-mail-line"></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </footer>
+    <!-- end footer -->
+    <!--start back-to-top-->
+    <button onclick="topFunction()" class="btn btn-danger btn-icon landing-back-top" id="back-to-top">
+        <i class="ri-arrow-up-line"></i>
+    </button>
+    <!--end back-to-top-->
+
+</div>
+
+@section scripts {
+    <!-- Swiper JS -->
+    <script src="~/assets/libs/swiper/swiper-bundle.min.js"></script>
+    <!-- landing init -->
+    <script src="~/assets/js/pages/landing.init.js"></script>
+
+@* اسکریپت برای محاسبه قیمت پلن سفارشی *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const durationSelector = document.getElementById('duration-selector');
+            const trafficSlider = document.getElementById('traffic-slider');
+            const trafficDisplay = document.getElementById('traffic-display');
+            const calculatedPriceElement = document.querySelector('#calculated-price .price-value');
+            const priceDurationElement = document.getElementById('price-duration');
+            const orderButton = document.getElementById('order-button');
+            // const usersSelector = document.getElementById('users-selector'); // اگر انتخاب کاربر فعال شد
+
+            // --- قیمت‌های پایه (قابل تنظیم) ---
+            const basePrices = {
+                // ماهانه
+                1: {
+                    30: 48000,   // 1 ماهه، 30 گیگ
+                    50: 65000,   // 1 ماهه، 50 گیگ
+                    100: 95000,  // 1 ماهه، 100 گیگ
+                    unlimited: 150000 // 1 ماهه، نامحدود
+                },
+                 // هزینه پایه برای هر کاربر اضافه (اگر فعال شد)
+                // extraUserCostPerMonth: 20000
+            };
+
+            // --- مپ کردن مقادیر اسلایدر به حجم ---
+             const trafficMap = {
+                 0: { value: '30', text: '۳۰ گیگابایت' },
+                 1: { value: '50', text: '۵۰ گیگابایت' },
+                 2: { value: '100', text: '۱۰۰ گیگابایت' },
+                 3: { value: 'unlimited', text: 'نامحدود' }
+             };
+
+            function formatPrice(price) {
+                // فرمت کردن قیمت به شکل خوانا (با جداکننده هزارگان)
+                return price.toLocaleString('fa-IR');
+            }
+
+            function calculatePrice() {
+                const selectedDurationOption = durationSelector.options[durationSelector.selectedIndex];
+                const durationMonths = parseInt(selectedDurationOption.value, 10);
+                const discountPercent = parseInt(selectedDurationOption.dataset.discount || '0', 10);
+
+                const sliderValue = trafficSlider.value;
+                const trafficInfo = trafficMap[sliderValue];
+                const trafficKey = trafficInfo.value; // '30', '50', '100', 'unlimited'
+
+                // const selectedUsers = parseInt(usersSelector.value, 10); // اگر انتخاب کاربر فعال شد
+
+                // قیمت پایه ماهانه برای حجم انتخاب شده
+                let baseMonthlyPrice = basePrices[1][trafficKey] || 0;
+
+                // محاسبه هزینه کاربر اضافه (اگر فعال شد)
+                // let userCost = (selectedUsers > 1) ? (selectedUsers - 1) * basePrices.extraUserCostPerMonth : 0;
+                // baseMonthlyPrice += userCost;
+
+                // قیمت کل برای مدت زمان انتخاب شده (بدون تخفیف)
+                let totalPrice = baseMonthlyPrice * durationMonths;
+
+                // اعمال تخفیف
+                if (discountPercent > 0) {
+                    totalPrice = totalPrice * (1 - discountPercent / 100);
+                }
+
+                // گرد کردن به نزدیک‌ترین ۱۰۰۰ تومان (اختیاری)
+                 totalPrice = Math.round(totalPrice / 1000) * 1000;
+
+                // نمایش قیمت
+                calculatedPriceElement.textContent = formatPrice(totalPrice);
+                priceDurationElement.textContent = `برای ${selectedDurationOption.text.split('(')[0].trim()}`; // نمایش مدت زمان بدون بخش تخفیف
+
+                // آپدیت لینک دکمه سفارش (اختیاری - اگر پارامترها باید به صفحه بعد ارسال شوند)
+                 updateOrderButtonLink(durationMonths, trafficKey /*, selectedUsers*/);
+
+            }
+
+            function updateTrafficDisplay() {
+                 const sliderValue = trafficSlider.value;
+                 const trafficInfo = trafficMap[sliderValue];
+                 trafficDisplay.textContent = trafficInfo.text;
+                 calculatePrice(); // Recalculate price when traffic changes
+             }
+
+             function updateOrderButtonLink(duration, traffic /*, users*/) {
+                // این تابع لینک دکمه سفارش را آپدیت می‌کند تا پارامترهای انتخابی
+                // به صفحه ایجاد سفارش ارسال شوند (مثلا با Query String)
+                let baseUrl = orderButton.href.split('?')[0]; // آدرس پایه بدون پارامتر
+
+                // پارامترهای کوئری استرینگ
+                 const params = new URLSearchParams();
+                 params.set('duration', duration);
+                 params.set('traffic', traffic);
+                 // params.set('users', users); // اگر انتخاب کاربر فعال شد
+
+                // ساخت لینک نهایی
+                orderButton.href = `${baseUrl}?${params.toString()}`;
+            }
+
+            // Event Listeners
+            durationSelector.addEventListener('change', calculatePrice);
+            trafficSlider.addEventListener('input', updateTrafficDisplay); // Use 'input' for real-time update
+            // usersSelector.addEventListener('change', calculatePrice); // اگر انتخاب کاربر فعال شد
+
+            // Initial Calculation and Display
+            updateTrafficDisplay(); // Set initial traffic display and calculate price
+        });
+
+        // --- اسکریپت برای فرم تماس (اختیاری) ---
+        const contactForm = document.getElementById('contact-form');
+        const submitButton = document.getElementById('submit-button');
+        const responseDiv = document.getElementById('contact-message-response');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', function (e) {
+                e.preventDefault(); // جلوگیری از ارسال پیش‌فرض فرم
+
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> در حال ارسال...';
+                responseDiv.innerHTML = ''; // پاک کردن پیام‌های قبلی
+
+                const formData = new FormData(contactForm);
+
+                fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        // مهم: ارسال توکن ضد جعل (CSRF Token)
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // تلاش برای خواندن پیام خطا از سرور (اگر وجود داشته باشد)
+                         return response.text().then(text => { throw new Error(text || `خطا در ارسال پیام: ${response.statusText}`); });
+                    }
+                    return response.json(); // فرض بر اینکه سرور JSON برمی‌گرداند
+                })
+                .then(data => {
+                    if (data.success) {
+                        responseDiv.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                ${data.message || 'پیام شما با موفقیت ارسال شد. به زودی با شما تماس خواهیم گرفت.'}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                                             </div>`;
+                        contactForm.reset(); // پاک کردن فرم
+                    } else {
+                        responseDiv.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                ${data.message || 'خطایی در ارسال پیام رخ داد. لطفا دوباره تلاش کنید.'}
+                                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                                             </div>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting contact form:', error);
+                    responseDiv.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                             خطایی در ارتباط با سرور رخ داد. لطفا اتصال اینترنت خود را بررسی کرده و دوباره تلاش کنید. (${error.message})
+                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="بستن"></button>
+                                         </div>`;
+                })
+                .finally(() => {
+                    // فعال کردن مجدد دکمه و بازگرداندن متن اصلی آن
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="ri-send-plane-fill align-bottom me-1"></i> ارسال پیام';
+                });
+            });
+        }
+
+    </script>
+}

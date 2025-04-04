@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace Domain.DTOs.VPN
 {
@@ -78,9 +79,8 @@ namespace Domain.DTOs.VPN
         {
             // استخراج اطلاعات مورد نیاز از VpnServerUrl
             if (string.IsNullOrEmpty(VpnServerUrl))
-                return string.Empty; // اگر لینک سرور موجود نباشد، مقدار خالی برمی‌گردد
+                return string.Empty;
 
-            // استخراج "n1.seadata.ir:46421" از لینک کامل
             var serverInfo = ExtractServerInfo(VpnServerUrl);
 
             // اگر پورت مشخص‌شده است، جایگزین کنیم
@@ -93,22 +93,30 @@ namespace Domain.DTOs.VPN
                 }
             }
 
-            // ساخت لینک نهایی
-            return $"vless://{VpnId}@{serverInfo}?type=tcp&path=%2F&host=www.speedtest.net&headerType=http&security=none#{RemarkName}";
+            // --- تغییر کلیدی اینجاست ---
+            // قبل از اضافه کردن RemarkName، آن را URL Encode می‌کنیم
+            // اگر RemarkName خالی یا null بود، رشته خالی انکود می‌شود که مشکلی ندارد
+            var encodedRemark = WebUtility.UrlEncode(RemarkName ?? "");
+            // --------------------------
+
+            // ساخت لینک نهایی با RemarkName انکود شده
+            //return $"vless://{VpnId}@{serverInfo}?type=tcp&path=%2F&host=www.speedtest.net&headerType=http&security=none#{RemarkName}"; // کد قبلی
+            return $"vless://{VpnId}@{serverInfo}?type=tcp&path=%2F&host=www.speedtest.net&headerType=http&security=none#{encodedRemark}"; // کد جدید
         }
 
         private string ExtractServerInfo(string url)
         {
             try
             {
-                // استخراج قسمت مورد نیاز بین "https://" و "/"
                 var startIndex = url.IndexOf("https://", StringComparison.Ordinal) + "https://".Length;
                 var endIndex = url.IndexOf('/', startIndex);
+                // هندل کردن حالتی که URL با / تمام نمی‌شود (اگرچه برای شما اتفاق نمی‌افتد)
+                if (endIndex == -1) endIndex = url.Length;
                 return url.Substring(startIndex, endIndex - startIndex);
             }
             catch
             {
-                return string.Empty; // اگر خطایی در استخراج پیش آمد، مقدار خالی برمی‌گردد
+                return string.Empty;
             }
         }
     }

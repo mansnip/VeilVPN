@@ -1,0 +1,343 @@
+﻿@using Domain.ViewModels.Admin
+@model List<AdminInvoiceListViewModel>
+@using System.Globalization // برای فرمت تاریخ شمسی (اگر نیاز است)
+
+@{
+    ViewData["Title"] = "مدیریت فاکتورها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    // برای تبدیل تاریخ میلادی به شمسی (اختیاری)
+    PersianCalendar pc = new PersianCalendar();
+    string ToPersianDate(DateTime dt) => $"{pc.GetYear(dt)}/{pc.GetMonth(dt):D2}/{pc.GetDayOfMonth(dt):D2}";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">@ViewData["Title"]</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">داشبورد</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">لیست فاکتورها</h4>
+            </div><!-- end card header -->
+
+            <div class="card-body">
+                <div id="invoiceList">
+                    <div class="row g-4 mb-3">
+                        @* <div class="col-sm-auto">
+                            <div>
+                                <button type="button" class="btn btn-success add-btn disabled" disabled><i class="ri-add-line align-bottom me-1"></i> افزودن فاکتور (غیرفعال)</button>
+                                <button class="btn btn-soft-danger disabled" disabled onclick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i></button>
+                            </div>
+                        </div> *@
+                        <div class="col-sm">
+                            <div class="d-flex justify-content-sm-end">
+                                <div class="search-box ms-2">
+                                    <input type="text" class="form-control search" placeholder="جستجو در فاکتورها...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive table-card mt-3 mb-1">
+                            <table class="table align-middle table-nowrap" id="invoiceTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        @* <th scope="col" style="width: 50px;">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                            </div>
+                                        </th> *@
+                                        <th class="sort" data-sort="invoice_number">شماره فاکتور</th>
+                                        <th class="sort" data-sort="user_email">ایمیل کاربر</th>
+                                        <th class="sort" data-sort="remark_name">توضیحات</th>
+                                        <th class="sort" data-sort="created_date">تاریخ ایجاد</th>
+                                        <th class="sort" data-sort="final_price">مبلغ نهایی</th>
+                                        <th class="sort" data-sort="invoice_type">نوع</th>
+                                        <th class="sort" data-sort="status">وضعیت</th>
+                                        <th data-sort="action">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list form-check-all">
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            @* <th scope="row">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="chk_child" value="@item.Id">
+                                                </div>
+                                            </th> *@
+                                            <td class="invoice_number"><a href="#">@item.InvoiceNumber</a></td>
+                                            <td class="user_email">@item.UserEmail</td>
+                                            <td class="remark_name">@(item.RemarkName ?? "-")</td>
+                                            <td class="created_date">@ToPersianDate(item.CreatedDate) (@item.CreatedDate.ToString("HH:mm"))</td>
+                                            <td class="final_price">@item.FinalPrice.ToString("N0") تومان</td>
+                                            <td class="invoice_type">
+                                                @if (item.IsRenewal)
+                                                {
+                                                    <span class="badge bg-info-subtle text-info">تمدید</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-primary-subtle text-primary">جدید</span>
+                                                }
+                                            </td>
+                                            <td class="status">
+                                                @switch (item.Status)
+                                                {
+                                                    case "پرداخت شده":
+                                                        <span class="badge bg-success-subtle text-success text-uppercase">پرداخت شده</span>
+                                                        break;
+                                                    case "لغو شده":
+                                                        <span class="badge bg-danger-subtle text-danger text-uppercase">لغو شده</span>
+                                                        break;
+                                                    case "در انتظار پرداخت":
+                                                    default:
+                                                        <span class="badge bg-warning-subtle text-warning text-uppercase">در انتظار پرداخت</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-2">
+                                                    <div class="view">
+                                                        @* لینک به جزئیات - اکشن Details را باید ایجاد کنید *@
+                                                        @* <a class="btn btn-sm btn-light view-item-btn" asp-action="Details" asp-route-id="@item.Id">مشاهده</a> *@
+                                                        <a href="/Admin/Invoices/ShowInvoice?Id=@item.Id" class="btn btn-sm btn-light view-item-btn">مشاهده</a> @* دکمه غیرفعال تا اکشن ساخته شود *@
+                                                    </div>
+                                                    @* دکمه‌های ویرایش/تغییر وضعیت/حذف در صورت نیاز *@
+                                                    @* <div class="edit">
+                                                        <button class="btn btn-sm btn-success edit-item-btn" data-bs-toggle="modal" data-bs-target="#showModal">ویرایش</button>
+                                                    </div>
+                                                    <div class="remove">
+                                                        <button class="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">حذف</button>
+                                                    </div> *@
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="noresult" style="display: none">
+                                <div class="text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                                    <h5 class="mt-2">متاسفم! هیچ نتیجه ای یافت نشد</h5>
+                                    <p class="text-muted mb-0">هیچ فاکتوری مطابق با جستجوی شما یافت نشد.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <div class="pagination-wrap hstack gap-2">
+                                <a class="page-item pagination-prev disabled" href="#">قبلی</a>
+                                <ul class="pagination listjs-pagination mb-0"></ul>
+                                <a class="page-item pagination-next" href="#">بعدی</a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center mt-4">
+                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
+                            <h5 class="mt-2">هنوز فاکتوری ثبت نشده است.</h5>
+                            <p class="text-muted mb-0">در حال حاضر هیچ فاکتوری برای نمایش وجود ندارد.</p>
+                        </div>
+                    }
+                </div>
+            </div><!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end col -->
+</div>
+<!-- end row -->
+
+@* Modal های ویرایش و حذف را در صورت نیاز اینجا اضافه کنید *@
+@* مثال برای مودال حذف (نیاز به تنظیمات بیشتر برای عملکرد دارد) *@
+@*
+<div class="modal fade" id="deleteRecordModal" tabindex="-1" aria-labelledby="deleteRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteRecordModalLabel">حذف فاکتور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                <p>آیا مطمئن هستید که می‌خواهید این فاکتور را حذف کنید؟</p>
+                <p class="text-danger"><strong>هشدار:</strong> این عمل غیرقابل بازگشت است.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+                <form asp-action="DeleteInvoice" asp-controller="Invoices" asp-area="Admin" method="post" style="display: inline;">
+                    <input type="hidden" name="invoiceId" id="deleteInvoiceId" value="" />
+                    <button type="submit" class="btn btn-danger">بله، حذف کن</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+*@
+
+@* مثال برای مودال ویرایش وضعیت (نیاز به تنظیمات بیشتر برای عملکرد دارد) *@
+@*
+<div class="modal fade" id="editStatusModal" tabindex="-1" aria-labelledby="editStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+             <form asp-action="UpdateStatus" asp-controller="Invoices" asp-area="Admin" method="post" id="editStatusForm">
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="editStatusModalLabel">تغییر وضعیت فاکتور</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body">
+                     <input type="hidden" name="id" id="editInvoiceId" />
+                     <div class="mb-3">
+                        <label for="invoiceNumberDisplay" class="form-label">شماره فاکتور</label>
+                        <input type="text" id="invoiceNumberDisplay" class="form-control" readonly disabled />
+                     </div>
+                     <div class="mb-3">
+                         <label for="newStatus" class="form-label">وضعیت جدید</label>
+                         <select class="form-select" id="newStatus" name="newStatus" required>
+                             <option value="در انتظار پرداخت">در انتظار پرداخت</option>
+                             <option value="پرداخت شده">پرداخت شده</option>
+                             <option value="لغو شده">لغو شده</option>
+                         </select>
+                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+*@
+
+
+@section Scripts {
+    <!-- list.js-->
+    <script src="~/assets/libs/list.js/list.min.js"></script>
+    <script src="~/assets/libs/list.pagination.js/list.pagination.min.js"></script>
+
+    <!-- sweetalert2 -->
+    @* <script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script> *@
+
+    <script>
+        $(document).ready(function () {
+            // مقداردهی اولیه list.js برای جدول
+            var options = {
+                valueNames: [
+                    'invoice_number',
+                    'user_email',
+                    'remark_name',
+                    'created_date',
+                    'final_price',
+                    'invoice_type',
+                    'status'
+                    // 'action' // ستون عملیات معمولاً نباید مرتب‌سازی یا جستجو شود
+                ],
+                page: 10, // تعداد آیتم در هر صفحه
+                pagination: true // فعال کردن分页
+            };
+
+            // ایجاد نمونه list.js
+            var invoiceList = new List('invoiceList', options);
+
+            // مدیریت حالت "نتیجه‌ای یافت نشد"
+            invoiceList.on('updated', function (list) {
+                var noResult = list.matchingItems.length === 0;
+                $('.noresult').toggle(noResult);
+                $('.table-responsive').toggle(!noResult);
+                $('.pagination-wrap').toggle(!noResult);
+
+                 // اگر هیچ آیتمی وجود ندارد (حتی قبل از جستجو)
+                 if (list.items.length === 0) {
+                     // اطمینان حاصل کنید که پیام "هنوز فاکتوری ثبت نشده است" در صورت خالی بودن کل لیست نمایش داده می‌شود
+                     // این بخش ممکن است نیاز به تنظیم دقیق‌تری بر اساس ساختار HTML شما داشته باشد
+                     // اگر از قبل پیامی برای لیست خالی دارید، این بخش ممکن است لازم نباشد
+                     if($('.table-responsive').is(':hidden') && $('.noresult').is(':hidden')) {
+                         // نمایش پیام سفارشی برای لیست خالی اولیه
+                         // $('#emptyListMessage').show(); // فرض کنید یک div با این id دارید
+                     }
+                 }
+            });
+
+            // (اختیاری) فعال کردن چک‌باکس‌ها و دکمه حذف گروهی
+            // function checkAll(ele) { ... }
+            // function deleteMultiple() { ... }
+            // مدیریت رویداد کلیک روی دکمه های حذف/ویرایش تکی (برای باز کردن مودال و مقداردهی اولیه)
+            // $(document).on('click', '.remove-item-btn', function() {
+            //     var invoiceId = $(this).closest('tr').find('input[name="chk_child"]').val(); // یا از data-* attribute
+            //     $('#deleteInvoiceId').val(invoiceId);
+            //     // $('#deleteRecordModal').modal('show');
+            // });
+            //
+            // $(document).on('click', '.edit-item-btn', function() {
+            //     var row = $(this).closest('tr');
+            //     var invoiceId = row.find('input[name="chk_child"]').val(); // یا از data-* attribute
+            //     var invoiceNumber = row.find('.invoice_number a').text();
+            //     var currentStatus = row.find('.status .badge').text().trim();
+            //
+            //     $('#editInvoiceId').val(invoiceId);
+            //     $('#invoiceNumberDisplay').val(invoiceNumber);
+            //     $('#newStatus').val(currentStatus); // تنظیم وضعیت فعلی در select
+            //
+            //     // $('#editStatusModal').modal('show');
+            // });
+
+
+        });
+    </script>
+
+    @* نمایش پیام‌های TempData (موفقیت/خطا) *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            // با استفاده از یک کتابخانه پیام مانند toastr یا SweetAlert2 نمایش دهید
+            // مثال با alert ساده:
+            // alert('@TempData["SuccessMessage"]');
+
+            // مثال با SweetAlert2 (اگر اضافه کرده باشید):
+            // Swal.fire({
+            //     title: 'موفقیت!',
+            //     text: '@Html.Raw(TempData["SuccessMessage"])', // استفاده از Raw برای جلوگیری از XSS اگر پیام HTML دارد
+            //     icon: 'success',
+            //     confirmButtonText: 'باشه'
+            // });
+             console.log('Success: @Html.Raw(TempData["SuccessMessage"])'); // نمایش در کنسول برای تست
+        </script>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            // مثال با alert ساده:
+            // alert('@TempData["ErrorMessage"]');
+
+            // مثال با SweetAlert2 (اگر اضافه کرده باشید):
+            // Swal.fire({
+            //     title: 'خطا!',
+            //     text: '@Html.Raw(TempData["ErrorMessage"])',
+            //     icon: 'error',
+            //     confirmButtonText: 'باشه'
+            // });
+            console.error('Error: @Html.Raw(TempData["ErrorMessage"])'); // نمایش در کنسول برای تست
+        </script>
+    }
+
+}

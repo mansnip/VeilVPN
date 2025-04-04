@@ -25,6 +25,9 @@ namespace Application.Services.Interfaces
         // متد جدید برای دریافت تاریخچه مصرف
         Task<List<UsageHistoryViewModel>> GetUsageHistoryAsync(string userId);
         Task<Subscription> GetSubscriptionById(string subscriptionId);
+
+        Task<SubscriptionViewModel?> GetSubscriptionDetailsForAdminAsync(string subscriptionId); // <<< متد جدید
+
     }
 
 }

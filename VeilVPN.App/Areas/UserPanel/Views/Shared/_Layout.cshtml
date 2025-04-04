@@ -11,7 +11,9 @@
     <meta content="Mordad" name="author">
     <!-- App favicon -->
     <link rel="shortcut icon" href="~/assets/images/favicon.ico">
+
     @await RenderSectionAsync("Styles", required: false)
+
     <!-- Layout config Js -->
     <script src="~/assets/js/layout.js"></script>
     <!-- Bootstrap Css -->
@@ -22,6 +24,7 @@
     <link href="~/assets/css/app-rtl.min.css" rel="stylesheet" type="text/css">
     <!-- custom Css-->
     <link href="~/assets/css/custom-rtl.min.css" rel="stylesheet" type="text/css">
+
 
 </head>
 
@@ -194,59 +197,28 @@
                                 <i class="bx bx-category-alt fs-22"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-lg p-0 dropdown-menu-end">
-                                <div class="p-3 border-top-0 border-start-0 border-end-0 border-dashed border">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <h6 class="m-0 fw-semibold fs-15">برنامه های وب</h6>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#!" class="btn btn-sm btn-soft-info">مشاهده همه برنامه ها<i class="ri-arrow-right-s-line align-middle"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="p-2">
                                     <div class="row g-0">
                                         <div class="col">
-                                            <a class="dropdown-icon-item" href="#!">
-                                                <img src="~/assets/images/brands/github.png" alt="Github">
-                                                <span>GitHub</span>
+                                            <a class="dropdown-icon-item" href="~/UserPanel/Chat/Index">
+                                                <img src="~/assets/images/brands/github.png" alt="پشتیبانی آنلاین">
+                                                <span>پشتیبانی آنلاین</span>
                                             </a>
                                         </div>
                                         <div class="col">
-                                            <a class="dropdown-icon-item" href="#!">
-                                                <img src="~/assets/images/brands/bitbucket.png" alt="بیت سطل">
-                                                <span>بیت باکت</span>
+                                            <a class="dropdown-icon-item" href="~/UserPanel/Subscription/MySubscriptions">
+                                                <img src="~/assets/images/brands/bitbucket.png" alt="نمایش اشتراک ها">
+                                                <span>اشتراک های من</span>
                                             </a>
                                         </div>
                                         <div class="col">
-                                            <a class="dropdown-icon-item" href="#!">
-                                                <img src="~/assets/images/brands/dribbble.png" alt="دریبل زدن">
-                                                <span>دریبل زدن</span>
+                                            <a class="dropdown-icon-item" href="~/UserPanel/Tutorials/Index">
+                                                <img src="~/assets/images/brands/slack.png" alt="آموزش ها">
+                                                <span>آموزش ها</span>
                                             </a>
                                         </div>
                                     </div>
 
-                                    <div class="row g-0">
-                                        <div class="col">
-                                            <a class="dropdown-icon-item" href="#!">
-                                                <img src="~/assets/images/brands/dropbox.png" alt="دراپ باکس">
-                                                <span>دراپ باکس</span>
-                                            </a>
-                                        </div>
-                                        <div class="col">
-                                            <a class="dropdown-icon-item" href="#!">
-                                                <img src="~/assets/images/brands/mail_chimp.png" alt="mailchimp">
-                                                <span>Mailchimp</span>
-                                            </a>
-                                        </div>
-                                        <div class="col">
-                                            <a class="dropdown-icon-item" href="#!">
-                                                <img src="~/assets/images/brands/slack.png" alt="سستی">
-                                                <span>سستی</span>
-                                            </a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -263,30 +235,6 @@
                             </button>
                         </div>
 
-                        <div class="dropdown ms-sm-3 header-item topbar-user">
-                            <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar-1.jpg" alt="آواتار سرصفحه">
-                                    <span class="text-start ms-xl-2">
-                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">آنا آدام</span>
-                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">بنیانگذار</span>
-                                    </span>
-                                </span>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <!-- item-->
-                                <h6 class="dropdown-header">خوش آمدی آنا!</h6>
-                                <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">نمایه</span></a>
-                                <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">پیام ها</span></a>
-                                <a class="dropdown-item" href="apps-tasks-kanban.html"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">تابلوی وظیفه</span></a>
-                                <a class="dropdown-item" href="pages-faqs.html"><i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span class="align-middle">کمک کنید</span></a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">تعادل:<b> 5971.67 دلار </b></span></a>
-                                <a class="dropdown-item" href="pages-profile-settings.html"><span class="badge bg-success-subtle text-success mt-1 float-end">جدید</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">تنظیمات</span></a>
-                                <a class="dropdown-item" href="auth-lockscreen-basic.html"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">صفحه قفل</span></a>
-                                <a class="dropdown-item" href="auth-logout-basic.html"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">خروج از سیستم</span></a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -343,30 +291,6 @@
                 </button>
             </div>
 
-            <div class="dropdown sidebar-user m-1 rounded">
-                <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="d-flex align-items-center gap-2">
-                        <img class="rounded header-profile-user" src="~/assets/images/users/avatar-1.jpg" alt="آواتار سرصفحه">
-                        <span class="text-start">
-                            <span class="d-block fw-medium sidebar-user-name-text">آنا آدام</span>
-                            <span class="d-block fs-14 sidebar-user-name-sub-text"><i class="ri ri-circle-fill fs-10 text-success align-baseline"></i> <span class="align-middle">آنلاین</span></span>
-                        </span>
-                    </span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                    <!-- item-->
-                    <h6 class="dropdown-header">خوش آمدی آنا!</h6>
-                    <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">نمایه</span></a>
-                    <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">پیام ها</span></a>
-                    <a class="dropdown-item" href="apps-tasks-kanban.html"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">تابلوی وظیفه</span></a>
-                    <a class="dropdown-item" href="pages-faqs.html"><i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span class="align-middle">کمک کنید</span></a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">تعادل:<b> 5971.67 دلار </b></span></a>
-                    <a class="dropdown-item" href="pages-profile-settings.html"><span class="badge bg-success-subtle text-success mt-1 float-end">جدید</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">تنظیمات</span></a>
-                    <a class="dropdown-item" href="auth-lockscreen-basic.html"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">صفحه قفل</span></a>
-                    <a class="dropdown-item" href="auth-logout-basic.html"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">خروج از سیستم</span></a>
-                </div>
-            </div>
             <div id="scrollbar">
                 <div class="container-fluid">
                     <div id="two-column-menu">
@@ -413,21 +337,20 @@
                         </li>
 
                         <!-- تنظیمات حساب کاربری -->
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarAccount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAccount">
-                                <i class="ri-user-settings-line"></i> <span data-key="t-account">حساب کاربری</span>
+                        <li b-d5pm6vaey1 class="nav-item">
+                            <a b-d5pm6vaey1 class="nav-link menu-link" href="#sidebarAccount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAccount">
+                                <i b-d5pm6vaey1 class="ri-user-settings-line"></i> <span b-d5pm6vaey1 data-key="t-account">حساب کاربری</span>
                             </a>
-                            <div class="collapse menu-dropdown" id="sidebarAccount">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="~/UserPanel/Panel/Profile" class="nav-link" data-key="t-profile">پروفایل کاربری</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="~/UserPanel/Panel/ChangePassword" class="nav-link" data-key="t-change-password">تغییر رمز عبور</a>
+                            <div b-d5pm6vaey1 class="collapse menu-dropdown" id="sidebarAccount">
+                                <ul b-d5pm6vaey1 class="nav nav-sm flex-column">
+                                    <li b-d5pm6vaey1 class="nav-item">
+                                        @* ===>>> لینک جدید <<<=== *@
+                                        <a href="@Url.Action("ChangePassword", "Authentication", new { area = "" })" class="nav-link" data-key="t-change-password">تغییر رمز عبور</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
+                        
 
                         <!-- پشتیبانی -->
                         <li class="nav-item">
@@ -437,10 +360,10 @@
                             <div class="collapse menu-dropdown" id="sidebarSupport">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/UserPanel/Panel/Tickets" class="nav-link" data-key="t-tickets">تیکت‌های پشتیبانی</a>
+                                        <a href="~/UserPanel/Chat" class="nav-link" data-key="t-tickets">چت آنلاین</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="~/UserPanel/Panel/NewTicket" class="nav-link" data-key="t-new-ticket">ایجاد تیکت جدید</a>
+                                        <a href="https://t.me/RahaGozarSupport" class="nav-link" data-key="t-new-ticket">پشتیبانی از طریق تلگرام</a>
                                     </li>
                                 </ul>
                             </div>
@@ -448,14 +371,14 @@
 
                         <!-- راهنما -->
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="~/UserPanel/Panel/Help">
-                                <i class="ri-question-line"></i> <span data-key="t-help">راهنما</span>
+                            <a class="nav-link menu-link" href="~/UserPanel/Tutorials/Index">
+                                <i class="ri-question-line"></i> <span data-key="t-help">آموزش ها</span>
                             </a>
                         </li>
 
                         <!-- خروج -->
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="~/UserPanel/Panel/Logout">
+                            <a class="nav-link menu-link" href="~/Authentication/SignOut">
                                 <i class="ri-logout-box-line"></i> <span data-key="t-logout">خروج</span>
                             </a>
                         </li>
@@ -486,10 +409,10 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <script>document.write(new Date().getFullYear())</script>© Velzon.
+                            <script>document.write(new Date().getFullYear())</script>© RahaGozar.
                         </div>
                         <div class="col-sm-6">
-                            <div class="text-sm-end d-none d-sm-block">طراحی و توسعه توسط <a href="https://mkhezerlou.ir" target="_blank">مرداد</a></div>
+                            <div class="text-sm-end d-none d-sm-block">طراحی و توسعه توسط <a href="https://RahaGozar.com" target="_blank">رهاگذر</a></div>
                         </div>
                     </div>
                 </div>
@@ -1465,7 +1388,7 @@
     <script src="~/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
     <script src="~/assets/js/plugins.js"></script>
 
-    
+
     @await RenderSectionAsync("Scripts", required: false)
 
     @await Html.PartialAsync("_Notification")

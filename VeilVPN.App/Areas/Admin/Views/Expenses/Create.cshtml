@@ -1,0 +1,153 @@
+﻿@model Domain.DTOs.Expense.CreateEditExpenseViewModel
+@{
+    ViewData["Title"] = "ایجاد هزینه جدید";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    // در صورت نیاز می‌توانید مقادیر دیگری برای Breadcrumb یا Header در ViewData تنظیم کنید
+    // ViewData["pTitle"] = "مدیریت هزینه‌ها";
+    // ViewData["pageTitle"] = "ایجاد";
+}
+
+
+<!-- Start Content-->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">@ViewData["Title"]</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Expenses">مدیریت هزینه‌ها</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">فرم ثبت هزینه</h4>
+                <div class="flex-shrink-0">
+                    <a asp-action="Index" class="btn btn-secondary btn-sm">
+                        <i class="ri-arrow-left-line align-bottom"></i> بازگشت به لیست
+                    </a>
+                </div>
+            </div><!-- end card header -->
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Description" class="form-label"></label>
+                            <input asp-for="Description" class="form-control" placeholder="مثال: خرید نان و شیر">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Amount" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Amount" type="number" step="any" class="form-control" placeholder="مبلغ هزینه">
+                                <span class="input-group-text">تومان</span>
+                            </div>
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+
+                        @* ---=== تغییر در این بخش ===--- *@
+                        <div class="col-md-6">
+                            <label asp-for="ExpenseDate" class="form-label"></label>
+                            @*
+                                استفاده از type="text" به جای type="date".
+                                اضافه کردن اتریبیوت data-jdp و data-jdp-only-date برای فعال‌سازی تقویم شمسی.
+                                مقدار پیش‌فرض (اگر در کنترلر تنظیم شده باشد) توسط تگ هلپر asp-for در value قرار می‌گیرد
+                                و کتابخانه تقویم باید بتواند آن را بخواند و نمایش دهد (بسته به فرمت پشتیبانی شده توسط کتابخانه).
+                                حذف asp-format چون دیگر type="date" نیست.
+                            *@
+                            <input asp-for="ExpenseDate" type="text" class="form-control" data-jdp data-jdp data-jdp-only-date placeholder="تاریخ هزینه را انتخاب کنید">
+                            <span asp-validation-for="ExpenseDate" class="text-danger"></span>
+                            <div class="d-none code-view">
+                                <pre class="language-markup">
+<code> &#60;div&#62;
+        &#60;label for="basiInput" class="form-label"&#62;تقویم (پیش‌فرض)&#60;/label&#62;
+        &#60;input type="text" class="form-control" id="basiInput" data-jdp data-jdp-only-date&#62;
+    &#60;/div&#62; </code>
+
+ </pre>
+                            </div>
+                        </div>
+                        @* ---=== پایان تغییر ===--- *@
+
+                        <div class="col-md-6">
+                            <label asp-for="Category" class="form-label"></label>
+                            <select asp-for="Category" class="form-select" asp-items="ViewBag.Categories">
+                                <option value="">-- انتخاب کنید --</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Frequency" class="form-label"></label>
+                            <select asp-for="Frequency" class="form-select" asp-items="ViewBag.Frequencies">
+                                <option value="">-- انتخاب کنید --</option>
+                            </select>
+                            <span asp-validation-for="Frequency" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Notes" class="form-label"></label>
+                            <textarea asp-for="Notes" class="form-control" rows="3" placeholder="توضیحات بیشتر (اختیاری)"></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ri-save-line align-bottom me-1"></i> ثبت هزینه
+                                </button>
+                                <a asp-action="Index" class="btn btn-light">
+                                    <i class="ri-close-line align-bottom me-1"></i> انصراف
+                                </a>
+                            </div>
+                        </div>
+                    </div><!--end row-->
+                </form>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@section Styles {
+    <!-- Css:Persian Datepicker -->
+    <link rel="stylesheet" href="/assets/libs/@@JalaliDatePicker/dist/jalalidatepicker.min.css">
+}
+
+@* بخش اسکریپت‌های لازم برای Validation سمت کلاینت *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @*
+       در صورت نیاز به اسکریپت‌های اضافی مخصوص این صفحه (مثلاً برای Date Picker های سفارشی یا ...)،
+       می‌توانید آن‌ها را در این قسمت اضافه کنید.
+    *@
+    <!-- prismjs plugin -->
+    <script src="/assets/libs/prismjs/prism.js"></script>
+    <script src="/assets/libs/@@JalaliDatePicker/dist/jalalidatepicker.min.js"></script>
+    <script>
+        jalaliDatepicker.startWatch({ time: true });
+    </script>
+    <script>
+        // هرگونه کد جاوااسکریپت سفارشی برای این صفحه
+        // مثال: تنظیمات اولیه برای یک Date Picker خاص اگر از کتابخانه دیگری استفاده می‌کنید
+        // $(document).ready(function() {
+        //     $('#ExpenseDate').datepicker({ /* options */ });
+        // });
+    </script>
+}
+

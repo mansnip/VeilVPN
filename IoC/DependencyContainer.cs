@@ -28,6 +28,8 @@ namespace IoC
             service.AddMemoryCache();
             service.AddHttpClient();
             service.AddSingleton<VPNSessionManager>();
+            service.AddScoped<IExpenseService, ExpenseService>();
+            service.AddScoped<IExpenseRepository, ExpenseRepository>();
 
             #endregion
 

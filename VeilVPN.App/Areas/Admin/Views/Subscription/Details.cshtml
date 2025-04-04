@@ -1,10 +1,50 @@
-﻿@model Domain.Entities.Subscription
+﻿@model Domain.DTOs.VPN.SubscriptionViewModel
 
 @{
     ViewData["Title"] = "جزئیات اشتراک";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-}
 
+    // محاسبه درصد زمان گذشته برای نوار پیشرفت (اگر لازم است)
+    int timeUsagePercent = 0;
+    if (Model.VpnRemainingDays.HasValue && Model.Duration > 0)
+    {
+        var elapsedDays = Model.Duration - Model.VpnRemainingDays.Value;
+        timeUsagePercent = (int)Math.Round((double)elapsedDays * 100 / Model.Duration);
+        if (timeUsagePercent < 0) timeUsagePercent = 0; // جلوگیری از منفی شدن
+        if (timeUsagePercent > 100) timeUsagePercent = 100; // جلوگیری از بیشتر از 100 شدن
+    }
+    else if (!Model.VpnRemainingDays.HasValue) // نامحدود
+    {
+        timeUsagePercent = 0; // یا 100؟ بستگی به نمایش دارد
+    }
+
+    // محاسبه ترافیک مصرف شده
+    var usedTrafficGb = (Model.Traffic - Model.VpnRemainingTraffic);
+    var usedTrafficDisplay = usedTrafficGb > 0 ? usedTrafficGb.ToString("0.##") : "0"; // نمایش با حداکثر دو رقم اعشار
+
+    // تعیین کلاس برای نوار پیشرفت ترافیک
+    var trafficProgressClass = "bg-info";
+    if (Model.VpnUsagePercentage > 90)
+    {
+        trafficProgressClass = "bg-danger";
+    }
+    else if (Model.VpnUsagePercentage > 70)
+    {
+        trafficProgressClass = "bg-warning";
+    }
+
+    // تعیین کلاس برای نوار پیشرفت زمان
+    var timeProgressClass = "bg-success";
+    if (timeUsagePercent > 90)
+    {
+        timeProgressClass = "bg-danger";
+    }
+    else if (timeUsagePercent > 70)
+    {
+        timeProgressClass = "bg-warning";
+    }
+
+}
 <!-- شروع عنوان صفحه -->
 <div class="row">
     <div class="col-12">
@@ -26,14 +66,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header">
-                <div class="d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">اطلاعات اشتراک</h5>
-                    <div class="flex-shrink-0">
-                        <a href="@Url.Action("Index", "Subscription")" class="btn btn-soft-primary btn-sm">
-                            <i class="ri-arrow-right-line align-bottom"></i> بازگشت به لیست
-                        </a>
-                    </div>
-                </div>
+                <!-- ... کد هدر کارت ... -->
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -43,16 +76,17 @@
                                 <th scope="row" class="text-muted">شناسه اشتراک</th>
                                 <td>@Model.Id</td>
                                 <th scope="row" class="text-muted">کاربر</th>
-                                <td>@(Model.User?.Email ?? "نامشخص")</td>
+                                @* اگر ایمیل کاربر اصلی را لازم دارید، باید به ViewModel اضافه شود *@
+                                <td>@(Model.VpnEmailName)</td> @* نمایش ایمیل VPN به جای ایمیل کاربر اصلی *@
                             </tr>
                             <tr>
                                 <th scope="row" class="text-muted">نام کاربری VPN</th>
                                 <td>@Model.VpnEmailName</td>
-                                <th scope="row" class="text-muted">نام نمایشی</th>
+                                <th scope="row" class="text-muted">نام نمایشی (Remark)</th>
                                 <td>@(Model.RemarkName ?? "بدون نام")</td>
                             </tr>
                             <tr>
-                                <th scope="row" class="text-muted">وضعیت</th>
+                                <th scope="row" class="text-muted">وضعیت (دیتابیس)</th>
                                 <td>
                                     @if (Model.IsActive)
                                     {
@@ -63,8 +97,31 @@
                                         <span class="badge bg-danger-subtle text-danger">غیرفعال</span>
                                     }
                                 </td>
+                                <th scope="row" class="text-muted">وضعیت (سرور VPN)</th>
+                                <td>
+                                    @* استفاده از StatusText و StatusClass از ViewModel *@
+                                    <span class="badge @Model.StatusClass">@Model.StatusText</span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th scope="row" class="text-muted">نام سرور</th>
-                                <td id="serverName">در حال بارگذاری...</td>
+                                <td>@Model.VpnServerName</td> @* نمایش مستقیم از مدل *@
+                                <th scope="row" class="text-muted">لینک اتصال</th>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(Model.SubscriptionLink))
+                                    {
+                                        <a href="@Model.SubscriptionLink" class="btn btn-sm btn-outline-primary" title="کپی لینک اتصال">
+                                            <i class="ri-links-line"></i> لینک
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-secondary ms-1" onclick="copyToClipboard('@Model.SubscriptionLink', this)">
+                                            <i class="ri-clipboard-line"></i> کپی
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span>لینک موجود نیست</span>
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-muted">تاریخ شروع</th>
@@ -75,14 +132,14 @@
                             <tr>
                                 <th scope="row" class="text-muted">مدت اشتراک (روز)</th>
                                 <td>@Model.Duration</td>
-                                <th scope="row" class="text-muted">روزهای باقیمانده</th>
-                                <td id="remainingDays">در حال محاسبه...</td>
+                                <th scope="row" class="text-muted">روزهای باقیمانده (سرور)</th>
+                                <td>@(Model.VpnRemainingDays.HasValue ? $"{Model.VpnRemainingDays} روز" : "نامحدود")</td> @* نمایش مستقیم از مدل *@
                             </tr>
                             <tr>
                                 <th scope="row" class="text-muted">حجم کل (گیگابایت)</th>
                                 <td>@Model.Traffic</td>
-                                <th scope="row" class="text-muted">حجم باقیمانده (گیگابایت)</th>
-                                <td>@Model.RemainingTraffic</td>
+                                <th scope="row" class="text-muted">حجم باقیمانده (گیگابایت - سرور)</th>
+                                <td>@Model.VpnRemainingTraffic.ToString("0.##") GB</td> @* نمایش مستقیم از مدل با فرمت *@
                             </tr>
                         </tbody>
                     </table>
@@ -96,16 +153,15 @@
     <div class="col-xl-6">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">وضعیت مصرف ترافیک</h4>
+                <h4 class="card-title mb-0">وضعیت مصرف ترافیک (سرور VPN)</h4>
             </div>
             <div class="card-body">
                 <div class="px-4">
-                    <div id="trafficProgressWrapper">
-                        <div class="progress animated-progress custom-progress progress-label">
-                            <div class="progress-bar bg-info" role="progressbar" id="trafficProgressBar"
-                                 style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                <div class="label" id="trafficProgressLabel">0%</div>
-                            </div>
+                    @* استفاده از VpnUsagePercentage از مدل *@
+                    <div class="progress animated-progress custom-progress progress-label">
+                        <div class="progress-bar @trafficProgressClass" role="progressbar"
+                             style="width: @Model.VpnUsagePercentage%" aria-valuenow="@Model.VpnUsagePercentage" aria-valuemin="0" aria-valuemax="100">
+                            <div class="label">@Model.VpnUsagePercentage%</div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between mt-3">
@@ -113,8 +169,12 @@
                             <p class="mb-0 text-muted">حجم کل: <span class="fw-medium">@Model.Traffic گیگابایت</span></p>
                         </div>
                         <div>
-                            <p class="mb-0 text-muted">حجم مصرف شده: <span class="fw-medium" id="usedTraffic">در حال محاسبه...</span></p>
+                            @* نمایش حجم مصرف شده محاسبه شده *@
+                            <p class="mb-0 text-muted">حجم مصرف شده: <span class="fw-medium">@usedTrafficDisplay گیگابایت</span></p>
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <p class="mb-0 text-muted small">باقیمانده در سرور: <span class="fw-medium">@Model.VpnRemainingTraffic.ToString("0.##") گیگابایت</span></p>
                     </div>
                 </div>
             </div>
@@ -128,20 +188,36 @@
             </div>
             <div class="card-body">
                 <div class="px-4">
-                    <div id="timeProgressWrapper">
+                    @if (Model.Duration > 0) // فقط اگر زمان محدود باشد نوار پیشرفت نشان بده
+                    {
                         <div class="progress animated-progress custom-progress progress-label">
-                            <div class="progress-bar bg-success" role="progressbar" id="timeProgressBar"
-                                 style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                <div class="label" id="timeProgressLabel">0%</div>
+                            @* استفاده از timeUsagePercent محاسبه شده *@
+                            <div class="progress-bar @timeProgressClass" role="progressbar"
+                                 style="width: @timeUsagePercent%" aria-valuenow="@timeUsagePercent" aria-valuemin="0" aria-valuemax="100">
+                                <div class="label">@timeUsagePercent%</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-between mt-3">
+                        <div class="d-flex justify-content-between mt-3">
+                            <div>
+                                <p class="mb-0 text-muted">گذشته: <span class="fw-medium">@((Model.VpnRemainingDays.HasValue && Model.Duration > 0) ? (Model.Duration - Model.VpnRemainingDays.Value) : 0) روز</span></p>
+                            </div>
+                            <div>
+                                <p class="mb-0 text-muted">باقی‌مانده: <span class="fw-medium">@(Model.VpnRemainingDays.HasValue ? $"{Model.VpnRemainingDays} روز" : "نامحدود")</span></p>
+                            </div>
+                        </div>
+                    }
+                    else // اگر زمان نامحدود است
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="ri-time-line align-middle me-1"></i> اشتراک زمانی نامحدود است.
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between mt-1">
                         <div>
-                            <p class="mb-0 text-muted">شروع: <span class="fw-medium">@Model.StartDate.ToString("yyyy/MM/dd")</span></p>
+                            <p class="mb-0 text-muted small">شروع: <span class="fw-medium">@Model.StartDate.ToString("yyyy/MM/dd")</span></p>
                         </div>
                         <div>
-                            <p class="mb-0 text-muted">انقضا: <span class="fw-medium">@Model.EndDate.ToString("yyyy/MM/dd")</span></p>
+                            <p class="mb-0 text-muted small">انقضا: <span class="fw-medium">@Model.EndDate.ToString("yyyy/MM/dd")</span></p>
                         </div>
                     </div>
                 </div>
@@ -149,6 +225,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-lg-12">
@@ -207,82 +284,29 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // دریافت اطلاعات سرور
-            $.ajax({
-                url: "/Admin/Servers/GetServerName",
-                type: "GET",
-                data: { id: "@Model.VpnServerID" },
-                success: function (data) {
-                    if (data.success) {
-                        $("#serverName").text(data.name);
-                    } else {
-                        $("#serverName").text("خطا در بارگذاری");
-                    }
-                },
-                error: function () {
-                    $("#serverName").text("خطا در بارگذاری");
-                }
+            // نمایش مودال ریست ترافیک
+            $("#resetTrafficBtn").on("click", function (e) {
+                e.preventDefault(); // جلوگیری از ارسال فرم پیش‌فرض یا رفتار لینک
+                $('#resetTrafficModal').modal('show');
             });
 
-            // بارگذاری آمار اشتراک
-            function loadSubscriptionStats() {
-                $.ajax({
-                    url: "@Url.Action("GetSubscriptionStats", "Subscription")",
-                    type: "GET",
-                    data: { id: "@Model.Id" },
-                    success: function (data) {
-                        if (data.success) {
-                            // بروزرسانی نوار پیشرفت ترافیک
-                            $("#trafficProgressBar").css("width", data.trafficUsagePercent + "%");
-                            $("#trafficProgressBar").attr("aria-valuenow", data.trafficUsagePercent);
-                            $("#trafficProgressLabel").text(data.trafficUsagePercent + "%");
-
-                            // بروزرسانی نوار پیشرفت زمان
-                            $("#timeProgressBar").css("width", data.timeUsagePercent + "%");
-                            $("#timeProgressBar").attr("aria-valuenow", data.timeUsagePercent);
-                            $("#timeProgressLabel").text(data.timeUsagePercent + "%");
-
-                            // بروزرسانی اطلاعات دیگر
-                            $("#remainingDays").text(data.remainingDays + " روز");
-
-                            // محاسبه حجم مصرف شده
-                            var usedTraffic = @Model.Traffic - data.remainingTraffic;
-                            $("#usedTraffic").text(usedTraffic + " گیگابایت");
-
-                            // تغییر رنگ نوار پیشرفت بر اساس میزان مصرف
-                            if (data.trafficUsagePercent > 90) {
-                                $("#trafficProgressBar").removeClass("bg-info").addClass("bg-danger");
-                            } else if (data.trafficUsagePercent > 70) {
-                                $("#trafficProgressBar").removeClass("bg-info").addClass("bg-warning");
-                            }
-
-                            if (data.timeUsagePercent > 90) {
-                                $("#timeProgressBar").removeClass("bg-success").addClass("bg-danger");
-                            } else if (data.timeUsagePercent > 70) {
-                                $("#timeProgressBar").removeClass("bg-success").addClass("bg-warning");
-                            }
-                        } else {
-                            console.error("خطا در دریافت آمار:", data.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("خطا در درخواست آمار:", error);
-                    }
+            // تابع کپی لینک در کلیپ‌بورد
+            window.copyToClipboard = function(text, buttonElement) {
+                navigator.clipboard.writeText(text).then(function() {
+                    // تغییر متن و آیکون دکمه به صورت موقت
+                    const originalIcon = buttonElement.innerHTML;
+                    buttonElement.innerHTML = '<i class="ri-check-line"></i> کپی شد!';
+                    buttonElement.disabled = true; // غیرفعال کردن دکمه
+                    setTimeout(() => {
+                        buttonElement.innerHTML = originalIcon; // بازگرداندن آیکون و متن اصلی
+                        buttonElement.disabled = false; // فعال کردن مجدد دکمه
+                    }, 2000); // بازگشت به حالت اولیه بعد از 2 ثانیه
+                }, function(err) {
+                    console.error('خطا در کپی لینک: ', err);
+                    // می‌توانید یک پیام خطا به کاربر نشان دهید (مثلاً با استفاده از toastr)
+                    alert('خطا در کپی لینک. لطفا دستی کپی کنید.');
                 });
             }
-
-            // بارگذاری اولیه آمار
-            loadSubscriptionStats();
-
-            // نمایش مودال ریست ترافیک
-            $("#resetTrafficBtn").on("click", function () {
-                $("#resetTrafficModal").modal("show");
-            });
-
-            // تأیید ریست ترافیک
-            $("#confirmResetTraffic").on("click", function () {
-                $("#resetTrafficForm").submit();
-            });
         });
     </script>
 }

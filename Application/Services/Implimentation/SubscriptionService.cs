@@ -330,6 +330,113 @@ namespace Application.Services.Implementations
         }
 
 
+        // متد کمکی برای گرفتن اشتراک با کاربر (نمونه - ممکن است در ریپازیتوری شما متفاوت باشد)
+        private async Task<Subscription?> GetSubscriptionWithUserAsync(string subscriptionId)
+        {
+            // این متد باید اشتراک را به همراه اطلاعات کاربر (User) برگرداند اگر نیاز دارید
+            // return await _dbContext.Subscriptions.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == subscriptionId);
+            // فعلا فقط اشتراک را می‌گیریم چون ViewModel اطلاعات کاربر را مستقیم نیاز ندارد
+            return await _subscriptionRepository.GetByIdAsync(subscriptionId);
+        }
+
+
+        public async Task<SubscriptionViewModel?> GetSubscriptionDetailsForAdminAsync(string subscriptionId)
+        {
+            // 1. دریافت اشتراک از دیتابیس (شامل اطلاعات کاربر و سرور اگر لازم است)
+            var subscription = await GetSubscriptionWithUserAsync(subscriptionId); // یا متد مناسب دیگر
+            if (subscription == null || string.IsNullOrEmpty(subscription.VpnServerID) || string.IsNullOrEmpty(subscription.VpnEmailName))
+            {
+                _logger.LogWarning($"Subscription not found or lacks VPN info for ID: {subscriptionId}");
+                return null; // اشتراک یافت نشد یا اطلاعات VPN ناقص است
+            }
+
+            // 2. ساخت ViewModel اولیه با اطلاعات دیتابیس
+            var viewModel = new SubscriptionViewModel
+            {
+                Id = subscription.Id,
+                Traffic = subscription.Traffic,
+                Duration = subscription.Duration,
+                // RemainingTraffic = subscription.RemainingTraffic, // این را با مقدار زنده جایگزین می‌کنیم
+                StartDate = subscription.StartDate,
+                EndDate = subscription.EndDate,
+                IsActive = subscription.IsActive,
+                DaysRemaining = (subscription.EndDate - DateTime.Now).Days > 0 ? (subscription.EndDate - DateTime.Now).Days : 0,
+                // PercentTrafficUsed = ... // این را با مقدار زنده جایگزین می‌کنیم
+                VpnEmailName = subscription.VpnEmailName,
+                RemarkName = subscription.RemarkName,
+                VpnId = subscription.VpnId,
+                // VpnServerName = "درحال بارگذاری...", // مقدار اولیه
+                HasVpnConnection = true // فرض اولیه، در صورت خطا false می‌شود
+            };
+
+            // 3. دریافت اطلاعات سرور
+            var server = await _serverVPNService.GetServerByIdAsync(subscription.VpnServerID);
+            if (server == null)
+            {
+                _logger.LogWarning($"Server VPN not found for ID: {subscription.VpnServerID}");
+                viewModel.HasVpnConnection = false;
+                viewModel.VpnServerName = "سرور نامعتبر";
+                return viewModel; // سرور یافت نشد، ViewModel ناقص را برمی‌گردانیم
+            }
+            viewModel.VpnServerName = server.Name;
+            viewModel.VpnServerUrl = server.ApiUrl; // برای ساخت لینک اتصال نیاز است
+
+            // 4. دریافت اطلاعات زنده از سرور VPN
+            try
+            {
+                var inboundsResponse = await _apiManager.GetInbounds(server);
+                if (!inboundsResponse.Success || inboundsResponse.Data?.Inbounds == null)
+                {
+                    _logger.LogWarning($"Error fetching inbounds from server {server.Name}: {inboundsResponse.Message}");
+                    viewModel.HasVpnConnection = false; // نمی‌توان اطلاعات زنده را گرفت
+                    return viewModel;
+                }
+
+                // 5. جستجوی کلاینت در پاسخ API
+                ClientStat? clientStat = null;
+                foreach (var inbound in inboundsResponse.Data.Inbounds)
+                {
+                    clientStat = inbound.ClientStats?
+                        .FirstOrDefault(c => c.Email?.Equals(subscription.VpnEmailName, StringComparison.OrdinalIgnoreCase) == true);
+
+                    if (clientStat != null)
+                    {
+                        viewModel.Port = inbound.Port; // پورت را از inbound می‌گیریم
+                        break;
+                    }
+                }
+
+                // 6. به‌روزرسانی ViewModel با اطلاعات زنده
+                if (clientStat != null)
+                {
+                    viewModel.IsVpnActive = clientStat.IsActive;
+                    viewModel.VpnRemainingTraffic = clientStat.RemainingGigabytes; // <<< مقدار زنده ترافیک
+                    viewModel.VpnRemainingDays = clientStat.RemainingDays;       // <<< مقدار زنده روزها
+                    viewModel.VpnUsagePercentage = clientStat.UsagePercentage;   // <<< درصد مصرف زنده
+                    // viewModel.SubscriptionLink از پراپرتی‌های بالا برای ساخت لینک استفاده می‌کند
+                }
+                else
+                {
+                    _logger.LogWarning($"Client with email {subscription.VpnEmailName} not found on server {server.Name}.");
+                    viewModel.HasVpnConnection = false; // کلاینت در سرور یافت نشد
+                    viewModel.IsVpnActive = false;
+                    viewModel.VpnRemainingTraffic = 0; // یا مقدار پیش‌فرض دیگر
+                    viewModel.VpnRemainingDays = 0;
+                    viewModel.VpnUsagePercentage = 100; // یا 0؟ بستگی به نمایش دارد
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error communicating with VPN server {server.Name} for subscription {subscriptionId}.");
+                viewModel.HasVpnConnection = false;
+                viewModel.IsVpnActive = false;
+                // مقادیر پیش‌فرض یا خطا را در ViewModel تنظیم کنید
+            }
+
+            return viewModel;
+        }
+
+
 
         // دریافت اشتراک‌های کاربر
         public async Task<List<SubscriptionViewModel>> GetUserSubscriptionsAsync(string userId)

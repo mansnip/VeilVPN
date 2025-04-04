@@ -1,0 +1,391 @@
+﻿@model Domain.ViewModels.UserPanel.Tutorials.TutorialCreateViewModel
+@{
+    ViewData["Title"] = "ایجاد آموزش جدید";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+            <h4 class="mb-sm-0">@ViewData["Title"]</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Tutorials">آموزش‌ها</a></li>
+                    <li class="breadcrumb-item active">ایجاد آموزش</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+@* استفاده از تگ form هلپر با متد POST و enctype برای آپلود فایل *@
+<form asp-action="Create" asp-controller="Tutorials" method="post" enctype="multipart/form-data" id="createTutorialForm">
+    @* توکن ضد جعل (Anti-Forgery Token) برای امنیت فرم *@
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-lg-8">
+            @* بخش اصلی محتوا *@
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">اطلاعات اصلی آموزش</h5>
+                </div>
+                <div class="card-body">
+                    @* نمایش خطاهای کلی اعتبار سنجی مدل *@
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                        لطفا خطاهای زیر را برطرف کنید:
+                    </div>
+
+                    @* فیلد عنوان آموزش *@
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">عنوان آموزش</label>
+                        <input asp-for="Title" class="form-control" placeholder="مثلا: راهنمای اتصال به V2RayNG در اندروید">
+                        <span asp-validation-for="Title" class="text-danger d-block small mt-1"></span> @* d-block برای نمایش بهتر خطا *@
+                    </div>
+
+                    @* فیلد توضیحات کوتاه *@
+                    <div class="mb-3">
+                        <label asp-for="ShortDescription" class="form-label">توضیحات کوتاه (برای کارت نمایش)</label>
+                        <textarea asp-for="ShortDescription" class="form-control" rows="3" placeholder="یک توضیح مختصر و جذاب برای نمایش در لیست آموزش‌ها (حداکثر 500 کاراکتر)"></textarea>
+                        <span asp-validation-for="ShortDescription" class="text-danger d-block small mt-1"></span>
+                    </div>
+
+                    @* فیلد محتوای کامل با ویرایشگر CKEditor *@
+                    <div class="mb-3">
+                        <label asp-for="Content" class="form-label">محتوای کامل آموزش</label>
+                        @* Textarea که CKEditor روی آن اعمال می‌شود *@
+                        <textarea asp-for="Content" id="ckeditor-classic" class="form-control"></textarea>
+                        <span asp-validation-for="Content" class="text-danger d-block small mt-1"></span>
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+
+            @* بخش لینک‌های دانلود (پیاده‌سازی ساده با Textarea برای JSON) *@
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">لینک‌های دانلود (اختیاری)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="DownloadLinkText1" class="form-label">لینک‌ها (فرمت JSON)</label>
+                        <textarea asp-for="DownloadLink1" class="form-control" rows="5" placeholder="لینک‌های دانلود را در قالب JSON وارد کنید. مثال:
+[
+  { &quot;Text&quot;: &quot;دانلود نسخه ویندوز&quot;, &quot;Url&quot;: &quot;https://example.com/download/windows&quot; },
+  { &quot;Text&quot;: &quot;دانلود نسخه اندروید&quot;, &quot;Url&quot;: &quot;https://example.com/download/android&quot; }
+]"></textarea>
+                        <div class="form-text">هر لینک باید شامل کلیدهای "Text" (متن دکمه) و "Url" (آدرس لینک) باشد. کل لیست را داخل براکت [] قرار دهید.</div>
+                        <span asp-validation-for="DownloadLink1" class="text-danger d-block small mt-1"></span>
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+
+        </div>
+        <!-- end col -->
+
+        <div class="col-lg-4">
+            @* ستون کناری برای تنظیمات *@
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">انتشار</h5>
+                </div>
+                <div class="card-body">
+                    @* در اینجا می‌توانید وضعیت انتشار (پیش‌نویس، منتشر شده) را اضافه کنید *@
+                    <div class="mb-3">
+                        <label class="form-label">وضعیت</label>
+                        <select class="form-select" disabled>
+                            @* فعلا فقط منتشر شده را داریم *@
+                            <option selected>منتشر شده</option>
+                            @* <option value="Draft">پیش‌نویس</option> *@
+                        </select>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-success w-sm">
+                            <i class="ri-save-line me-1 align-bottom"></i> ذخیره آموزش
+                        </button>
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">دسته‌بندی</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label">نام دسته‌بندی</label>
+                        <input asp-for="Category" class="form-control" placeholder="مثلا: راهنمای اتصال، رفع مشکل">
+                        <span asp-validation-for="Category" class="text-danger d-block small mt-1"></span>
+                        @*   <div class="form-text">
+                               در آینده می‌توانید از یک لیست کشویی برای دسته‌بندی‌های موجود استفاده کنید.
+                           </div> *@
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">برچسب‌ها (Tags)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TagsString" class="form-label">برچسب‌ها</label>
+                        <input asp-for="TagsString" class="form-control" placeholder="برچسب‌ها را با ویرگول (,) جدا کنید">
+                        <span asp-validation-for="TagsString" class="text-danger d-block small mt-1"></span>
+                        <div class="form-text">مثال: اندروید, v2ray, مشکل اتصال, ios</div>
+                        @* --- پیشنهاد استفاده از Select2 ---
+                         <select asp-for="TagsList" class="form-select" id="tags-select" multiple="multiple"></select>
+                         <span asp-validation-for="TagsList" class="text-danger"></span>
+                         <div class="form-text">برای افزودن تگ جدید، آن را تایپ کرده و Enter بزنید.</div>
+                         *@
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">تصویر کاور</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="CoverImageFile" class="form-label">انتخاب تصویر کاور</label>
+                        <input asp-for="CoverImageFile" class="form-control" type="file" accept="image/jpeg, image/png, image/gif, image/webp">
+                        <span asp-validation-for="CoverImageFile" class="text-danger d-block small mt-1"></span>
+                    </div>
+                    <div>
+                        <label class="form-label">پیش‌نمایش</label>
+                        <img id="cover-image-preview" src="/assets/images/placeholder-image.png" alt="پیش‌نمایش کاور" class="img-thumbnail" style="max-height: 150px; display: block;"> @* یک تصویر پیش‌فرض قرار دهید *@
+                    </div>
+                </div>
+                <!-- end card body -->
+            </div>
+            <!-- end card -->
+
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- ckeditor -->
+    <script src="/assets/libs/@@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+
+    <!-- dropzone js -->
+    <script src="/assets/libs/dropzone/dropzone-min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let editorInstance; // متغیر برای نگهداری نمونه ویرایشگر
+
+            // --- CKEditor Initialization ---
+            ClassicEditor
+                .create(document.querySelector('#ckeditor-classic'), {
+                    // پیکربندی CKEditor
+                    language: 'fa', // تنظیم زبان فارسی
+                    toolbar: {
+                         items: [
+                            'heading', '|',
+                            'bold', 'italic', 'underline', 'strikethrough', '|', // استایل‌های متن
+                            'link', 'bulletedList', 'numberedList', '|',        // لیست و لینک
+                            'alignment', '|',                                     // چینش متن
+                            'blockQuote', 'insertTable', '|',                     // نقل قول و جدول
+                            'imageInsert', 'mediaEmbed', '|',                      // تصویر و رسانه
+                            'code', 'codeBlock', '|',                             // کد
+                            'removeFormat', 'undo', 'redo'                       // ابزارهای دیگر
+                        ]
+                    },
+                     image: {
+                        toolbar: [
+                            'imageStyle:inline',
+                            'imageStyle:block',
+                            'imageStyle:side',
+                            '|',
+                            'toggleImageCaption',
+                            'imageTextAlternative'
+                        ],
+                        // ممکن است نیاز به تنظیم آپلود کننده تصویر داشته باشید
+                        // upload: { ... }
+                    },
+                    table: {
+                        contentToolbar: [
+                            'tableColumn', 'tableRow', 'mergeTableCells',
+                            'tableProperties', 'tableCellProperties'
+                        ]
+                    },
+                     codeBlock: { // تنظیم زبان‌های code block (اختیاری)
+                        languages: [
+                            { language: 'plaintext', label: 'Plain text' },
+                            { language: 'c', label: 'C' },
+                            { language: 'cs', label: 'C#' },
+                            { language: 'cpp', label: 'C++' },
+                            { language: 'css', label: 'CSS' },
+                            { language: 'diff', label: 'Diff' },
+                            { language: 'html', label: 'HTML' },
+                            { language: 'java', label: 'Java' },
+                            { language: 'javascript', label: 'JavaScript' },
+                            { language: 'php', label: 'PHP' },
+                            { language: 'python', label: 'Python' },
+                            { language: 'ruby', label: 'Ruby' },
+                            { language: 'typescript', label: 'TypeScript' },
+                            { language: 'xml', label: 'XML' },
+                            { language: 'bash', label: 'Bash' },
+                            { language: 'sql', label: 'SQL'}
+                        ]
+                    },
+                    // غیرفعال کردن تبدیل خودکار تایپوگرافی اگر نامطلوب است
+                     typing: {
+                         transformations: {
+                             remove: [
+                                 // 'symbols',
+                                 // 'quotes',
+                                 // 'arrowLeft',
+                                 // 'arrowRight'
+                             ]
+                         }
+                    }
+                })
+                .then(editor => {
+                    console.log('CKEditor 5 initialized successfully!');
+                    editorInstance = editor; // ذخیره نمونه ویرایشگر
+
+                    // اطمینان از آپدیت شدن مدل هنگام تغییر محتوا (مهم برای فرم سابمیت)
+                     editor.model.document.on('change:data', () => {
+                         const data = editor.getData();
+                         document.querySelector('#ckeditor-classic').value = data; // به‌روزرسانی مقدار textarea پنهان
+                         // برای تریگر کردن ولیدیشن جاوا اسکریپت (در صورت نیاز)
+                         // $('#ckeditor-classic').trigger('change');
+                         // یا
+                          // document.querySelector('#ckeditor-classic').dispatchEvent(new Event('change', { bubbles: true }));
+                     });
+
+                })
+                .catch(error => {
+                    console.error('Error initializing CKEditor 5:', error);
+                    // نمایش خطا به کاربر یا لاگ کردن آن
+                    const editorElement = document.querySelector('#ckeditor-classic');
+                    if (editorElement) {
+                       editorElement.style.display = 'block'; // نمایش textarea معمولی در صورت بروز خطا
+                       const errorDiv = document.createElement('div');
+                       errorDiv.className = 'alert alert-danger mt-2';
+                       errorDiv.textContent = 'خطا در بارگذاری ویرایشگر متن. لطفا صفحه را رفرش کنید یا با پشتیبانی تماس بگیرید.';
+                       editorElement.parentNode.insertBefore(errorDiv, editorElement.nextSibling);
+                    }
+                });
+
+
+             // --- Image Preview ---
+             const coverImageInput = document.getElementById('CoverImageFile');
+             const coverImagePreview = document.getElementById('cover-image-preview');
+             const defaultImageSrc = coverImagePreview.src; // ذخیره مسیر پیش‌فرض
+
+             if (coverImageInput && coverImagePreview) {
+                coverImageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            coverImagePreview.src = e.target.result;
+                            coverImagePreview.style.display = 'block'; // نمایش تصویر
+                        }
+                        reader.readAsDataURL(file);
+                    } else {
+                        // اگر فایل انتخاب شده تصویر نیست یا انتخاب لغو شده
+                        coverImagePreview.src = defaultImageSrc; // بازگرداندن به پیش‌فرض
+                         if (!defaultImageSrc || defaultImageSrc.includes('placeholder')) {
+                           // coverImagePreview.style.display = 'none'; // پنهان کردن اگر تصویر پیش‌فرض وجود ندارد
+                         }
+                         // پاک کردن مقدار فیلد آپلود (برای جلوگیری از ارسال فایل نامعتبر)
+                         // coverImageInput.value = ''; // این خط ممکن است در برخی مرورگرها محدودیت داشته باشد
+                    }
+                });
+             } else {
+                 console.warn('Cover image input or preview element not found.');
+             }
+
+
+             // --- Select2 for Tags (Optional) ---
+             /*
+             if (typeof $ !== 'undefined' && $.fn.select2) {
+                 $('#tags-select').select2({
+                     tags: true, // Allow adding new tags
+                     tokenSeparators: [',', ' '], // Separate tags by comma or space
+                     placeholder: 'برچسب‌ها را وارد یا انتخاب کنید',
+                     dir: "rtl" // Enable RTL support
+                 });
+             } else {
+                 console.warn('jQuery or Select2 library not found. Tags input will be a standard text input.');
+             }
+             */
+
+
+            // --- Prevent accidental navigation ---
+            let formChanged = false;
+            const form = document.getElementById('createTutorialForm');
+            if (form) {
+                 // Detect changes in form inputs
+                form.addEventListener('change', () => { formChanged = true; });
+                // Detect changes in CKEditor
+                // The 'change:data' listener above sets the textarea value,
+                // which should trigger the form's 'change' event.
+
+                 window.addEventListener('beforeunload', (event) => {
+                    if (formChanged) {
+                        // Standard way to show the confirmation dialog
+                        event.preventDefault();
+                        // Chrome requires returnValue to be set
+                        event.returnValue = '';
+                        return ''; // For older browsers
+                    }
+                 });
+
+                 // Reset flag on successful submit (you might need to adjust this based on AJAX vs full postback)
+                 form.addEventListener('submit', () => {
+                    // If using AJAX, reset on success callback
+                    // If full postback, this might not be strictly necessary,
+                    // but good practice if you add AJAX later.
+                    formChanged = false;
+                 });
+            }
+
+
+        }); // End DOMContentLoaded
+    </script>
+}
+
+@* بخش استایل‌های خاص این صفحه (اختیاری) *@
+@section Styles {
+    <!-- Plugins css -->
+    <link href="/assets/libs/dropzone/dropzone.css" rel="stylesheet" type="text/css">
+    <style>
+        /* افزایش ارتفاع CKEditor */
+        .ck-editor__editable_inline {
+            min-height: 350px;
+        }
+
+        /* استایل بهتر برای پیش‌نمایش تصویر */
+        #cover-image-preview {
+            object-fit: cover; /* نمایش بهتر تصویر بدون کشیدگی */
+            border: 1px solid #dee2e6; /* مرز مشابه سایر عناصر فرم */
+        }
+
+        /* رفع مشکل احتمالی نمایش span ولیدیشن زیر CKEditor */
+        /* .ck.ck-editor + .text-danger { */
+        /*    display: block; */
+        /*    margin-top: 0.25rem; */
+        /* } */
+    </style>
+}

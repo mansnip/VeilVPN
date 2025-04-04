@@ -18,12 +18,14 @@ namespace Domain.ViewModels.UserPanel
         public string UserFullName { get; set; }
         public string UserEmail { get; set; }
         public string UserPhone { get; set; }
+        public string PaymentToken { get; set; } = Guid.NewGuid().ToString();
         public decimal TotalAmount => Subscription?.FinalPrice ?? 0;
 
         [Display(Name = "نام")]
         [MaxLength(20, ErrorMessage = "{0} نمی تواند بیشتر از 20 کاراکتر باشد.")]
         public string? RemarkName { get; set; }
         public SubscriptionDetails Subscription { get; set; }
+        public bool IsComplate { get; set; }
 
         // پراپرتی‌های جدید برای تمدید اشتراک
         public bool IsRenewal { get; set; } = false;

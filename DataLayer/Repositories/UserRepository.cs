@@ -59,5 +59,16 @@ namespace DataLayer.Repositories
             _context.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        // *** پیاده‌سازی متد جدید ***
+        public async Task<List<User>> GetUsersInRoleAsync(string roleName)
+        {
+            // فرض: پراپرتی نقش در User اسمش Role هست و از نوع string
+            // اگر ساختار نقش‌ها فرق داره (مثلا جدول جدا یا Claims)، این کوئری باید تغییر کنه
+            // مهم: به بزرگی و کوچکی حروف نقش توجه کن (شاید نیاز به ToLower() باشه)
+            return await _context.Users
+                .Where(u => u.Role == roleName && !u.IsDelete) // نقش رو چک کن و حذف نشده‌ها رو بیار
+                .ToListAsync();
+        }
     }
 }
