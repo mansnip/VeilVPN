@@ -1,5 +1,8 @@
-﻿@{
+﻿@using Application.Services.Interfaces
+@inject IUserService _userService
+@{
     Layout = "~/Areas/Landing/Views/Shared/_Layout.cshtml";
+
 }
 
 <div class="layout-wrapper landing">
@@ -39,6 +42,11 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <a href="/UserPanel/Panel/Index" class="btn btn-soft-success material-shadow-none" title="پنل کاربری">پنل کاربری</a>
+                        var user = await _userService.GetUserById(User.Identity!.Name!);
+                        if (user.Role == "Admin")
+                        {
+                            <a href="/Admin/Home/Index" class="btn btn-soft-primary material-shadow-none" title="پنل کاربری">پنل مدیریت</a>
+                        }
                     }
                     else
                     {
@@ -967,7 +975,7 @@
                         @* لینک شبکه‌های اجتماعی (اختیاری) *@
                         <ul class="list-inline mb-0 footer-social-link">
                             <li class="list-inline-item">
-                                <a href="https://t.me/YourChannel" target="_blank" class="avatar-xs d-block" title="تلگرام">
+                                <a href="https://t.me/RahaGozarChannel" target="_blank" class="avatar-xs d-block" title="تلگرام">
                                     <div class="avatar-title rounded bg-soft-primary text-primary fs-16 shadow">
                                         @* اضافه کردن shadow برای تطابق با قالب *@
                                         <i class="ri-telegram-fill"></i>
@@ -975,7 +983,7 @@
                                 </a>
                             </li>
                             @* <li class="list-inline-item">
-                                <a href="https://instagram.com/YourProfile" target="_blank" class="avatar-xs d-block" title="اینستاگرام">
+                                <a href="https://instagram.com/RahaGozarVPN" target="_blank" class="avatar-xs d-block" title="اینستاگرام">
                                     <div class="avatar-title rounded bg-soft-danger text-danger fs-16 shadow">
                                         <i class="ri-instagram-fill"></i>
                                     </div>

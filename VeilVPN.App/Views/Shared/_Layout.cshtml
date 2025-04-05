@@ -1,6 +1,4 @@
-﻿@using Application.Services.Interfaces
-@inject IUserService _userService;
-
+﻿
 <!DOCTYPE html>
 <html lang="fa" dir="rtl" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default">
 
@@ -293,164 +291,93 @@
                 </button>
             </div>
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div id="scrollbar">
-                    <div class="container-fluid">
-                        <div id="two-column-menu">
-                        </div>
-                        <ul class="navbar-nav" id="navbar-nav">
-                            <li class="menu-title"><span data-key="t-menu">منو اصلی</span></li>
-
-                            <!-- داشبورد -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="~/UserPanel/Panel/Index">
-                                    <i class="ri-dashboard-2-line"></i> <span>داشبورد</span>
-                                </a>
-                                @{
-                                    var user = await _userService.GetUserById(User.Identity!.Name!);
-                                    if (user.Role == "Admin")
-                                    {
-                                        <a class="nav-link menu-link" href="/Admin/Home/Index">
-                                            <i class="ri-dashboard-2-line"></i> <span>داشبورد</span>
-                                        </a>
-                                    }
-                                }
-                            </li>
-
-                            <!-- اشتراک -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="#sidebarSubscription" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSubscription">
-                                    <i class="ri-wifi-line"></i> <span data-key="t-subscription">اشتراک VPN</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarSubscription">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="~/UserPanel/Panel/BuySubscription" class="nav-link" data-key="t-buy-subscription">خرید اشتراک</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="~/UserPanel/Subscription/MySubscriptions" class="nav-link" data-key="t-my-subscriptions">اشتراک‌های من</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- فاکتورها -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="~/UserPanel/Panel/Invoices">
-                                    <i class="ri-bill-line"></i> <span data-key="t-invoices">فاکتورها</span>
-                                </a>
-                            </li>
-
-                            <!-- تنظیمات حساب کاربری -->
-                            <li b-d5pm6vaey1 class="nav-item">
-                                <a b-d5pm6vaey1 class="nav-link menu-link" href="#sidebarAccount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAccount">
-                                    <i b-d5pm6vaey1 class="ri-user-settings-line"></i> <span b-d5pm6vaey1 data-key="t-account">حساب کاربری</span>
-                                </a>
-                                <div b-d5pm6vaey1 class="collapse menu-dropdown" id="sidebarAccount">
-                                    <ul b-d5pm6vaey1 class="nav nav-sm flex-column">
-                                        <li b-d5pm6vaey1 class="nav-item">
-                                            @* ===>>> لینک جدید <<<=== *@
-                                            <a href="@Url.Action("ChangePassword", "Authentication", new { area = "" })" class="nav-link" data-key="t-change-password">تغییر رمز عبور</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-
-                            <!-- پشتیبانی -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="#sidebarSupport" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSupport">
-                                    <i class="ri-customer-service-2-line"></i> <span data-key="t-support">پشتیبانی</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="sidebarSupport">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="~/UserPanel/Chat" class="nav-link" data-key="t-tickets">چت آنلاین</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="https://t.me/RahaGozarSupport" class="nav-link" data-key="t-new-ticket">پشتیبانی از طریق تلگرام</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- راهنما -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="~/UserPanel/Tutorials/Index">
-                                    <i class="ri-question-line"></i> <span data-key="t-help">آموزش ها</span>
-                                </a>
-                            </li>
-
-                            <!-- خروج -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="~/Authentication/SignOut">
-                                    <i class="ri-logout-box-line"></i> <span data-key="t-logout">خروج</span>
-                                </a>
-                            </li>
-                        </ul>
+            <div id="scrollbar">
+                <div class="container-fluid">
+                    <div id="two-column-menu">
                     </div>
+                    <ul class="navbar-nav" id="navbar-nav">
+                        <li class="menu-title"><span data-key="t-menu">منو اصلی</span></li>
+
+                        <!-- داشبورد -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="~/UserPanel/Panel/Index">
+                                <i class="ri-dashboard-2-line"></i> <span>داشبورد</span>
+                            </a>
+                        </li>
+
+                        <!-- اشتراک -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarSubscription" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSubscription">
+                                <i class="ri-wifi-line"></i> <span data-key="t-subscription">اشتراک VPN</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarSubscription">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="~/UserPanel/Panel/BuySubscription" class="nav-link" data-key="t-buy-subscription">خرید اشتراک</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/UserPanel/Subscription/MySubscriptions" class="nav-link" data-key="t-my-subscriptions">اشتراک‌های من</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <!-- فاکتورها -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="~/UserPanel/Panel/Invoices">
+                                <i class="ri-bill-line"></i> <span data-key="t-invoices">فاکتورها</span>
+                            </a>
+                        </li>
+
+                        <!-- تنظیمات حساب کاربری -->
+                        <li b-d5pm6vaey1 class="nav-item">
+                            <a b-d5pm6vaey1 class="nav-link menu-link" href="#sidebarAccount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAccount">
+                                <i b-d5pm6vaey1 class="ri-user-settings-line"></i> <span b-d5pm6vaey1 data-key="t-account">حساب کاربری</span>
+                            </a>
+                            <div b-d5pm6vaey1 class="collapse menu-dropdown" id="sidebarAccount">
+                                <ul b-d5pm6vaey1 class="nav nav-sm flex-column">
+                                    <li b-d5pm6vaey1 class="nav-item">
+                                        @* ===>>> لینک جدید <<<=== *@
+                                        <a href="@Url.Action("ChangePassword", "Authentication", new { area = "" })" class="nav-link" data-key="t-change-password">تغییر رمز عبور</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+
+                        <!-- پشتیبانی -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarSupport" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSupport">
+                                <i class="ri-customer-service-2-line"></i> <span data-key="t-support">پشتیبانی</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarSupport">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="~/UserPanel/Chat" class="nav-link" data-key="t-tickets">چت آنلاین</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="https://t.me/RahaGozarSupport" class="nav-link" data-key="t-new-ticket">پشتیبانی از طریق تلگرام</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <!-- راهنما -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="~/UserPanel/Tutorials/Index">
+                                <i class="ri-question-line"></i> <span data-key="t-help">آموزش ها</span>
+                            </a>
+                        </li>
+
+                        <!-- خروج -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="~/Authentication/SignOut">
+                                <i class="ri-logout-box-line"></i> <span data-key="t-logout">خروج</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-            }
-            else
-            {
-                <div id="scrollbar">
-                    <div class="container-fluid">
-
-                        <div id="two-column-menu">
-                        </div>
-                        <ul class="navbar-nav" id="navbar-nav">
-
-                            <!-- عنوان بخش ورود و ثبت نام -->
-                            <li class="menu-title"><span data-key="t-access">ورود و ثبت نام</span></li>
-
-                            <!-- لینک ورود -->
-                            <li class="nav-item">
-                                @* مسیر را با مسیر صفحه ورود خودتان جایگزین کنید *@
-                                <a class="nav-link menu-link" href="@Url.Action("SignIn", "Authentication", new { area = "" })" title="ورود به حساب کاربری">
-                                    <i class="ri-login-box-line"></i> <span data-key="t-login">ورود</span>
-                                </a>
-                            </li>
-
-                            <!-- لینک ثبت نام -->
-                            <li class="nav-item">
-                                @* مسیر را با مسیر صفحه ثبت نام خودتان جایگزین کنید *@
-                                <a class="nav-link menu-link" href="@Url.Action("SignUp", "Authentication", new { area = "" })" title="ایجاد حساب کاربری جدید">
-                                    <i class="ri-user-add-line"></i> <span data-key="t-signup">ثبت نام</span>
-                                </a>
-                            </li>
-
-                            <!-- (اختیاری) می‌توانید لینک‌های عمومی دیگر را هم اینجا اضافه کنید -->
-                            <li class="menu-title"><span data-key="t-public-sections">بخش‌های عمومی</span></li>
-
-                            <!-- لینک صفحه اصلی سایت (لندینگ) -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="@Url.Action("Index", "Home", new { area = "" })" title="بازگشت به صفحه اصلی">
-                                    <i class="ri-home-4-line"></i> <span data-key="t-landing-home">صفحه اصلی</span>
-                                </a>
-                            </li>
-
-                            <!-- لینک آموزش ها (عمومی) -->
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="@Url.Action("Index", "Tutorials", new { area = "UserPanel" })">
-                                    <i class="ri-question-line"></i> <span data-key="t-help">آموزش ها</span>
-                                </a>
-                            </li>
-
-                            <!-- (اختیاری) لینک تماس با ما یا درباره ما -->
-                            @* <li class="nav-item">
-                     <a class="nav-link menu-link" href="@Url.Action("Contact", "Home", new { area = "" })">
-                         <i class="ri-mail-line"></i> <span data-key="t-contact">تماس با ما</span>
-                     </a>
-                 </li> *@
-
-                        </ul>
-                    </div>
-                    <!-- Sidebar -->
-                </div>
-            }
-            
-            
+            </div>
             <div class="sidebar-background"></div>
         </div>
         <!-- Left Sidebar End -->

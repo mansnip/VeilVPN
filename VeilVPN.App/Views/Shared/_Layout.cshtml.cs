@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace VeilVPN.App.Areas.Landing.Views.Home
+namespace VeilVPN.App.Views.Shared
 {
-    public class FileNameModel : PageModel
+    public class _LayoutModel : PageModel
     {
         public void OnGet()
         {

@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VeilVPN.App.Areas.UserPanel.Controllers
 {
-    [Authorize] // اگر می‌خواهید فقط کاربران لاگین شده ببینند
     [Area("UserPanel")] // اگر در بخش ادمین است
     public class TutorialsController : Controller
     {
@@ -185,9 +184,9 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
         //    return View(model);
         //}
 
-        // --- TODO: اکشن‌های Edit (GET & POST) و Delete (POST) را مشابه Create پیاده‌سازی کنید ---
-        // Edit(GET): خواندن داده از دیتابیس، مپ کردن به EditViewModel، نمایش فرم
-        // Edit(POST): ولیدیشن، آپلود عکس (در صورت تغییر)، آپدیت داده در دیتابیس، ریدایرکت
+        // --- TODO: اکشن‌های Edit(GET & POST) و Delete(POST) را مشابه Create پیاده‌سازی کنید ---
+        // Edit(GET) : خواندن داده از دیتابیس، مپ کردن به EditViewModel، نمایش فرم
+        // Edit(POST) : ولیدیشن، آپلود عکس(در صورت تغییر)، آپدیت داده در دیتابیس، ریدایرکت
         // Delete(POST): پیدا کردن رکورد، حذف از دیتابیس، ریدایرکت
 
     }

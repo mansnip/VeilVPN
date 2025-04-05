@@ -12,8 +12,8 @@
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">آموزش‌ها</a></li>
-                    <li class="breadcrumb-item active">نمای شبکه</li>
+                    <li class="breadcrumb-item"><a href="~/">صفحه اصلی</a></li> @* لینک به صفحه اصلی *@
+                    <li class="breadcrumb-item active">آموزش‌ها</li>
                 </ol>
             </div>
 
@@ -22,85 +22,173 @@
 </div>
 <!-- end page title -->
 
-<div class="row g-4 mb-3">
-    <div class="col-sm">
-        @* --- بخش جستجو و فیلتر (نیازمند پیاده‌سازی بک‌اند) --- *@
-        <div class="d-flex justify-content-sm-end gap-2">
-            <div class="search-box ms-2">
-                <input type="text" class="form-control" placeholder="جستجو آموزش...">
-                <i class="ri-search-line search-icon"></i>
-            </div>
-
-            <select class="form-control w-md" data-choices data-choices-search-false>
-                <option value="All">همه دسته‌بندی‌ها</option>
-                @* می‌توانید دسته‌بندی‌ها را داینامیک لود کنید *@
-                <option value="Android">اندروید</option>
-                <option value="iOS">iOS</option>
-                <option value="Windows">ویندوز</option>
-                <option value="Other">سایر</option>
-            </select>
-        </div>
-        @* --- پایان بخش جستجو و فیلتر --- *@
-    </div>
-</div>
 
 <div class="row">
-    @if (!Model.Any())
-    {
-        <div class="col-12">
-            <div class="alert alert-info text-center">
-                هیچ آموزشی برای نمایش یافت نشد.
+    @* --- ستون سایدبار (چپ) --- *@
+    <div class="col-xxl-3">
+        <div class="card">
+            <div class="card-body p-4">
+                @* --- جستجو --- *@
+                <div class="search-box">
+                    <p class="text-muted">جستجو کنید</p>
+                    <div class="position-relative">
+                        @* !!! نکته: برای فعال کردن جستجو، نیاز به پیاده‌سازی سمت سرور یا جاوااسکریپت دارید *@
+                        <input type="text" class="form-control rounded bg-light border-light" placeholder="جستجو آموزش...">
+                        <i class="mdi mdi-magnify search-icon"></i>
+                    </div>
+                </div>
+
+                @* --- دسته بندی ها --- *@
+                @* !!! نکته: این بخش نیاز به داده داینامیک از Controller و ViewModel دارد *@
+                <div class="mt-4 pt-4 border-top border-dashed border-bottom-0 border-start-0 border-end-0">
+                    <p class="text-muted">دسته بندی ها</p>
+                    <ul class="list-unstyled fw-medium">
+                        <li><a href="javascript: void(0);" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>همه دسته‌ها</a></li>
+                        @* نمونه آیتم داینامیک (باید از ViewModel بیاید) *@
+                        @* @foreach (var category in ViewBag.Categories) *@
+                        @* { *@
+                        @*     <li><a href="/Tutorials?category=@category.Slug" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>@category.Name <span class="badge badge-soft-success rounded-pill float-end ms-1 font-size-12">@category.Count</span></a></li> *@
+                        @* } *@
+                        <li><a href="javascript: void(0);" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>اندروید<span class="badge badge-soft-success rounded-pill float-end ms-1 font-size-12">04</span></a></li>
+                        <li><a href="javascript: void(0);" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>ویندوز</a></li>
+                        <li><a href="javascript: void(0);" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>iOS</a></li>
+                    </ul>
+                </div>
+
+                @* --- آرشیو --- *@
+                @* !!! نکته: این بخش نیاز به داده داینامیک از Controller و ViewModel دارد *@
+                <div class="mt-4 pt-4 border-top border-dashed border-bottom-0 border-start-0 border-end-0">
+                    <p class="text-muted">آرشیو</p>
+                    <ul class="list-unstyled fw-medium">
+                        <li><a href="javascript: void(0);" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>2024<span class="badge badge-soft-success rounded-pill float-end ms-1 font-size-12">03</span></a></li>
+                        <li><a href="javascript: void(0);" class="text-muted py-2 d-block"><i class="mdi mdi-chevron-right me-1"></i>2023<span class="badge badge-soft-success rounded-pill float-end ms-1 font-size-12">06</span></a></li>
+                    </ul>
+                </div>
+
+                @* --- برچسب ها --- *@
+                @* !!! نکته: این بخش نیاز به داده داینامیک از Controller و ViewModel دارد *@
+                <div class="mt-4 pt-4 border-top border-dashed border-bottom-0 border-start-0 border-end-0">
+                    <p class="text-muted">برچسب ها</p>
+                    <div class="d-flex flex-wrap gap-2 widget-tag">
+                        <div><a href="javascript: void(0);" class="badge bg-light text-muted font-size-12">اندروید</a></div>
+                        <div><a href="javascript: void(0);" class="badge bg-light text-muted font-size-12">ویندوز</a></div>
+                        <div><a href="javascript: void(0);" class="badge bg-light text-muted font-size-12">iOS</a></div>
+                        <div><a href="javascript: void(0);" class="badge bg-light text-muted font-size-12">v2ray</a></div>
+                        <div><a href="javascript: void(0);" class="badge bg-light text-muted font-size-12">NapsternetV</a></div>
+                        <div><a href="javascript: void(0);" class="badge bg-light text-muted font-size-12">Clash</a></div>
+                    </div>
+                </div>
             </div>
         </div>
-    }
-    else
-    {
-        @foreach (var item in Model)
-        {
-            <div class="col-xxl-3 col-lg-4 col-md-6">
-                @* ستون بندی را تنظیم کنید *@
-                <div class="card overflow-hidden blog-grid-card">
-                    <div class="position-relative overflow-hidden">
-                        <img src="@item.CoverImagePath" alt="@item.Title" class="blog-img object-fit-cover" style="height: 200px;"> @* ارتفاع ثابت برای عکس *@
-                        @* @if (!string.IsNullOrEmpty(item.Category))
-                        {
-                            <div class="bg-primary-subtle text-primary Svg-primary ribbon-box"><span class="ribbon-content">@item.Category</span></div>
-                        } *@
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title fs-16"><a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id" class="text-reset">@item.Title</a></h5>
-                        <p class="text-muted mb-2 clamp-lines-3">@item.ShortDescription</p> @* نمایش 3 خط *@
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id" class="link link-primary text-decoration-underline link-offset-1">مشاهده آموزش<i class="ri-arrow-right-up-line"></i></a>
-                            @* می‌توانید دکمه‌های ویرایش و حذف را اینجا برای ادمین اضافه کنید *@
-                            @* <div class="fs-12 text-muted">
-                                        <i class="ri-calendar-event-line align-bottom me-1"></i> @item.CreatedAt.ToString("yyyy/MM/dd")
-                                    </div> *@
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
+    @* --- پایان ستون سایدبار --- *@
 
-            <!--end col-->
-        }
-    }
-</div><!--end row-->
-@* --- بخش صفحه‌بندی (نیازمند پیاده‌سازی بک‌اند با PagedList یا مشابه) --- *@
-@* <div class="row g-0 text-center text-sm-start align-items-center mb-4">
-            <div class="col-sm-6">
-                <div>
-                    <p class="mb-sm-0 text-muted"> در حال نمایش <span class="fw-semibold"> 1 </span> به <span class="fw-semibold"> @Model.Count() </span> از <span class="fw-semibold text-decoration-underline"> @Model.Count() </span> ورودی ها</p>
-                </div>
+    @* --- ستون محتوای اصلی (راست) --- *@
+    <div class="col-xxl-9">
+        @* --- دکمه افزودن جدید و فیلترها (اختیاری برای نمایش عمومی) --- *@
+        @* <div class="row g-4 mb-3">
+            <div class="col-sm-auto">
+                 @if (User.IsInRole("Admin")) // نمایش دکمه فقط برای ادمین (اگر نیاز باشد)
+                 {
+                     <div>
+                         <a href="/Admin/Tutorials/Create" class="btn btn-success"><i class="ri-add-line align-bottom me-1"></i>افزودن جدید</a>
+                     </div>
+                 }
             </div>
-            <div class="col-sm-6">
-                <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
-                     Pagination links here
-                </ul>
+            <div class="col-sm">
+                 <div class="d-flex justify-content-sm-end gap-2">
+                     <div class="search-box ms-2">
+                         <input type="text" class="form-control" placeholder="جستجو...">
+                         <i class="ri-search-line search-icon"></i>
+                     </div>
+                     <select class="form-control w-md" data-choices data-choices-search-false>
+                         <option value="All">همه زمان‌ها</option>
+                         <option value="Today">امروز</option>
+                         </select>
+                 </div>
             </div>
         </div> *@
-@* --- پایان بخش صفحه‌بندی --- *@
+        @* --- پایان دکمه افزودن و فیلترها --- *@
 
+        <div class="row gx-4">
+            @if (!Model.Any())
+            {
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        <i class="ri-error-warning-line me-2 align-middle"></i>هیچ آموزشی برای نمایش یافت نشد.
+                    </div>
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="col-xxl-12">
+                        @* هر آموزش در یک ردیف کامل در این ستون *@
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-xxl-3 col-lg-5">
+                                        <a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id">
+                                            @* لینک روی عکس *@
+                                            <img src="@item.CoverImagePath" alt="@item.Title" class="img-fluid rounded w-100 object-fit-cover" style="max-height: 200px;"> @* می‌توانید ارتفاع را تنظیم کنید *@
+                                        </a>
+                                    </div><!--end col-->
+                                    <div class="col-xxl-9 col-lg-7">
+                                        @* <p class="mb-2 text-primary text-uppercase">@item.CategoryName</p> *@ @* در صورت داشتن دسته بندی *@
+                                        <a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id" class="text-reset">
+                                            <h5 class="fs-15 fw-semibold">@item.Title</h5>
+                                        </a>
+                                        @* <div class="d-flex align-items-center gap-2 mb-3 flex-wrap"> *@
+                                        @*     <span class="text-muted"><i class="ri-calendar-event-line me-1"></i>@item.CreatedAt.ToString("dd MMMM yyyy")</span> *@
+                                        @* <span class="text-muted"><i class="ri-eye-line me-1"></i>@item.ViewCount</span>| *@
+                                        @* <a href="#"><i class="ri-user-3-line me-1"></i>@item.AuthorName</a> *@
+                                        @* </div> *@
+                                        <p class="text-muted mb-2 clamp-lines-3">@item.ShortDescription</p> @* استفاده از کلاس قبلی برای محدود کردن متن *@
+                                        <a asp-action="Details" asp-controller="Tutorials" asp-route-id="@item.Id" class="text-decoration-underline link-primary">ادامه مطلب<i class="ri-arrow-left-line"></i></a>
+                                        @* --- نمایش برچسب های مربوط به این آموزش (اختیاری) --- *@
+                                        @* <div class="d-flex align-items-center gap-2 mt-3 flex-wrap">
+                                            @foreach(var tag in item.Tags) {
+                                                <a href="/Tutorials?tag=@tag.Slug" class="badge text-success bg-success-subtle">#@tag.Name</a>
+                                            }
+                                        </div> *@
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--end col-->
+                }
+            }
+        </div><!--end row (Tutorial list)-->
+
+        @* --- بخش صفحه‌بندی --- *@
+        @* !!! نکته: این بخش نیاز به پیاده‌سازی با استفاده از کتابخانه صفحه‌بندی (مانند PagedList.Core) در Controller و View دارد *@
+        <div class="row g-0 text-center text-sm-start align-items-center mb-4">
+            <div class="col-sm-6">
+                <div>
+                    @* نمایش اطلاعات صفحه‌بندی (مثال) *@
+                    @* <p class="mb-sm-0 text-muted"> در حال نمایش <span class="fw-semibold">@Model.FirstItemOnPage</span> تا <span class="fw-semibold">@Model.LastItemOnPage</span> از <span class="fw-semibold text-decoration-underline">@Model.TotalItemCount</span> مورد</p> *@
+                    <p class="mb-sm-0 text-muted"> در حال نمایش <span class="fw-semibold"> 1 </span> به <span class="fw-semibold"> @Model.Count() </span> از <span class="fw-semibold text-decoration-underline"> @Model.Count() </span> ورودی ها</p> @* نمایش موقت *@
+                </div>
+            </div>
+            <!-- end col -->
+            <div class="col-sm-6">
+                <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
+                    @* لینک های صفحه بندی در اینجا توسط کتابخانه PagedList یا مشابه تولید می شود *@
+                    <li class="page-item disabled"><a href="#" class="page-link">قبلی</a></li>
+                    <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                    <li class="page-item"><a href="#" class="page-link">بعدی</a></li>
+                </ul>
+            </div><!-- end col -->
+        </div><!--end row (Pagination)-->
+
+    </div>
+    @* --- پایان ستون محتوای اصلی --- *@
+</div><!--end row (Main Page Structure)-->
 @section Styles {
+@* افزودن استایل های لازم برای این صفحه *@
     <style>
         .clamp-lines-3 {
             display: -webkit-box;
@@ -108,13 +196,28 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-height: calc(1.5em * 3); /* حداقل ارتفاع برای 3 خط */
+            /* min-height: calc(1.5em * 3); */ /* ممکن است باعث بهم ریختگی شود، با احتیاط استفاده کنید */
         }
 
-        .blog-img.object-fit-cover {
+        .object-fit-cover {
             object-fit: cover;
             width: 100%;
         }
     </style>
-    }
+}
 
+@section Scripts {
+@* افزودن اسکریپت های لازم برای این صفحه (مثلا برای data-choices اگر استفاده می‌کنید) *@
+@* <script src="~/lib/choices.js/public/assets/scripts/choices.min.js"></script> *@
+@* <script>
+            // Initialize Choices.js if needed for filters
+            // document.addEventListener('DOMContentLoaded', function () {
+            //     var element = document.querySelector('[data-choices]');
+            //     if(element) {
+            //         const choices = new Choices(element, {
+            //             searchEnabled: false // Or true if you want search in dropdown
+            //         });
+            //     }
+            // });
+        </script> *@
+}

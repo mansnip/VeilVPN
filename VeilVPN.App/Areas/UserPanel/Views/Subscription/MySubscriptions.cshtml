@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "اشتراک‌های من";
     Layout = "~/Areas/UserPanel/Views/Shared/_Layout.cshtml";
+    // پیدا کردن اولین اشتراک فعال برای نمایش در کارت ویژه
+    var activeSubscription = Model?.FirstOrDefault(s => s.IsActive && s.HasVpnConnection && s.StatusText == "فعال");
 }
 
 <!-- شروع عنوان صفحه -->
@@ -11,7 +13,7 @@
             <h4 class="mb-sm-0">اشتراک‌های من</h4>
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">اشتراک VPN</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Panel", new { area = "UserPanel" })">پنل کاربری</a></li>
                     <li class="breadcrumb-item active">اشتراک‌های من</li>
                 </ol>
             </div>
@@ -19,139 +21,139 @@
     </div>
 </div>
 
-<style>
-    #connectionLinkModal .modal-body {
-        text-align: center;
-    }
-
-        #connectionLinkModal .modal-body .d-flex {
-            flex-direction: column; /* برای قرار گرفتن دکمه‌ها زیر هم */
-        }
-
-        #connectionLinkModal .modal-body button {
-            width: 100%; /* عریض شدن دکمه‌ها */
-        }
-</style>
-<!-- شروع بخش کارت اشتراک فعال -->
-@if (Model != null && Model.Any(s => s.IsActive && s.HasVpnConnection))
+<!-- [شروع] کارت اشتراک فعال (در صورت وجود) -->
+@if (activeSubscription != null)
 {
-    var activeSubscription = Model.FirstOrDefault(s => s.IsActive && s.HasVpnConnection);
     <div class="row">
         <div class="col-xl-12">
-            <div class="card">
-                <div class="card-header border-0 align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">اشتراک فعال</h4>
+            <div class="card border border-success shadow-sm"> @* کمی برجسته تر *@
+                <div class="card-header bg-success-subtle border-0 align-items-center d-flex"> @* هدر با رنگ ملایم *@
+                    <h4 class="card-title mb-0 flex-grow-1 text-success">
+                        <i class="ri-shield-check-line align-middle me-1"></i> اشتراک فعال شما
+                    </h4>
                     <div>
-                        <span class="badge @activeSubscription.StatusClass">@activeSubscription.StatusText</span>
+                        <span class="badge fs-6 @activeSubscription.StatusClass"> @* کمی بزرگتر *@
+                            <i class="ri-check-double-line align-middle"></i> @activeSubscription.StatusText
+                        </span>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-xl-4">
-                            <div class="text-center p-3">
+                <div class="card-body p-4"> @* کمی پدینگ بیشتر *@
+                    <div class="row gy-4"> @* اضافه کردن فاصله عمودی بین ردیف‌ها در حالت موبایل *@
+                        <!-- بخش اطلاعات کلی -->
+                        <div class="col-lg-4 col-md-6">
+                            <div class="text-center p-3 border rounded h-100 d-flex flex-column justify-content-center"> @* کادر و چیدمان بهتر *@
                                 <div class="avatar-md mx-auto mb-3">
-                                    <div class="avatar-title bg-soft-primary text-primary rounded-circle fs-1">
-                                        <i class="ri-wifi-line"></i>
+                                    <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-1">
+                                        <i class="ri-wifi-fill"></i> @* آیکون پررنگ تر *@
                                     </div>
                                 </div>
-                                <h5 class="mb-3">@activeSubscription.Traffic گیگابایت / @activeSubscription.Duration روزه</h5>
-                                <p class="text-muted mb-0">سرور: @activeSubscription.VpnServerName</p>
-                                <p class="text-muted mb-0">نام کاربری: @activeSubscription.VpnEmailName</p>
-                                <div class="mt-3">
+                                <h5 class="mb-2">@activeSubscription.Traffic گیگابایت / @activeSubscription.Duration روزه</h5>
+                                @if (!string.IsNullOrEmpty(activeSubscription.RemarkName))
+                                {
+                                    <p class="text-info mb-2">نام: @activeSubscription.RemarkName</p>
+                                }
+                                <p class="text-muted mb-1 small">سرور: @activeSubscription.VpnServerName</p>
+                                <p class="text-muted mb-3 small">نام کاربری: @activeSubscription.VpnEmailName</p>
+                                <div class="mt-auto"> @* قرار دادن در پایین *@
                                     @if (activeSubscription.VpnRemainingDays.HasValue)
                                     {
-                                        <span class="badge bg-light text-muted p-2">
-                                            <i class="ri-time-line align-middle me-1"></i> @activeSubscription.VpnRemainingDays روز باقی‌مانده
+                                        <span class="badge bg-light text-dark p-2 border"> @* با بوردر *@
+                                            <i class="ri-calendar-2-line align-middle me-1"></i> @activeSubscription.VpnRemainingDays روز باقی‌مانده
                                         </span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-light text-muted p-2">
-                                            <i class="ri-time-line align-middle me-1"></i> نامحدود
+                                        <span class="badge bg-light text-dark p-2 border">
+                                            <i class="ri-infinity-line align-middle me-1"></i> زمان نامحدود
                                         </span>
                                     }
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-8">
+
+                        <!-- بخش جزئیات مصرف و زمان -->
+                        <div class="col-lg-8 col-md-6">
                             <div class="p-3">
                                 <div class="row">
-                                    <!-- نمایش ترافیک واقعی از سرور VPN -->
+                                    <!-- ترافیک مصرفی -->
                                     <div class="col-md-6 mb-4">
-                                        <h5 class="mb-3">ترافیک مصرفی (سرور VPN)</h5>
-                                        <div class="progress animated-progress custom-progress progress-label">
-                                            <div class="progress-bar @(activeSubscription.VpnUsagePercentage > 80 ? "bg-danger" : "bg-primary")"
-                                                 role="progressbar"
-                                                 style="width: @activeSubscription.VpnUsagePercentage%"
-                                                 aria-valuenow="@activeSubscription.VpnUsagePercentage"
-                                                 aria-valuemin="0"
-                                                 aria-valuemax="100">
+                                        <h6 class="mb-3 fw-semibold">
+                                            <i class="ri-database-2-line align-middle me-1 text-primary"></i> ترافیک مصرفی (بر اساس سرور)
+                                        </h6>
+                                        <div class="progress animated-progress custom-progress progress-label mb-2">
+                                            <div class="progress-bar @(activeSubscription.VpnUsagePercentage > 85 ? "bg-danger" : (activeSubscription.VpnUsagePercentage > 60 ? "bg-warning" : "bg-primary"))"
+                                                 role="progressbar" style="width: @activeSubscription.VpnUsagePercentage%"
+                                                 aria-valuenow="@activeSubscription.VpnUsagePercentage" aria-valuemin="0" aria-valuemax="100">
                                                 <div class="label">@activeSubscription.VpnUsagePercentage%</div>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-between mt-2">
-                                            <span class="text-muted small">مصرف شده: @(activeSubscription.Traffic - activeSubscription.VpnRemainingTraffic) GB</span>
-                                            <span class="text-muted small">باقی‌مانده: @activeSubscription.VpnRemainingTraffic GB</span>
+                                        <div class="d-flex justify-content-between text-muted small">
+                                            <span><i class="ri-download-2-line"></i> مصرف: @String.Format("{0:0.##}", activeSubscription.Traffic - activeSubscription.VpnRemainingTraffic) GB</span>
+                                            <span><i class="ri-stack-line"></i> مانده: @String.Format("{0:0.##}", activeSubscription.VpnRemainingTraffic) GB</span>
                                         </div>
                                     </div>
-                                    <!-- نمایش زمان باقیمانده از سرور VPN -->
+                                    <!-- زمان باقیمانده -->
                                     <div class="col-md-6 mb-4">
-                                        <h5 class="mb-3">مدت زمان باقیمانده</h5>
-                                        @if (activeSubscription.VpnRemainingDays.HasValue)
+                                         <h6 class="mb-3 fw-semibold">
+                                            <i class="ri-time-line align-middle me-1 text-success"></i> زمان باقیمانده
+                                        </h6>
+                                        @if (activeSubscription.VpnRemainingDays.HasValue && activeSubscription.Duration > 0)
                                         {
-                                            var daysPercentage = (int)((activeSubscription.VpnRemainingDays.Value * 100.0) / activeSubscription.Duration);
-                                            <div class="progress animated-progress custom-progress progress-label">
-                                                <div class="progress-bar @(daysPercentage < 20 ? "bg-danger" : "bg-success")"
-                                                     role="progressbar"
-                                                     style="width: @daysPercentage%"
-                                                     aria-valuenow="@daysPercentage"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100">
+                                            var daysPercentage = 100 - (int)(((double)(activeSubscription.Duration - activeSubscription.VpnRemainingDays.Value) / activeSubscription.Duration) * 100);
+                                            if (daysPercentage < 0) daysPercentage = 0;
+                                            if (daysPercentage > 100) daysPercentage = 100; // اطمینان از محدوده
+
+                                            <div class="progress animated-progress custom-progress progress-label mb-2">
+                                                <div class="progress-bar @(daysPercentage < 15 ? "bg-danger" : (daysPercentage < 40 ? "bg-warning" : "bg-success"))"
+                                                     role="progressbar" style="width: @daysPercentage%"
+                                                     aria-valuenow="@daysPercentage" aria-valuemin="0" aria-valuemax="100">
                                                     <div class="label">@daysPercentage%</div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between mt-2">
-                                                <span class="text-muted small">گذشته: @(activeSubscription.Duration - activeSubscription.VpnRemainingDays) روز</span>
-                                                <span class="text-muted small">باقی‌مانده: @activeSubscription.VpnRemainingDays روز</span>
+                                            <div class="d-flex justify-content-between text-muted small">
+                                                <span><i class="ri-skip-right-line"></i> گذشته: @(activeSubscription.Duration - activeSubscription.VpnRemainingDays) روز</span>
+                                                <span><i class="ri-timer-line"></i> مانده: @activeSubscription.VpnRemainingDays روز</span>
                                             </div>
                                         }
                                         else
                                         {
-                                            <div class="alert alert-info mb-0">
-                                                <i class="ri-information-line me-2"></i> زمان نامحدود
+                                             <div class="alert alert-info py-2 mb-0"> @* استایل بهتر برای نامحدود *@
+                                                <i class="ri-information-line me-1"></i> زمان نامحدود
                                             </div>
                                         }
                                     </div>
                                 </div>
+
                                 <!-- وضعیت اتصال -->
-                                <div class="alert @(activeSubscription.IsVpnActive ? "alert-success" : "alert-warning") d-flex align-items-center mb-4">
-                                    <i class="@(activeSubscription.IsVpnActive ? "ri-checkbox-circle-line" : "ri-error-warning-line") me-2 fs-4"></i>
-                                    <div>
+                                <div class="alert @(activeSubscription.IsVpnActive ? "alert-success" : "alert-danger") d-flex align-items-center p-2 mb-4"> @* قرمز برای غیرفعال *@
+                                    <i class="@(activeSubscription.IsVpnActive ? "ri-shield-check-line" : "ri-error-warning-line") me-2 fs-5"></i>
+                                    <div class="fw-medium">
                                         @if (activeSubscription.IsVpnActive)
                                         {
-                                            <span>اتصال به سرور VPN برقرار است</span>
+                                            <span>اتصال به سرور VPN برقرار و فعال است.</span>
                                         }
                                         else
                                         {
-                                            <span>وضعیت اشتراک شما غیرفعال می باشد.</span>
+                                            <span>اتصال به سرور برقرار نیست یا اشتراک غیرفعال است.</span>
                                         }
                                     </div>
                                 </div>
+
                                 <!-- دکمه های عملیات -->
-                                <div class="mt-4 d-flex justify-content-between">
-                                    <div>
-                                        <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-outline-warning">
-                                            <i class="ri-customer-service-2-line align-bottom me-1"></i> گزارش مشکل
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel", subscriptionId = activeSubscription.Id })" class="btn btn-outline-info me-2">
-                                            <i class="ri-refresh-line align-bottom me-1"></i> تمدید اشتراک
-                                        </a>
-                                        <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-primary">
-                                            <i class="ri-add-line align-bottom me-1"></i> خرید اشتراک جدید
-                                        </a>
-                                    </div>
+                                <div class="mt-4 d-flex justify-content-end flex-wrap gap-2"> @* چیدمان از راست و فاصله *@
+                                    <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-outline-warning">
+                                        <i class="ri-question-line align-bottom me-1"></i> پشتیبانی / گزارش مشکل
+                                    </a>
+                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel", subscriptionId = activeSubscription.Id })" class="btn btn-outline-info">
+                                        <i class="ri-refresh-line align-bottom me-1"></i> تمدید اشتراک
+                                    </a>
+                                    @* --- دکمه جدید نمایش لینک اتصال برای کارت فعال --- *@
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#connectionLinkModal-@activeSubscription.Id">
+                                        <i class="ri-link-m align-bottom me-1"></i> نمایش لینک اتصال
+                                    </button>
+                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-primary">
+                                        <i class="ri-add-circle-line align-bottom me-1"></i> خرید اشتراک جدید
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -161,48 +163,50 @@
         </div>
     </div>
 }
+<!-- [پایان] کارت اشتراک فعال -->
 
-<!-- شروع لیست اشتراک‌ها -->
+<!-- [شروع] لیست کامل اشتراک‌ها -->
 <div class="row">
     <div class="col-xl-12">
-        <div class="card">
+        <div class="card @(activeSubscription == null ? "mt-0" : "mt-4")"> @* اگر کارت فعال نبود، مارجین بالا نده *@
             <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">تاریخچه اشتراک‌ها</h4>
+                <h4 class="card-title mb-0 flex-grow-1">
+                    <i class="ri-list-check-2 align-middle me-1"></i> لیست کامل اشتراک‌ها
+                </h4>
                 <div class="flex-shrink-0">
                     <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-primary btn-sm">
                         <i class="ri-add-line align-bottom me-1"></i> خرید اشتراک جدید
                     </a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body pt-0"> @* حذف پدینگ بالا برای چسبیدن به هدر *@
                 @if (Model != null && Model.Any())
                 {
-                    <div class="table-responsive table-card">
-                        <table class="table table-hover align-middle table-nowrap mb-0">
-                            <thead class="table-light">
+                    <div class="table-responsive table-card mt-3"> @* کمی مارجین بالا *@
+                        <table class="table table-hover table-striped align-middle table-nowrap mb-0"> @* اضافه کردن استایل striped *@
+                            <thead class="table-light text-muted"> @* رنگ متن هدر *@
                                 <tr>
-                                    <th scope="col">تاریخ شروع</th>
-                                    <th scope="col">تاریخ پایان</th>
-                                    <th scope="col">ترافیک</th>
-                                    <th scope="col">مدت (روز)</th>
-                                    <th scope="col">نام اشتراک</th>
-                                    <th scope="col">ترافیک باقیمانده</th>
-                                    <th scope="col">وضعیت</th>
-                                    <th scope="col">عملیات</th>
+                                    <th>تاریخ شروع</th>
+                                    <th>تاریخ پایان</th>
+                                    <th>طرح (ترافیک/مدت)</th>
+                                    <th>نام اشتراک</th>
+                                    <th>ترافیک باقیمانده (دیتابیس)</th> @* مشخص کردن منبع ترافیک *@
+                                    <th>وضعیت</th>
+                                    <th style="width: 280px;">عملیات</th> @* کمی عرض بیشتر برای دکمه ها *@
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var subscription in Model.OrderByDescending(s => s.StartDate))
                                 {
-                                    <tr>
+                                    var isCurrentActive = activeSubscription != null && subscription.Id == activeSubscription.Id;
+                                    <tr class="@(isCurrentActive ? "table-success" : "")"> @* هایلایت ردیف فعال *@
                                         <td>@subscription.StartDate.ToPersianDate()</td>
                                         <td>@subscription.EndDate.ToPersianDate()</td>
-                                        <td>@subscription.Traffic گیگابایت</td>
-                                        <td>@subscription.Duration</td>
+                                        <td>@subscription.Traffic گیگ / @subscription.Duration روز</td>
                                         <td>
                                             @if (!string.IsNullOrEmpty(subscription.RemarkName))
                                             {
-                                                <span class="badge bg-info-subtle text-info">@subscription.RemarkName</span>
+                                                <span class="badge bg-info-subtle text-info-emphasis">@subscription.RemarkName</span> @* رنگ بهتر *@
                                             }
                                             else
                                             {
@@ -210,70 +214,89 @@
                                             }
                                         </td>
                                         <td>
-                                            <div class="progress animated-progress progress-sm">
-                                                <div class="progress-bar bg-success" role="progressbar" style="width: @((subscription.RemainingTraffic * 100) / subscription.Traffic)%" aria-valuenow="@((subscription.RemainingTraffic * 100) / subscription.Traffic)" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <small>@subscription.RemainingTraffic از @subscription.Traffic گیگابایت</small>
+                                            @if (subscription.Traffic > 0) // فقط اگر ترافیک محدود باشد نمایش بده
+                                            {
+                                                var percent = (int)(((double)subscription.RemainingTraffic / subscription.Traffic) * 100);
+                                                if (percent < 0) percent = 0;
+                                                if (percent > 100) percent = 100;
+                                                <div class="progress animated-progress progress-sm progress-label"> @* نمایش درصد در اینجا هم مفید است *@
+                                                     <div class="progress-bar @(percent < 15 ? "bg-danger" : (percent < 40 ? "bg-warning" : "bg-success"))"
+                                                         role="progressbar" style="width: @percent%" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100">
+                                                        <div class="label small">@percent%</div>
+                                                     </div>
+                                                </div>
+                                                <small class="d-block text-center mt-1">@subscription.RemainingTraffic از @subscription.Traffic GB</small>
+                                            }
+                                            else
+                                            {
+                                                 <span class="badge bg-light text-dark border"><i class="ri-infinity-line"></i> نامحدود</span>
+                                            }
                                         </td>
                                         <td>
-                                            <span class="badge @subscription.StatusClass">@subscription.StatusText</span>
+                                            <span class="badge fs-base @subscription.StatusClass">@subscription.StatusText</span> @* متن کمی بزرگتر *@
                                         </td>
                                         <td>
                                             <!-- دکمه های عملیات -->
-                                            <div class="hstack gap-2 flex-wrap">
-                                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#subscriptionDetails-@subscription.Id">
-                                                    <i class="ri-eye-line align-bottom"></i> جزئیات
+                                            <div class="hstack gap-1 flex-wrap"> @* کاهش فاصله *@
+                                                <button type="button" class="btn btn-sm btn-soft-primary" data-bs-toggle="modal" data-bs-target="#subscriptionDetails-@subscription.Id" title="نمایش جزئیات">
+                                                    <i class="ri-eye-line"></i> جزئیات
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#connectionLinkModal-@subscription.Id">
-                                                    <i class="ri-link-m"></i> نمایش لینک اتصال
-                                                </button>
-
-                                                @if (subscription.EndDate.AddDays(30) < DateTime.Now || subscription.RemainingTraffic < 30) // نمایش دکمه تمدید اگر کمتر از 30 روز یا کمتر از 30 گیگابایت باقی مانده باشد
+                                                @if (subscription.HasVpnConnection && !string.IsNullOrEmpty(subscription.SubscriptionLink)) // فقط اگر لینک وجود دارد نمایش بده
                                                 {
-                                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel", subscriptionId = subscription.Id })" class="btn btn-sm btn-outline-primary">
-                                                        <i class="ri-refresh-line align-bottom"></i> تمدید
+                                                    <button type="button" class="btn btn-sm btn-soft-success" data-bs-toggle="modal" data-bs-target="#connectionLinkModal-@subscription.Id" title="نمایش لینک اتصال">
+                                                        <i class="ri-link-m"></i> لینک
+                                                    </button>
+                                                }
+                                                @{
+                                                    // شرط نمایش دکمه تمدید (مثلا: کمتر از 10 روز مانده یا منقضی شده یا ترافیک کمتر از 20%)
+                                                    bool showRenew = (!subscription.VpnRemainingDays.HasValue || subscription.VpnRemainingDays <= 10 || subscription.StatusText == "منقضی شده" || (subscription.VpnUsagePercentage >= 80 && subscription.Traffic > 0)) && subscription.StatusText != "درحال آماده‌سازی";
+                                                }
+                                                @if (showRenew)
+                                                {
+                                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel", subscriptionId = subscription.Id })" class="btn btn-sm btn-soft-info" title="تمدید اشتراک">
+                                                        <i class="ri-refresh-line"></i> تمدید
                                                     </a>
                                                 }
-
-                                                <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-sm btn-outline-warning">
-                                                    <i class="ri-customer-service-2-line align-bottom me-1"></i> پشتیبانی
+                                                <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-sm btn-soft-warning" title="پشتیبانی و گزارش مشکل">
+                                                    <i class="ri-question-line"></i> پشتیبانی
                                                 </a>
                                             </div>
-                                            <style>
-                                                #qrcode- @subscription.Id {
-                                                    display: flex;
-                                                    justify-content: center; /* مرکز کردن به صورت افقی */
-                                                    align-items: center; /* مرکز کردن به صورت عمودی (در صورت نیاز) */
-                                                }
-                                            </style>
-                                            <!-- مودال لینک اتصال -->
+
+                                            <!-- [شروع] مودال لینک اتصال (برای هر ردیف) -->
+                                            @if (subscription.HasVpnConnection && !string.IsNullOrEmpty(subscription.SubscriptionLink))
+                                            {
                                             <div class="modal fade" id="connectionLinkModal-@subscription.Id" tabindex="-1" aria-labelledby="connectionLinkModalLabel-@subscription.Id" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">لینک اتصال اشتراک</h5>
+                                                            <h5 class="modal-title" id="connectionLinkModalLabel-@subscription.Id">
+                                                                <i class="ri-link align-middle me-1"></i> لینک اتصال اشتراک @(!string.IsNullOrEmpty(subscription.RemarkName) ? $"({subscription.RemarkName})" : "")
+                                                            </h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body text-center">
-                                                            <!-- QR Code -->
-                                                            <div id="qrcode-@subscription.Id"
-                                                                 class="mb-3 d-flex justify-content-center qrcode-container" @* کلاس qrcode-container اضافه شد *@
-                                                                 data-link="@subscription.SubscriptionLink" @* لینک اشتراک به عنوان دیتا اتریبیوت اضافه شد *@
-                                                                 data-subid="@subscription.Id">
-                                                                @* آی‌دی اشتراک برای لاگ و اشکال‌زدایی *@
-                                                                <!-- QR Code توسط جاوا اسکریپت در اینجا ایجاد می‌شود -->
-                                                                <div class="spinner-border text-primary" role="status">
-                                                                    <span class="visually-hidden">در حال بارگذاری QR Code...</span>
+                                                            <!-- QR Code Container -->
+                                                            <div class="mb-3 d-inline-block p-2 border rounded bg-light qrcode-container" @* استایل بهتر و کلاس *@
+                                                                 data-link="@subscription.SubscriptionLink"
+                                                                 data-subid="@subscription.Id"
+                                                                 style="cursor: pointer;" @* نشان دادن قابلیت کلیک *@
+                                                                 title="برای کپی لینک کلیک کنید">
+                                                                <div id="qrcode-@subscription.Id">
+                                                                    <!-- QR Code توسط جاوا اسکریپت در اینجا ایجاد می‌شود -->
+                                                                    <div class="spinner-border text-primary" role="status">
+                                                                        <span class="visually-hidden">در حال بارگذاری QR Code...</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <p class="text-muted small">(برای کپی لینک بر روی QR Code کلیک کنید)</p> @* راهنمای بهتر *@
+                                                            <p class="text-muted small mb-4">برای کپی لینک، روی QR Code کلیک کنید.</p>
 
-                                                            <!-- دکمه‌های آموزشی -->
-                                                            <div class="tutorial-buttons d-flex flex-column gap-2 mt-4">
-                                                                @* لینک‌های آموزشی خود را اینجا قرار دهید *@
-                                                                <button class="btn btn-info btn-lg" onclick="window.open('YOUR_WINDOWS_TUTORIAL_URL', '_blank')"> <i class="ri-windows-fill align-middle"></i> آموزش ویندوز</button>
-                                                                <button class="btn btn-success btn-lg" onclick="window.open('YOUR_ANDROID_TUTORIAL_URL', '_blank')"><i class="ri-android-fill align-middle"></i> آموزش اندروید</button>
-                                                                <button class="btn btn-secondary btn-lg" onclick="window.open('YOUR_IOS_TUTORIAL_URL', '_blank')"><i class="ri-apple-fill align-middle"></i> آموزش iOS</button>
+                                                            <!-- دکمه‌های آموزش -->
+                                                            <h6 class="mb-3">راهنمای اتصال</h6>
+                                                            <div class="d-flex justify-content-center flex-wrap gap-2">
+                                                                @* لینک‌های آموزشی واقعی خود را اینجا قرار دهید *@
+                                                                <button class="btn btn-outline-info" onclick="window.open('YOUR_WINDOWS_TUTORIAL_URL_HERE', '_blank')"><i class="ri-windows-fill align-middle me-1"></i> ویندوز</button>
+                                                                <button class="btn btn-outline-success" onclick="window.open('YOUR_ANDROID_TUTORIAL_URL_HERE', '_blank')"><i class="ri-android-fill align-middle me-1"></i> اندروید</button>
+                                                                <button class="btn btn-outline-dark" onclick="window.open('YOUR_IOS_TUTORIAL_URL_HERE', '_blank')"><i class="ri-apple-fill align-middle me-1"></i> آیفون (iOS)</button>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -281,92 +304,146 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </div>
+                                            }
+                                            <!-- [پایان] مودال لینک اتصال -->
 
-                                            <!-- مدال جزئیات -->
+                                            <!-- [شروع] مدال جزئیات (برای هر ردیف) -->
                                             <div class="modal fade" id="subscriptionDetails-@subscription.Id" tabindex="-1" aria-labelledby="subscriptionDetailsLabel-@subscription.Id" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg"> @* کمی بزرگتر برای نمایش بهتر *@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="subscriptionDetailsLabel-@subscription.Id">جزئیات اشتراک</h5>
+                                                            <h5 class="modal-title" id="subscriptionDetailsLabel-@subscription.Id">
+                                                               <i class="ri-information-line align-middle me-1"></i> جزئیات اشتراک @(!string.IsNullOrEmpty(subscription.RemarkName) ? $"({subscription.RemarkName})" : "")
+                                                            </h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="table-responsive">
-                                                                <table class="table table-borderless mb-0">
+                                                                <table class="table table-bordered table-sm mb-0"> @* بوردر و کوچک‌تر *@
                                                                     <tbody>
                                                                         <tr>
-                                                                            <th>شناسه اشتراک:</th>
-                                                                            <td>@subscription.Id</td>
+                                                                            <th class="bg-light" style="width: 180px;">شناسه سیستم:</th>
+                                                                            <td><code>@subscription.Id</code></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <th>نوع اشتراک:</th>
+                                                                            <th class="bg-light">طرح اشتراک:</th>
                                                                             <td>@subscription.Traffic گیگابایت / @subscription.Duration روزه</td>
                                                                         </tr>
                                                                         @if (!string.IsNullOrEmpty(subscription.RemarkName))
                                                                         {
                                                                             <tr>
-                                                                                <th>نام اشتراک:</th>
+                                                                                <th class="bg-light">نام اشتراک:</th>
                                                                                 <td>@subscription.RemarkName</td>
                                                                             </tr>
                                                                         }
                                                                         <tr>
-                                                                            <th>تاریخ شروع:</th>
-                                                                            <td>@subscription.StartDate.ToPersianDate()</td>
+                                                                            <th class="bg-light">تاریخ شروع:</th>
+                                                                            <td>@subscription.StartDate.ToPersianDate()</td> @* نمایش زمان *@
                                                                         </tr>
                                                                         <tr>
-                                                                            <th>تاریخ پایان:</th>
-                                                                            <td>@subscription.EndDate.ToPersianDate()</td>
+                                                                            <th class="bg-light">تاریخ پایان:</th>
+                                                                            <td>@subscription.EndDate.ToPersianDate()</td> @* نمایش زمان *@
                                                                         </tr>
-                                                                        <tr>
-                                                                            <th>ترافیک کل:</th>
-                                                                            <td>@subscription.Traffic گیگابایت</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <th>ترافیک مصرف شده:</th>
-                                                                            <td>@(subscription.Traffic - subscription.RemainingTraffic) گیگابایت</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <th>ترافیک باقیمانده:</th>
-                                                                            <td>@subscription.RemainingTraffic گیگابایت</td>
-                                                                        </tr>
-                                                                        @if (!string.IsNullOrEmpty(subscription.VpnServerName))
-                                                                        {
-                                                                            <tr>
-                                                                                <th>سرور VPN:</th>
-                                                                                <td>@subscription.VpnServerName</td>
-                                                                            </tr>
-                                                                        }
-                                                                        @if (!string.IsNullOrEmpty(subscription.VpnEmailName))
-                                                                        {
-                                                                            <tr>
-                                                                                <th>نام کاربری VPN:</th>
-                                                                                <td>@subscription.VpnEmailName</td>
-                                                                            </tr>
-                                                                        }
-                                                                        <tr>
-                                                                            <th>وضعیت:</th>
+                                                                         <tr>
+                                                                            <th class="bg-light">وضعیت فعلی:</th>
                                                                             <td>
-                                                                                <span class="badge @subscription.StatusClass">@subscription.StatusText</span>
+                                                                                 <span class="badge fs-base @subscription.StatusClass">@subscription.StatusText</span>
                                                                             </td>
                                                                         </tr>
+                                                                        @* --- نمایش اطلاعات VPN فقط در صورت وجود --- *@
+                                                                        @if(subscription.HasVpnConnection)
+                                                                        {
+                                                                             <tr>
+                                                                                <th class="bg-light">سرور VPN:</th>
+                                                                                <td>@subscription.VpnServerName</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="bg-light">نام کاربری VPN:</th>
+                                                                                <td>@subscription.VpnEmailName</td>
+                                                                            </tr>
+                                                                             <tr>
+                                                                                <th class="bg-light">وضعیت اتصال VPN:</th>
+                                                                                 <td>
+                                                                                    @if (subscription.IsVpnActive)
+                                                                                    {
+                                                                                        <span class="badge bg-success-subtle text-success-emphasis"><i class="ri-shield-check-line align-middle"></i> فعال</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span class="badge bg-danger-subtle text-danger-emphasis"><i class="ri-error-warning-line align-middle"></i> غیر فعال / قطع</span>
+                                                                                    }
+                                                                                 </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="bg-light">کل ترافیک (سرور):</th>
+                                                                                <td>@subscription.Traffic GB</td>
+                                                                            </tr>
+                                                                             <tr>
+                                                                                <th class="bg-light">ترافیک مصرف شده (سرور):</th>
+                                                                                <td>@String.Format("{0:0.##}", subscription.Traffic - subscription.VpnRemainingTraffic) GB</td>
+                                                                            </tr>
+                                                                             <tr>
+                                                                                <th class="bg-light">ترافیک باقیمانده (سرور):</th>
+                                                                                <td><span class="fw-bold text-primary">@String.Format("{0:0.##}", subscription.VpnRemainingTraffic) GB</span></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="bg-light">زمان باقیمانده (سرور):</th>
+                                                                                <td>
+                                                                                    @if(subscription.VpnRemainingDays.HasValue)
+                                                                                    {
+                                                                                         <span class="fw-bold text-success">@subscription.VpnRemainingDays روز</span>
+                                                                                    } else {
+                                                                                         <span class="badge bg-info-subtle text-info-emphasis">نامحدود</span>
+                                                                                    }
+                                                                                </td>
+                                                                            </tr>
+                                                                             <tr>
+                                                                                <th class="bg-light">لینک اتصال:</th>
+                                                                                <td>
+                                                                                    @if(!string.IsNullOrEmpty(subscription.SubscriptionLink))
+                                                                                    {
+                                                                                        <code style="word-break: break-all; direction: ltr; text-align:left;">@subscription.SubscriptionLink</code>
+                                                                                        <button class="btn btn-sm btn-soft-secondary ms-2 p-1" onclick="navigator.clipboard.writeText('@subscription.SubscriptionLink'); alert('لینک کپی شد!')" title="کپی لینک">
+                                                                                            <i class="ri-file-copy-line"></i>
+                                                                                        </button>
+                                                                                    } else {
+                                                                                         <span class="text-muted small">لینک موجود نیست</span>
+                                                                                    }
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                        else // اگر HasVpnConnection false بود
+                                                                        {
+                                                                             <tr>
+                                                                                <td colspan="2" class="text-center text-muted py-3">
+                                                                                    <i class="ri-loader-2-line fs-4 align-middle me-1"></i> در حال حاضر اطلاعات اتصال VPN برای این اشتراک در دسترس نیست (ممکن است در حال آماده‌سازی باشد).
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                        @* --- پایان اطلاعات VPN --- *@
+
                                                                     </tbody>
                                                                 </table>
                                                             </div>
                                                         </div>
-                                                        
                                                         <div class="modal-footer">
                                                             <div class="hstack gap-2 justify-content-end flex-wrap">
-                                                                @if (subscription.EndDate.AddDays(30) < DateTime.Now || subscription.RemainingTraffic < 30)
+                                                                @* --- دکمه جدید نمایش لینک اتصال در مودال جزئیات --- *@
+                                                                @if (subscription.HasVpnConnection && !string.IsNullOrEmpty(subscription.SubscriptionLink))
                                                                 {
-                                                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel", subscriptionId = subscription.Id })" class="btn btn-outline-primary">
+                                                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#connectionLinkModal-@subscription.Id" title="نمایش لینک و QR Code">
+                                                                        <i class="ri-link-m align-bottom me-1"></i> نمایش لینک اتصال
+                                                                    </button>
+                                                                }
+                                                                @if (showRenew) // استفاده از همان شرطی که برای دکمه تمدید در جدول استفاده شد
+                                                                {
+                                                                    <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel", subscriptionId = subscription.Id })" class="btn btn-info">
                                                                         <i class="ri-refresh-line align-bottom me-1"></i> تمدید اشتراک
                                                                     </a>
                                                                 }
-                                                                <a href="@Url.Action("SupportRequest", "Panel", new { area = "UserPanel", subscriptionId = subscription.Id })" class="btn btn-outline-warning">
-                                                                    <i class="ri-customer-service-2-line align-bottom me-1"></i> پشتیبانی
+                                                                <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-warning">
+                                                                    <i class="ri-question-line align-bottom me-1"></i> پشتیبانی / گزارش مشکل
                                                                 </a>
                                                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">بستن</button>
                                                             </div>
@@ -374,6 +451,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- [پایان] مدال جزئیات -->
                                         </td>
                                     </tr>
                                 }
@@ -383,30 +461,34 @@
                 }
                 else
                 {
-                    <div class="text-center p-4">
+                    <!-- پیام عدم وجود اشتراک -->
+                    <div class="text-center p-4 border rounded mt-4 bg-light"> @* ظاهر بهتر *@
                         <div class="avatar-md mx-auto mb-4">
-                            <div class="avatar-title bg-light text-danger rounded-circle">
-                                <i class="ri-information-line fs-1"></i>
+                            <div class="avatar-title bg-danger-subtle text-danger rounded-circle fs-1"> @* رنگ ملایم‌تر *@
+                                <i class="ri-folder-zip-line"></i> @* آیکون مرتبط‌تر *@
                             </div>
                         </div>
                         <h4 class="mb-3">هیچ اشتراکی یافت نشد!</h4>
-                        <p class="text-muted mb-4">شما تا به حال هیچ اشتراکی خریداری نکرده‌اید.</p>
+                        <p class="text-muted mb-4">شما تا به حال هیچ اشتراکی خریداری نکرده‌اید یا اشتراک‌های قبلی شما منقضی شده‌اند.</p>
                         <div>
-                            <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-success">خرید اشتراک</a>
+                            <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })" class="btn btn-success btn-lg">
+                                <i class="ri-shopping-cart-line align-middle me-1"></i> خرید اولین اشتراک
+                            </a>
                         </div>
                     </div>
                 }
-            </div>
-        </div>
-    </div>
-</div>
-<!-- پایان لیست اشتراک‌ها -->
-<!-- راهنمای اشتراک -->
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+</div><!-- end row -->
+<!-- [پایان] لیست کامل اشتراک‌ها -->
+
+<!-- [شروع] راهنمای اشتراک / سوالات متداول -->
 <div class="row">
     <div class="col-lg-12">
-        <div class="card">
+        <div class="card mt-4"> @* اضافه کردن مارجین بالا *@
             <div class="card-header">
-                <h4 class="card-title mb-0">سوالات متداول درباره اشتراک</h4>
+                <h4 class="card-title mb-0"><i class="ri-questionnaire-line align-middle me-1"></i> سوالات متداول درباره اشتراک</h4>
             </div>
             <div class="card-body">
                 <div class="accordion custom-accordionwithicon accordion-flush" id="accordionFlushExample">
@@ -417,160 +499,200 @@
                             </button>
                         </h2>
                         <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">
-                                برای خرید اشتراک، ابتدا یکی از طرح‌های موجود را انتخاب کرده و روی دکمه "خرید اشتراک" کلیک کنید. سپس مراحل پرداخت را تکمیل نمایید. پس از تأیید پرداخت، اشتراک شما بلافاصله فعال می‌شود و می‌توانید از خدمات RahaGozar استفاده کنید.
+                            <div class="accordion-body text-muted"> @* رنگ متن ملایم‌تر *@
+                                برای خرید اشتراک، ابتدا به صفحه <a href="@Url.Action("BuySubscription", "Panel", new { area = "UserPanel" })">خرید اشتراک</a> مراجعه کنید. یکی از طرح‌های موجود را انتخاب کرده و روی دکمه "خرید اشتراک" یا "افزودن به سبد خرید" کلیک کنید. سپس مراحل پرداخت از طریق درگاه زرین‌پال را تکمیل نمایید. پس از تأیید پرداخت، اشتراک شما بلافاصله فعال می‌شود و لینک اتصال آن در همین صفحه (اشتراک‌های من) قابل مشاهده خواهد بود.
                             </div>
                         </div>
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                آیا می‌توانم طرح اشتراک خود را ارتقا دهم؟
+                                چگونه اشتراک فعلی خود را تمدید کنم؟
                             </button>
                         </h2>
-                        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">
-                                بله، شما می‌توانید در هر زمان طرح اشتراک خود را ارتقا دهید. برای این کار، به پنل کاربری خود مراجعه کرده و از بخش "اشتراک‌های من" اقدام به خرید اشتراک جدید کنید. تفاوت قیمت بین طرح فعلی و طرح جدید از شما دریافت خواهد شد.
+                         <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body text-muted">
+                                برای تمدید اشتراک فعال یا اشتراکی که به زودی منقضی می‌شود، می‌توانید از دکمه "تمدید اشتراک" در کنار آن اشتراک در جدول بالا یا در کارت اشتراک فعال استفاده کنید. با کلیک بر روی این دکمه، به صفحه خرید هدایت می‌شوید و طرح فعلی برای شما از پیش انتخاب شده است. پس از پرداخت، مدت زمان و ترافیک به اشتراک موجود شما اضافه خواهد شد. همچنین می‌توانید با انتخاب طرحی متفاوت، اشتراک خود را ارتقا دهید.
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-item">
+                     <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingThree">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                                چگونه می‌توانم از RahaGozar در چند دستگاه استفاده کنم؟
+                                چگونه لینک اتصال را دریافت و استفاده کنم؟
                             </button>
                         </h2>
-                        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">
-                                پس از خرید اشتراک، می‌توانید نرم‌افزار RahaGozar را برای سیستم‌عامل‌های مختلف (ویندوز، مک، اندروید، iOS) دانلود کرده و با استفاده از اطلاعات کاربری خود وارد شوید. شما می‌توانید همزمان در چند دستگاه از RahaGozar استفاده کنید، اما توجه داشته باشید که میزان ترافیک مصرفی در همه دستگاه‌ها محاسبه می‌شود.
+                         <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body text-muted">
+                                پس از فعال شدن اشتراک، دکمه <button type="button" class="btn btn-sm btn-soft-success disabled"><i class="ri-link-m"></i> لینک</button> یا <button type="button" class="btn btn-sm btn-success disabled"><i class="ri-link-m"></i> نمایش لینک اتصال</button> در کنار اشتراک شما ظاهر می‌شود. با کلیک بر روی آن، یک پنجره (مودال) باز می‌شود که حاوی QR Code و لینک متنی اشتراک است.
+                                <br><strong>برای اتصال:</strong>
+                                <ul>
+                                    <li><strong>در موبایل (اندروید/iOS):</strong> اپلیکیشن V2RayNG (اندروید) یا NapsternetV (آیفون) یا سایر کلاینت‌های سازگار را نصب کنید. سپس با استفاده از گزینه اسکن QR Code در اپلیکیشن، کد نمایش داده شده را اسکن کنید. یا لینک متنی را کپی کرده و در اپلیکیشن از گزینه Import from Clipboard استفاده نمایید.</li>
+                                    <li><strong>در کامپیوتر (ویندوز):</strong> اپلیکیشن V2RayN را نصب کنید. لینک متنی را از مودال کپی کرده (با کلیک روی QR Code یا دکمه کپی) و سپس در V2RayN، از منوی Servers گزینه Import bulk URL from clipboard را انتخاب کنید.</li>
+                                </ul>
+                                دکمه‌های راهنمای تصویری در همان پنجره مودال لینک اتصال نیز موجود است.
                             </div>
                         </div>
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingFour">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
-                                آیا استفاده از RahaGozar قانونی است؟
+                                تفاوت ترافیک و زمان باقیمانده در جدول و کارت فعال چیست؟
                             </button>
                         </h2>
                         <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">
-                                استفاده از VPN در بیشتر کشورها قانونی است، اما قوانین در این زمینه متفاوت است. RahaGozar برای حفظ حریم خصوصی و امنیت آنلاین طراحی شده است. توصیه می‌کنیم که از RahaGozar مطابق با قوانین کشور خود استفاده کنید.
+                            <div class="accordion-body text-muted">
+                                اطلاعات نمایش داده شده در <strong>کارت اشتراک فعال</strong> (در بالای صفحه) مستقیماً از <strong>سرور VPN</strong> خوانده می‌شود و به‌روزترین وضعیت مصرف ترافیک و زمان باقیمانده واقعی را نشان می‌دهد. این اطلاعات ممکن است با کمی تاخیر (معمولا چند دقیقه) به‌روز شوند.
+                                <br>
+                                اطلاعات ترافیک باقیمانده در <strong>جدول "لیست کامل اشتراک‌ها"</strong>، مقداری است که در <strong>دیتابیس سایت</strong> ذخیره شده و ممکن است دقیقاً برابر با مقدار لحظه‌ای سرور نباشد، اما برای نمایش کلی تاریخچه و وضعیت اولیه مناسب است. معیار اصلی برای اتمام حجم یا زمان، اطلاعات دریافتی از سرور است که در کارت فعال و جزئیات مودال نمایش داده می‌شود.
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-item">
+                     <div class="accordion-item">
                         <h2 class="accordion-header" id="flush-headingFive">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
-                                در صورت بروز مشکل فنی چکار کنم؟
+                                در صورت بروز مشکل فنی یا سوال در مورد اشتراک چکار کنم؟
                             </button>
                         </h2>
                         <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body">
-                                در صورت بروز هرگونه مشکل فنی، می‌توانید از طریق دکمه "گزارش مشکل" در صفحه اشتراک‌های خود، درخواست پشتیبانی ثبت کنید. تیم پشتیبانی ما در اسرع وقت به مشکل شما رسیدگی خواهد کرد. همچنین می‌توانید از طریق اطلاعات تماس موجود در سایت با ما در ارتباط باشید.
+                            <div class="accordion-body text-muted">
+                                در صورت بروز هرگونه مشکل فنی در اتصال، قطعی، کندی سرعت یا سوال در مورد وضعیت اشتراک خود، بهترین راه ارتباط با ما از طریق سیستم <strong>پشتیبانی (چت آنلاین)</strong> است. دکمه <a href="@Url.Action("Index", "Chat", new { area = "UserPanel" })" class="btn btn-sm btn-soft-warning"><i class="ri-question-line"></i> پشتیبانی</a> در کنار هر اشتراک یا در منوی پنل کاربری شما را به بخش پشتیبانی هدایت می‌کند. لطفاً در پیام خود شناسه اشتراک (موجود در جدول و مودال جزئیات) یا نام اشتراک (در صورت تعیین) را ذکر کنید تا سریع‌تر به مشکل شما رسیدگی شود.
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- پایان راهنمای اشتراک -->
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+</div><!-- end row -->
+<!-- [پایان] راهنمای اشتراک / سوالات متداول -->
 @section Scripts {
-    @* <script src="~/lib/qrcode/qrcode.min.js" type="text/javascript"></script> *@
-@* کتابخانه qrcode.js از CDN *@
-    <script src="~/lib/qrcode.min.js" type="text/javascript"></script>
+@* کتابخانه qrcode.js - می‌توانید از CDN استفاده کنید یا اگر فایل را به صورت محلی دارید، آدرس آن را بدهید *@
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+@* اگر فایل local دارید، مشابه این آدرس‌دهی کنید: *@
+@* <script src="~/lib/qrcodejs/qrcode.min.js"></script> *@
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // انتخاب همه مودال‌های لینک اتصال با استفاده از بخشی از ID
-            const subscriptionModals = document.querySelectorAll('[id^="connectionLinkModal-"]');
+        // --- تابع کمکی برای کپی متن در کلیپ‌بورد ---
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(function () {
+                // نمایش پیام موفقیت (می‌توانید از tooltip یا روش دیگری استفاده کنید)
+                const originalTooltip = element.getAttribute('data-bs-original-title');
+                const successMessage = 'لینک کپی شد!';
+                var tooltip = bootstrap.Tooltip.getInstance(element);
+                if (!tooltip) {
+                     tooltip = new bootstrap.Tooltip(element, {
+                        title: successMessage,
+                        trigger: 'manual'
+                    });
+                } else {
+                     tooltip.setContent({ '.tooltip-inner': successMessage });
+                }
+                tooltip.show();
+                setTimeout(() => {
+                    tooltip.hide();
+                     // tooltip.setContent({ '.tooltip-inner': originalTooltip }); // بازگرداندن متن اصلی (اختیاری)
+                }, 2000);
+            }, function (err) {
+                console.error('خطا در کپی کردن لینک: ', err);
+                alert('مشکلی در کپی کردن لینک رخ داد. لطفا به صورت دستی کپی کنید.');
+            });
+        }
 
-            subscriptionModals.forEach(modalElement => {
-                // اضافه کردن Listener برای رویداد 'show.bs.modal' (زمانی که مودال شروع به باز شدن می‌کند)
-                modalElement.addEventListener('show.bs.modal', function (event) {
-                    const modal = event.target; // مودالی که در حال باز شدن است
-                    // پیدا کردن محفظه QR Code *داخل* این مودال خاص
+        // --- اجرای کد پس از بارگذاری کامل DOM ---
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const connectionLinkModals = document.querySelectorAll('[id^="connectionLinkModal-"]');
+
+            connectionLinkModals.forEach(modalElement => {
+                modalElement.addEventListener('shown.bs.modal', function (event) {
+                    const modal = event.target;
                     const qrContainer = modal.querySelector('.qrcode-container');
 
                     if (!qrContainer) {
-                        console.error("محفظه QR Code با کلاس '.qrcode-container' در مودال پیدا نشد:", modal.id);
-                        return; // خروج از تابع اگر محفظه پیدا نشد
+                        console.error("خطا: محفظه QR Code با کلاس '.qrcode-container' در مودال پیدا نشد:", modal.id);
+                        if (qrContainer) qrContainer.innerHTML = '<p class="text-danger">خطا در بارگذاری QR Code.</p>';
+                        return;
                     }
 
-                    // بررسی اینکه آیا QR Code قبلاً تولید شده است (برای جلوگیری از تولید مجدد)
-                    // qrcode.js معمولا یک تگ <canvas> یا <img> ایجاد می‌کند.
                     if (qrContainer.querySelector('canvas') || qrContainer.querySelector('img')) {
-                        // console.log("QR Code قبلاً برای این مودال تولید شده است:", qrContainer.id);
-                        return; // اگر از قبل وجود دارد، کاری انجام نده
+                        return; // Already generated
                     }
 
-                    // خواندن لینک از data attribute
                     const link = qrContainer.getAttribute('data-link');
-                    const subId = qrContainer.getAttribute('data-subid'); // برای لاگ
+                    const subId = qrContainer.getAttribute('data-subid');
 
                     if (link && link.trim() !== '') {
-                        try {
-                            // پاک کردن محتوای قبلی (مثل اسپینر لودینگ یا پیام خطا)
-                            qrContainer.innerHTML = '';
+                        qrContainer.innerHTML = ''; // Clear previous content/spinner
 
-                            // ایجاد QR Code جدید
-                            var qrcode = new QRCode(qrContainer, {
-                                text: link,        // لینک اشتراک
-                                width: 300,        // عرض QR Code به پیکسل
-                                height: 300,       // ارتفاع QR Code به پیکسل
-                                colorDark: "#000000", // رنگ اصلی کد
-                                colorLight: "#ffffff", // رنگ پس‌زمینه
-                                correctLevel: QRCode.CorrectLevel.M // سطح تصحیح خطا (H بالاترین و برای اسکن از صفحه بهتر است)
+                        try {
+                            const qrcode = new QRCode(qrContainer, {
+                                text: link,
+                                width: 200, // Adjust size as needed
+                                height: 200, // Adjust size as needed
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                // ***** تغییر کلیدی اینجاست *****
+                                correctLevel: QRCode.CorrectLevel.M // تغییر از H به M (Medium)
+                                // *******************************
                             });
 
-                            // --- افزودن قابلیت کپی با کلیک ---
                             qrContainer.style.cursor = 'pointer';
-                            // حذف listener قبلی اگر وجود داشت (برای اطمینان)
-                            qrContainer.onclick = null;
-                            // اضافه کردن listener جدید
-                            qrContainer.onclick = function() {
-                                navigator.clipboard.writeText(link).then(function() {
-                                    // *** نمایش ALERT موفقیت آمیز ***
-                                    alert('لینک اتصال با موفقیت در کلیپ‌بورد کپی شد!');
-                                    // ******************************
+                            qrContainer.setAttribute('data-bs-toggle', 'tooltip');
+                            qrContainer.setAttribute('data-bs-placement', 'top');
+                            qrContainer.setAttribute('data-bs-original-title', 'برای کپی لینک کلیک کنید');
+                            // Initialize tooltip instance if needed, or rely on the general initializer below
 
-                                }, function(err) {
-                                    console.error('خطا در کپی لینک اتصال: ', err);
-                                    // *** نمایش ALERT خطا ***
-                                    alert('خطا در کپی لینک. لطفا بررسی کنید مرورگر شما اجازه دسترسی به کلیپ‌بورد را می‌دهد یا به صورت دستی لینک را از بخش مربوطه کپی کنید.');
-                                    // *************************
-                                });
+                            qrContainer.onclick = function () {
+                                copyToClipboard(link, qrContainer);
                             };
-                            // --- پایان قابلیت کپی با کلیک ---
 
-                        } catch (e) {
-                            console.error(`خطا در تولید QR Code برای اشتراک ${subId}:`, e);
-                            // نمایش پیام خطا در محفظه QR Code
-                            qrContainer.innerHTML = '<p class="text-danger small mt-2">خطا در نمایش QR Code</p>';
+                            console.log(`[QR Code] کد QR برای اشتراک ${subId} با سطح تصحیح خطا 'M' ایجاد شد.`);
+
+                        } catch (error) {
+                            // *** مدیریت خطا در صورت بروز مشکل حتی با سطح M ***
+                            console.error(`[QR Code] خطا در ساخت QR Code برای اشتراک ${subId} (سطح M):`, error);
+                            // بررسی اینکه آیا خطا هنوز هم Overflow است؟
+                            if (error.message && error.message.includes("code length overflow")) {
+                                qrContainer.innerHTML = `<p class="text-danger small mt-2">خطا: لینک اتصال بیش از حد طولانی است و حتی با کاهش سطح خطا قابل تبدیل به QR Code نیست. لطفاً لینک را به صورت دستی کپی کنید.</p>
+                                                         <button class="btn btn-secondary btn-sm mt-2" onclick="copyToClipboard('${link.replace(/'/g, "\\'")}', this)">کپی دستی لینک</button>`; // دکمه کپی دستی اضافه شد
+                            } else {
+                                qrContainer.innerHTML = '<p class="text-danger small mt-2">خطا در ساخت QR Code. لطفا صفحه را رفرش کنید یا با پشتیبانی تماس بگیرید.</p>';
+                            }
                         }
+
                     } else {
-                        // اگر لینک خالی یا ناموجود بود
-                        console.warn(`لینک اتصال برای QR Code اشتراک ${subId} یافت نشد یا خالی است.`);
-                        qrContainer.innerHTML = '<p class="text-muted small mt-2">لینک اتصال برای این اشتراک موجود نیست.</p>';
+                        console.warn(`[QR Code] لینک اشتراک برای مودال ${modal.id} (اشتراک ${subId}) خالی یا نامعتبر است.`);
+                        qrContainer.innerHTML = '<p class="text-warning small mt-2"><i class="ri-error-warning-line align-middle me-1"></i> لینک اتصال برای این اشتراک یافت نشد.</p>';
                     }
                 });
-            });
-        });
-    </script>
 
-    <!-- سفارشی کردن متن آکاردئون -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // برای اصلاح نمایش اکاردئون
-            var accordionButtons = document.querySelectorAll('.accordion-button');
-            accordionButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    setTimeout(function() {
-                        window.dispatchEvent(new Event('resize'));
-                    }, 300);
-                });
-            });
-        });
+                 modalElement.addEventListener('hidden.bs.modal', function (event) {
+                     const modal = event.target;
+                     const qrContainer = modal.querySelector('.qrcode-container');
+                     if (qrContainer) {
+                         const tooltip = bootstrap.Tooltip.getInstance(qrContainer);
+                         if (tooltip) {
+                             tooltip.dispose();
+                         }
+                         // Optional: Clear QR code on close to force regeneration next time
+                         // qrContainer.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">...</span></div>';
+                     }
+                 });
+
+            }); // End forEach modal
+
+            // Initialize any remaining tooltips on the page
+             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                 // Avoid re-initializing tooltips already handled by copyToClipboard or qrContainer click
+                 if (!bootstrap.Tooltip.getInstance(tooltipTriggerEl)) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                 }
+             });
+
+            console.log("[MySubscriptions] Script reloaded. QR Code generation logic updated (CorrectLevel: M).");
+
+        }); // --- End of DOMContentLoaded ---
     </script>
 }

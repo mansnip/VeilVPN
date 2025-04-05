@@ -18,7 +18,6 @@ namespace VeilVPN.App.Controllers
         {
             string content = "User-agent: *\n" +
                            "Allow: /\n" +
-                           "Disallow: /panel/\n" +
                            "Disallow: /authentication/admin/\n" +
                            "Disallow: /admin/\n" +
                            "Disallow: /api/\n" +
