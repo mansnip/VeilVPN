@@ -86,7 +86,7 @@ namespace VeilVPN.App.Services.Implimentation
                     contacts.Add(new ChatContactDto
                     {
                         Id = adminUserId, // <<< تغییر نام از UserId به Id
-                        Name = adminUser.Email ?? "پشتیبانی", // نام ادمین یا "پشتیبانی"
+                        Name = "پشتیبانی فنی و فروش", // نام ادمین یا "پشتیبانی"
                         Avatar = "/assets/images/users/avatar-3.jpg", // <<< استفاده از آواتار ادمین یا پیش‌فرض
                         Status = isOnline ? "online" : "offline", // <<< استفاده از Status به جای IsOnline/StatusText
                         UnreadCount = unreadCount,

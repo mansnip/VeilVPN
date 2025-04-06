@@ -7,6 +7,12 @@ using VeilVPN.App.Controllers;
 using System;
 using System.Threading.Tasks;
 using Domain.ViewModels.UserPanel.Dashboard;
+using Application.API;
+using Application.Services.Implimentation;
+using Domain.DTOs.VPN;
+using System.Security.Claims;
+using Domain.DTOs.Subscription;
+using Application.Extensions;
 
 namespace VeilVPN.App.Areas.UserPanel.Controllers
 {
@@ -90,6 +96,80 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
             // ارسال ViewModel به View
             return View(viewModel);
         }
+
+        public IActionResult TestRoute()
+        {
+            // یک breakpoint اینجا بگذارید
+            System.Diagnostics.Debug.WriteLine("TestRoute action hit!");
+            return Ok("PanelController Route is working!");
+        }
+
+        [HttpGet("/UserPanel/Panel/GetSubscriptionStats/{subscriptionId}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetSubscriptionStats(Guid subscriptionId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                // _logger.LogWarning("Unauthorized attempt to GetSubscriptionStats - UserId is null or empty.");
+                return Unauthorized(new { success = false, message = "کاربر نامعتبر است. لطفا دوباره وارد شوید." });
+            }
+
+            // _logger.LogInformation("User {UserId} requesting stats for subscription {SubscriptionId}", userId, subscriptionId);
+
+            try
+            {
+                // 1. فراخوانی تابع اصلی برای دریافت همه اشتراک‌ها با آمار به‌روز:
+                // نکته: ایده‌آل‌تر این است که یک متد سرویس داشته باشید که فقط آمار یک اشتراک خاص را بگیرد.
+                // GetUserSubscriptionByIdAsync(userId, subscriptionId)
+                List<SubscriptionViewModel> allUserSubscriptions = await _subscriptionService.GetUserSubscriptionsAsync(userId);
+
+                // 2. پیدا کردن اشتراک مورد نظر در لیست:
+                var targetSubscriptionViewModel = allUserSubscriptions.FirstOrDefault(s => s.Id == subscriptionId.ToString());
+
+                if (targetSubscriptionViewModel == null)
+                {
+                    // _logger.LogWarning("Subscription {SubscriptionId} not found for user {UserId} after fetching all subscriptions.", subscriptionId, userId);
+                    return NotFound(new { success = false, message = "اشتراک مورد نظر یافت نشد. ممکن است حذف شده باشد یا متعلق به شما نباشد." });
+                }
+
+                // 3. **مهم:** ساخت مدل ویو جدید یا anonymous type برای خروجی JSON با نام‌های مورد انتظار جاوا اسکریپت
+                var statsForJs = new
+                {
+                    // پراپرتی‌های مورد نیاز جاوا اسکریپت (camelCase در JSON نهایی):
+                    usagePercentage = targetSubscriptionViewModel.VpnUsagePercentage,
+                    totalTrafficGB = targetSubscriptionViewModel.Traffic, // فرض می‌کنیم Traffic کل ترافیک به GB است
+                    remainingTrafficGB = targetSubscriptionViewModel.VpnRemainingTraffic, // فرض می‌کنیم VpnRemainingTraffic باقی‌مانده به GB است
+                                                                                          // محاسبه ترافیک مصرف شده:
+                    usedTrafficGB = Math.Round(targetSubscriptionViewModel.Traffic - targetSubscriptionViewModel.VpnRemainingTraffic, 2), // گرد کردن برای دقت بهتر
+                    remainingDays = targetSubscriptionViewModel.VpnRemainingDays, // از پراپرتی صحیح روزهای باقی‌مانده استفاده کنید
+
+                    // سایر پراپرتی‌هایی که ممکن است لازم باشند (اختیاری):
+                    id = targetSubscriptionViewModel.Id,
+                    isActive = targetSubscriptionViewModel.IsActive,
+                    statusText = targetSubscriptionViewModel.StatusText,
+                    statusClass = targetSubscriptionViewModel.StatusClass,
+                    endDate = targetSubscriptionViewModel.EndDate,
+                    startDate = targetSubscriptionViewModel.StartDate,
+                    remarkName = targetSubscriptionViewModel.RemarkName,
+                    subscriptionLink = targetSubscriptionViewModel.SubscriptionLink,
+                    hasVpnConnection = targetSubscriptionViewModel.HasVpnConnection,
+                    isVpnActive = targetSubscriptionViewModel.IsVpnActive,
+                    // ... هر پراپرتی دیگری که فکر می‌کنید ممکن است در جاوا اسکریپت لازم شود ...
+                };
+
+                // _logger.LogInformation("Successfully prepared updated stats for subscription {SubscriptionId} for user {UserId}", subscriptionId, userId);
+
+                // 4. برگرداندن نتیجه موفقیت آمیز با آبجکت ساخته شده جدید:
+                return Ok(new { success = true, message = "آمار اشتراک با موفقیت به‌روز شد.", stats = statsForJs });
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex, "Error occurred in GetSubscriptionStats for SubscriptionId {SubscriptionId} and UserId {UserId}.", subscriptionId, userId);
+                return StatusCode(500, new { success = false, message = "خطای داخلی سرور هنگام دریافت آمار اشتراک رخ داد. جزئیات خطا در لاگ سرور ثبت شد." });
+            }
+        }
+
 
 
         public IActionResult Logout()

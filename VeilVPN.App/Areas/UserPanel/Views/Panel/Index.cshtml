@@ -10,7 +10,6 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent mb-4">
-            @* اضافه کردن mb-4 برای فاصله *@
             <h4 class="mb-sm-0">داشبورد</h4>
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -22,19 +21,18 @@
     </div>
 </div>
 <!-- end page title -->
-<!-- نمایش پیام‌های موفقیت و خطا -->
+<!-- نمایش پیام‌ها -->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>موفقیت!</strong> @TempData["SuccessMessage"]
+        <i class="ri-check-double-line me-1 align-middle fs-16"></i> <strong>موفقیت!</strong> @TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>خطا!</strong> @TempData["ErrorMessage"]
+        <i class="ri-error-warning-line me-1 align-middle fs-16"></i> <strong>خطا!</strong> @TempData["ErrorMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
@@ -42,12 +40,11 @@
 <!-- پیام خوش آمدگویی -->
 <div class="row">
     <div class="col-12">
-        <div class="card bg-primary text-white border-0 shadow-sm">
-            @* کمی استایل بیشتر *@
+        <div class="card bg-primary text-white border-0 shadow">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-shrink-0">
-                        <i class="ri-shield-user-line fs-1"></i> @* آیکون مناسب‌تر *@
+                        <i class="ri-user-smile-line fs-1"></i> <!-- آیکون دوستانه‌تر -->
                     </div>
                     <div class="flex-grow-1 ms-3">
                         <h5 class="card-title text-white mb-1">سلام، @Model.UserName عزیز!</h5>
@@ -62,18 +59,18 @@
 <div class="row">
     <!-- ستون اصلی (بخش اشتراک) -->
     <div class="col-lg-8">
-        <div class="card card-height-100 shadow-sm">
-            @* افزودن سایه *@
-            <div class="card-header align-items-center d-flex border-bottom-dashed">
-                @* جداکننده خط‌چین *@
+        <div class="card card-height-100 shadow mb-4">
+            <!-- اضافه کردن mb-4 -->
+            <div class="card-header align-items-center d-flex border-bottom">
+                <!-- حذف dashed -->
                 <h4 class="card-title mb-0 flex-grow-1">
-                    <i class="ri-shield-check-line align-middle me-1 text-primary"></i> وضعیت اشتراک
+                    <i class="ri-shield-check-line align-middle me-1 text-primary"></i> وضعیت اشتراک فعلی
                 </h4>
                 @if (Model.HasActiveSubscription)
                 {
                     <div class="flex-shrink-0">
-                        @* دکمه تمدید که به صفحه خرید با ID اشتراک فعلی می‌رود *@
-                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" asp-route-subscriptionId="@Model.ActiveSubscription.Id" class="btn btn-soft-success btn-sm">
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" asp-route-subscriptionId="@Model.ActiveSubscription.Id" class="btn btn-success btn-sm">
+                            <!-- تغییر به دکمه اصلی -->
                             <i class="ri-refresh-line align-bottom me-1"></i> تمدید اشتراک
                         </a>
                     </div>
@@ -96,22 +93,23 @@
 
                     <h5 class="fs-15 mb-3">@sub.RemarkName</h5>
 
-                    <div class="row gy-3">
+                    <div class="row gy-3 mb-4">
+                        <!-- اضافه کردن فاصله پایین -->
                         <div class="col-md-6">
                             <p class="mb-2">
                                 <i class="ri-calendar-check-line align-middle me-1 text-muted"></i>
-                                <span class="fw-medium">تاریخ انقضا:</span> @sub.ExpiryDate.ToPersianDate()
+                                <span class="fw-medium">تاریخ انقضا:</span> <span class="fw-bold">@sub.ExpiryDate.ToPersianDate()</span>
                             </p>
                             <p class="mb-0">
                                 <i class="ri-time-line align-middle me-1 text-muted"></i>
                                 <span class="fw-medium">زمان باقیمانده:</span>
                                 @if (sub.RemainingDays > 0)
                                 {
-                                    <span class="text-success">@sub.RemainingDays روز</span>
+                                    <span class="badge bg-success-subtle text-success ms-1">@sub.RemainingDays روز</span>
                                 }
                                 else
                                 {
-                                    <span class="text-danger">منقضی شده</span>
+                                    <span class="badge bg-danger-subtle text-danger ms-1">منقضی شده</span>
                                 }
                             </p>
                         </div>
@@ -122,44 +120,60 @@
                             </p>
                             <p class="mb-0">
                                 <i class="ri-download-cloud-2-line align-middle me-1 text-muted"></i>
-                                <span class="fw-medium">باقیمانده:</span> @sub.RemainingTrafficGB گیگابایت
-                                (@if (sub.RemainingTrafficGB <= 0 && sub.TotalTrafficGB > 0)
+                                <span class="fw-medium">باقیمانده:</span> <span class="fw-bold">@sub.RemainingTrafficGB</span> گیگابایت
+                                @if (sub.TotalTrafficGB > 0) // فقط اگر حجم داشته باشه وضعیتش معنی داره
                                 {
-                                    <span class="text-danger">تمام شده</span>
+                                    @if (sub.RemainingTrafficGB <= 0)
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger ms-1">تمام شده</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success-subtle text-success ms-1">موجود</span>
+                                    }
                                 }
-                                else
-                                {
-                                    <span class="text-success">موجود</span>
-                                })
                             </p>
                         </div>
                     </div>
 
                     <div class="mt-4">
                         <label class="form-label mb-1">میزان مصرف ترافیک (@($"{sub.UsagePercentage:F1}")%)</label>
-                        <div class="progress progress-lg rounded-pill" style="height: 10px;">
-                            <div class="progress-bar bg-@progressColor" role="progressbar" style="width: @($"{sub.UsagePercentage}%")" aria-valuenow="@sub.UsagePercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress progress-lg rounded-pill" style="height: 12px;">
+                            <!-- کمی افزایش ارتفاع -->
+                            <div id="traffic-progress-bar" class="progress-bar bg-@progressColor progress-bar-striped progress-bar-animated" role="progressbar" style="width: @($"{sub.UsagePercentage}%")" aria-valuenow="@sub.UsagePercentage" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="d-flex justify-content-between mt-1 fs-12 text-muted">
-                            <span>@sub.UsedTrafficGB GB مصرف شده</span>
-                            <span>@sub.TotalTrafficGB GB کل</span>
+                            <span id="used-traffic">@sub.UsedTrafficGB GB مصرف شده</span>
+                            <span id="total-traffic">@sub.TotalTrafficGB GB کل</span>
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-2 border-top border-dashed">
-                        @* جداکننده *@
-                        <a asp-area="UserPanel" asp-controller="Subscription" asp-action="MySubscriptions" class="btn btn-soft-primary btn-sm">
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                        <!-- حذف dashed و چینش دکمه ها -->
+                        <a asp-area="UserPanel" asp-controller="Subscription" asp-action="MySubscriptions" class="btn btn-outline-primary">
+                            <!-- دکمه برجسته‌تر -->
                             <i class="ri-eye-line align-middle me-1"></i> مشاهده جزئیات کامل اشتراک
                         </a>
+                        <!-- [جدید] دکمه رفرش دستی آمار -->
+                        <div>
+                            <button id="refresh-stats-btn" class="btn btn-soft-secondary" title="به‌روزرسانی آمار">
+                                <i class="ri-refresh-line"></i>
+                            </button>
+                            <span id="stats-loading" class="spinner-border spinner-border-sm text-primary ms-2" role="status" style="display: none;"></span>
+                        </div>
                     </div>
                 }
-                else
+                else // در صورتی که اشتراک فعال وجود نداشته باشد
                 {
                     <div class="text-center py-4">
-                        <i class="ri-error-warning-line fs-1 text-warning mb-3"></i>
+                        <div class="avatar-lg mx-auto mb-4">
+                            <div class="avatar-title bg-warning-subtle text-warning fs-1 rounded-circle">
+                                <i class="ri-error-warning-line"></i>
+                            </div>
+                        </div>
                         <h5 class="text-muted">شما در حال حاضر هیچ اشتراک فعالی ندارید.</h5>
-                        <p class="text-muted">برای استفاده از خدمات، لطفا یک اشتراک جدید خریداری کنید.</p>
-                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" class="btn btn-success mt-2">
+                        <p class="text-muted mb-4">برای استفاده از خدمات و دسترسی به اینترنت آزاد، لطفا یک اشتراک جدید خریداری کنید.</p>
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="BuySubscription" class="btn btn-success">
                             <i class="ri-shopping-cart-2-line align-bottom me-1"></i> خرید اشتراک
                         </a>
                     </div>
@@ -170,163 +184,343 @@
     <!-- ستون کناری (فاکتورها و لینک‌ها) -->
     <div class="col-lg-4">
         <!-- کارت فاکتورهای در انتظار -->
-        <div class="card card-height-100 shadow-sm mb-4">
-            @* افزودن سایه و فاصله پایین *@
-            <div class="card-body text-center">
-                <div class="avatar-sm mx-auto mb-3">
-                    <span class="avatar-title bg-warning-subtle text-warning rounded-circle fs-2">
-                        <i class="ri-file-list-3-line"></i>
+        <div class="card card-height-100 shadow mb-4">
+            <div class="card-body text-center d-flex flex-column">
+                <!-- استفاده از flex برای چسباندن دکمه به پایین -->
+                <div class="avatar-md mx-auto mb-3">
+                    <span class="avatar-title bg-warning text-white rounded-circle fs-1">
+                        <!-- رنگ اصلی هشدار -->
+                        <i class="ri-file-list-3-fill"></i> <!-- آیکون پررنگ تر -->
                     </span>
                 </div>
-                <h4 class="fs-4 mb-1">
-                    @Model.PendingInvoicesCount
-                </h4>
+                <h4 class="fs-3 mb-1 fw-bold" id="pending-invoices-count">@Model.PendingInvoicesCount</h4>
                 <p class="text-muted mb-3">فاکتور در انتظار پرداخت</p>
-                <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-soft-warning btn-sm w-100">
-                    مشاهده و پرداخت فاکتورها
-                </a>
-            </div>
-        </div>
-
-        <!-- لینک های سریع (نمونه) -->
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="card-title mb-0"><i class="ri-links-line align-middle me-1"></i> لینک‌های سریع</h5>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a asp-area="UserPanel" asp-controller="Subscription" asp-action="MySubscriptions">
-                            <i class="ri-list-check-2 align-middle me-2 text-primary"></i> اشتراک‌های من
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices">
-                            <i class="ri-file-text-line align-middle me-2 text-primary"></i> فاکتورهای من
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a asp-area="UserPanel" asp-controller="Tutorials" asp-action="Index">@* لینک به صفحه راهنما یا دانلود *@
-                            <i class="ri-download-2-line align-middle me-2 text-primary"></i> راهنمای اتصال و دانلود
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a asp-area="UserPanel" asp-controller="Chat" asp-action="Index">@* لینک به صفحه تیکت‌ها *@
-                            <i class="ri-customer-service-2-line align-middle me-2 text-primary"></i> پشتیبانی (تیکت)
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div><!-- end col -->
-</div><!-- end row -->
-<!-- بخش فاکتورهای اخیر -->
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card shadow-sm">
-            @* افزودن سایه *@
-            <div class="card-header d-flex align-items-center border-bottom-dashed">
-                <h4 class="card-title flex-grow-1 mb-0">
-                    <i class="ri-file-list-2-line align-middle me-1 text-info"></i> فاکتورهای اخیر
-                </h4>
-                <div class="flex-shrink-0">
-                    <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-soft-info btn-sm">
-                        مشاهده همه فاکتورها <i class="ri-arrow-left-s-line align-middle"></i>
+                <div class="mt-auto">
+                    <!-- چسباندن به پایین کارت -->
+                    <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-warning w-100">
+                        <!-- دکمه اصلی هشدار -->
+                        مشاهده و پرداخت فاکتورها
                     </a>
                 </div>
-            </div><!-- end cardheader -->
+            </div>
+        </div>
+
+        <!-- لینک های سریع (طراحی دکمه ای) -->
+        <div class="card shadow">
+            <div class="card-header bg-light border-bottom">
+                <!-- پس زمینه روشن برای هدر -->
+                <h5 class="card-title mb-0"><i class="ri-links-fill align-middle me-1 text-primary"></i> لینک‌های سریع</h5>
+            </div>
             <div class="card-body">
-                <div class="table-responsive table-card">
-                    <table class="table table-hover table-nowrap table-centered align-middle mb-0">
-                        <thead class="table-light text-muted">
-                            @* تغییر رنگ به table-light *@
-                            <tr>
-                                <th scope="col">شماره فاکتور</th>
-                                <th scope="col">تاریخ</th>
-                                <th scope="col">مبلغ</th>
-                                <th scope="col">وضعیت</th>
-                                <th scope="col">عملیات</th>
-                            </tr><!-- end tr -->
-                        </thead><!-- thead -->
-
-                        <tbody>
-                            @if (Model.RecentInvoices != null && Model.RecentInvoices.Any())
-                            {
-                                @foreach (var invoice in Model.RecentInvoices)
-                                {
-                                    <tr>
-                                        <td class="fw-medium">@invoice.InvoiceNumber</td>
-                                        <td>@invoice.InvoiceDate.ToPersianDate()</td>
-                                        <td>@invoice.FinalPrice.ToPrice() تومان</td>
-                                        <td>
-                                            @if (invoice.Status == "پرداخت شده")
-                                            {
-                                                <span class="badge bg-success-subtle text-success">@invoice.Status</span>
-                                            }
-                                            else if (invoice.Status == "در انتظار پرداخت")
-                                            {
-                                                <span class="badge bg-warning-subtle text-warning">@invoice.Status</span>
-                                            }
-                                            else if (invoice.Status == "لغو شده")
-                                            {
-                                                <span class="badge bg-danger-subtle text-danger">@invoice.Status</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-info-subtle text-info">@invoice.Status</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            <div class="hstack gap-2">
-                                                <a href="@Url.Action("ShowInvoice", "Panel", new { area = "UserPanel", id = invoice.Id })" class="btn btn-sm btn-soft-primary">
-                                                    <i class="ri-eye-line align-middle"></i> <span class="d-none d-sm-inline-block">مشاهده</span> @* متن در موبایل مخفی شود *@
-                                                </a>
-                                                @if (invoice.Status == "در انتظار پرداخت")
-                                                {
-                                                    <form asp-area="UserPanel" asp-controller="Panel" asp-action="ProcessPayment" method="post" class="d-inline">
-                                                        <input type="hidden" name="invoiceId" value="@invoice.Id" />
-                                                        <button type="submit" class="btn btn-sm btn-soft-success">
-                                                            <i class="ri-bank-card-line align-middle"></i> <span class="d-none d-sm-inline-block">پرداخت</span>
-                                                        </button>
-                                                    </form>
-                                                    @* دکمه لغو در داشبورد شاید ضروری نباشد، برای خلوت شدن حذف شد *@
-                                                    @* <form asp-area="UserPanel" asp-controller="Panel" asp-action="CancelInvoice" method="post" onsubmit="return confirm('آیا از لغو این فاکتور اطمینان دارید؟');" class="d-inline">
-                                                            <input type="hidden" name="invoiceId" value="@invoice.Id" />
-                                                            <button type="submit" class="btn btn-sm btn-soft-danger">
-                                                                <i class="ri-close-circle-line align-middle"></i> <span class="d-none d-sm-inline-block">لغو</span>
-                                                            </button>
-                                                        </form> *@
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- end tr -->
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="5" class="text-center py-4">
-                                        <i class="ri-information-line fs-3 text-muted mb-2"></i><br />
-                                        هیچ فاکتور اخیری برای نمایش وجود ندارد.
-                                    </td>
-                                </tr>
-                            }
-                        </tbody><!-- end tbody -->
-                    </table><!-- end table -->
+                <div class="d-grid gap-2">
+                    <a asp-area="UserPanel" asp-controller="Subscription" asp-action="MySubscriptions" class="btn btn-outline-primary text-start">
+                        <i class="ri-list-check-2 align-middle me-2"></i> اشتراک‌های من
+                    </a>
+                    <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-outline-primary text-start">
+                        <i class="ri-file-text-line align-middle me-2"></i> فاکتورهای من
+                    </a>
+                    <a asp-area="UserPanel" asp-controller="Tutorials" asp-action="Index" class="btn btn-outline-primary text-start">
+                        <i class="ri-download-cloud-2-line align-middle me-2"></i> راهنمای اتصال و دانلود
+                    </a>
+                    <a asp-area="UserPanel" asp-controller="Chat" asp-action="Index" class="btn btn-outline-primary text-start">
+                        <i class="ri-customer-service-2-line align-middle me-2"></i> پشتیبانی (تیکت)
+                    </a>
                 </div>
-            </div><!-- end card body -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-</div><!-- end row -->
-@section Scripts {
-    <!-- اینجا می‌توانید اسکریپت‌های خاص این صفحه را اضافه کنید -->
-@* <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script> *@
-@* <script src="~/assets/js/pages/dashboard-projects.init.js"></script> *@ @* اگر نیاز به نمودار یا شمارنده دارید *@
+            </div>
+        </div><!-- end col -->
+    </div><!-- end row -->
+    <!-- بخش فاکتورهای اخیر -->
+    <div class="row mt-4 col-lg-8">
+        <!-- اضافه کردن فاصله بالا -->
+        <div class="col-lg-12">
+            <!-- تمام عرض -->
+            <div class="card shadow">
+                <div class="card-header d-flex align-items-center border-bottom bg-light">
+                    <!-- جداکننده و پس زمینه روشن -->
+                    <h4 class="card-title flex-grow-1 mb-0">
+                        <i class="ri-file-list-3-line align-middle me-1 text-info"></i> تاریخچه فاکتورها (3 مورد اخیر)
+                    </h4>
+                    <div class="flex-shrink-0">
+                        <a asp-area="UserPanel" asp-controller="Panel" asp-action="Invoices" class="btn btn-primary btn-sm">
+                            <!-- لینک به صفحه کامل فاکتورها -->
+                            مشاهده همه <i class="ri-arrow-left-s-line align-middle"></i>
+                        </a>
+                    </div>
+                </div><!-- end card header -->
+                <div class="card-body">
+                    @if (Model.RecentInvoices != null && Model.RecentInvoices.Any())
+                    {
+                        <div class="table-responsive table-card">
+                            <table class="table table-hover table-striped align-middle table-nowrap mb-0">
+                                <!-- اضافه کردن استایل striped -->
+                                <thead class="table-light text-muted">
+                                    <!-- رنگ متن هدر -->
+                                    <tr>
+                                        <th scope="col">شماره فاکتور</th>
+                                        <th scope="col">تاریخ ایجاد</th>
+                                        <th scope="col">مبلغ کل</th>
+                                        <th scope="col">وضعیت</th>
+                                        <th scope="col">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var invoice in Model.RecentInvoices)
+                                    {
+                                        <tr>
+                                            <td><a asp-area="UserPanel" asp-controller="Panel" asp-action="InvoiceDetail" asp-route-invoiceId="@invoice.Id" class="fw-medium link-primary">#@invoice.InvoiceNumber</a></td>
+                                            <td>@invoice.InvoiceDate.ToPersianDate()</td> @* نمایش زمان دقیق‌تر *@
+                                            <td>@invoice.FinalPrice.ToString("N0") تومان</td>
+                                            <td>
+                                                @if (invoice.Status == "پرداخت شده")
+                                                {
+                                                    <span class="badge bg-success-subtle text-success"><i class="ri-check-double-line align-middle me-1"></i>پرداخت شده</span>
+                                                }
+                                                else if (invoice.Status == "در انتظار پرداخت")
+                                                {
+                                                    <span class="badge bg-warning-subtle text-warning"><i class="ri-time-line align-middle me-1"></i>در انتظار پرداخت</span>
+                                                }
+                                                else if (invoice.Status == "لغو شده")
+                                                {
+                                                    <span class="badge bg-danger-subtle text-danger"><i class="ri-close-circle-line align-middle me-1"></i>لغو شده</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary-subtle text-secondary">@invoice.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="hstack gap-2">
+                                                    @* برای چیدمان دکمه ها *@
+                                                    <a asp-area="UserPanel" asp-controller="Panel" asp-action="InvoiceDetail" asp-route-invoiceId="@invoice.Id" class="btn btn-sm btn-soft-primary">
+                                                        <i class="ri-eye-line align-middle"></i> <span class="d-none d-sm-inline-block">مشاهده</span>
+                                                    </a>
+                                                    @if (invoice.Status == "در انتظار پرداخت")
+                                                    {
+                                                        // نکته: لینک پرداخت باید به کنترلر و اکشن صحیح که عملیات پرداخت را آغاز می‌کند، اشاره کند.
+                                                        <a asp-area="" asp-controller="Payment" asp-action="PayInvoice" asp-route-invoiceId="@invoice.Id" class="btn btn-sm btn-soft-success">
+                                                            <i class="ri-secure-payment-line align-middle"></i> <span class="d-none d-sm-inline-block">پرداخت</span>
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else // در صورتی که هیچ فاکتوری وجود نداشته باشد
+                    {
+                        <div class="text-center py-4">
+                            <div class="avatar-lg mx-auto mb-4">
+                                <div class="avatar-title bg-light text-muted fs-1 rounded-circle">
+                                    <i class="ri-file-text-line"></i>
+                                </div>
+                            </div>
+                            <h5 class="text-muted">هنوز هیچ فاکتوری برای شما ثبت نشده است.</h5>
+                        </div>
+                    }
+                </div><!-- end card-body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
+    </div><!-- end row -->
+    <!-- [جدید] بخش JavaScript برای رفرش آمار -->
+    @section Scripts {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const refreshButton = document.getElementById('refresh-stats-btn');
+                const loadingSpinner = document.getElementById('stats-loading');
+                const subscriptionId = '@(Model.HasActiveSubscription ? Model.ActiveSubscription.Id : Guid.Empty)'; // دریافت ID اشتراک از مدل
 
-    <script>
-        // کد جاوا اسکریپت اضافی در صورت نیاز
-        // مثال: آپدیت خودکار وضعیت یا...
-    </script>
-}
+                // Add data attributes to elements needing update for easier selection in JS
+                 const remainingTrafficEl = document.querySelector('.col-md-6 p:nth-child(2) .fw-bold');
+                 if(remainingTrafficEl) remainingTrafficEl.dataset.stat = 'remaining-traffic';
+
+                 const remainingDaysEl = document.querySelector('.col-md-6 p:nth-child(2) .badge');
+                 if(remainingDaysEl) remainingDaysEl.dataset.stat = 'remaining-days';
+
+                 // Optional: Give the label an ID if it doesn't have one
+                 const progressLabel = document.querySelector('.mt-4 > label.form-label.mb-1');
+                 if(progressLabel && !progressLabel.id) progressLabel.id = 'traffic-usage-label';
+                 const progressBar = document.getElementById('traffic-progress-bar');
+                 if(progressBar && progressLabel && progressLabel.id) progressBar.setAttribute('aria-labelledby', progressLabel.id); // Improve accessibility
+
+
+                if (refreshButton && loadingSpinner && subscriptionId && subscriptionId !== '@Guid.Empty.ToString()') { // Ensure subscriptionId is valid
+                    refreshButton.addEventListener('click', function() {
+                        // Show spinner, hide button (or disable it)
+                        loadingSpinner.style.display = 'inline-block';
+                        refreshButton.disabled = true;
+                        console.log('Refreshing subscription stats for ID:', subscriptionId);
+
+                        // --- AJAX Call to get updated stats ---
+                        // !!! مهم: URL زیر باید با اندپوینت واقعی شما در کنترلر جایگزین شود !!!
+                                    fetch(`/UserPanel/Panel/GetSubscriptionStats/${subscriptionId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                // Add AntiForgery token if needed for GET requests (less common but possible)
+                                // 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                 // Try to read error message from body if available
+                                 return response.text().then(text => {
+                                    throw new Error(`HTTP error! status: ${response.status}, message: ${text || 'No error message'}`);
+                                 });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Received stats:', data);
+                            if (data && data.success === true && data.stats) { // Check success flag and stats object
+                                // Update UI elements
+                                updateStatsUI(data.stats);
+                                 showToast('آمار اشتراک با موفقیت به‌روز شد.', 'success');
+                            } else {
+                                // Log the actual response for debugging
+                                console.error('Failed to get stats or invalid data format. Response:', data);
+                                showToast('خطا در دریافت آمار: ' + (data ? data.message : 'پاسخ نامعتبر'), 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching subscription stats:', error);
+                            showToast('خطا در ارتباط با سرور: ' + error.message, 'error');
+                        })
+                        .finally(() => {
+                            // Hide spinner, re-enable button
+                            loadingSpinner.style.display = 'none';
+                            refreshButton.disabled = false;
+                        });
+                    });
+                } else {
+                     if (!refreshButton) console.warn("Refresh button not found.");
+                     if (!loadingSpinner) console.warn("Loading spinner not found.");
+                     if (!subscriptionId || subscriptionId === '@Guid.Empty.ToString()') console.warn("No active subscription ID found for refresh functionality.");
+                }
+
+                // Function to update UI elements with new stats
+                function updateStatsUI(stats) {
+                    // Update Remaining Traffic text
+                    const remainingTrafficElement = document.querySelector('[data-stat="remaining-traffic"]');
+                     if (remainingTrafficElement && stats.remainingTrafficGB !== undefined) {
+                        remainingTrafficElement.textContent = stats.remainingTrafficGB.toFixed(2); // Format to 2 decimal places
+                    } else if (remainingTrafficElement) { console.warn('Remaining traffic data missing in stats'); }
+                      else { console.warn('Remaining traffic element not found for update'); }
+
+
+                    // Update Used Traffic text
+                    const usedTrafficElement = document.getElementById('used-traffic');
+                    if (usedTrafficElement && stats.usedTrafficGB !== undefined) {
+                        usedTrafficElement.textContent = `${stats.usedTrafficGB.toFixed(2)} GB مصرف شده`; // Format to 2 decimal places
+                    } else if (usedTrafficElement) { console.warn('Used traffic data missing in stats'); }
+                      else { console.warn('Used traffic element not found for update'); }
+
+                     // Update Total Traffic text
+                     const totalTrafficElement = document.getElementById('total-traffic');
+                     if (totalTrafficElement && stats.totalTrafficGB !== undefined) {
+                        totalTrafficElement.textContent = `${stats.totalTrafficGB.toFixed(2)} GB کل`; // Format to 2 decimal places
+                     } else if (totalTrafficElement) { console.warn('Total traffic data missing in stats'); }
+                       else { console.warn('Total traffic element not found for update'); }
+
+
+                    // Update Progress Bar
+                    const progressBar = document.getElementById('traffic-progress-bar');
+                    const usagePercentageLabel = document.getElementById('traffic-usage-label'); // Use ID assigned earlier
+                     if (progressBar && stats.usagePercentage !== undefined) {
+                         const percentage = parseFloat(stats.usagePercentage);
+                         progressBar.style.width = `${percentage}%`;
+                         progressBar.setAttribute('aria-valuenow', percentage);
+
+                         // Update progress bar color based on percentage
+                         progressBar.classList.remove('bg-primary', 'bg-warning', 'bg-danger'); // Remove existing color classes
+                         let progressColor = 'primary';
+                         if (percentage >= 90) {
+                             progressColor = 'danger';
+                         } else if (percentage >= 75) {
+                             progressColor = 'warning';
+                         }
+                         progressBar.classList.add(`bg-${progressColor}`);
+
+                         // Update the label text
+                         if (usagePercentageLabel) {
+                             usagePercentageLabel.textContent = `میزان مصرف ترافیک (${percentage.toFixed(1)}%)`;
+                         }
+
+                     } else if (progressBar) { console.warn('Usage percentage data missing in stats'); }
+                       else { console.warn('Progress bar element not found for update'); }
+
+                    // Update Remaining Days Badge
+                    const remainingDaysBadge = document.querySelector('[data-stat="remaining-days"]');
+                     if (remainingDaysBadge && stats.remainingDays !== undefined) {
+                        if (stats.remainingDays > 0) {
+                           remainingDaysBadge.textContent = `${stats.remainingDays} روز`;
+                           remainingDaysBadge.className = 'badge bg-success-subtle text-success ms-1'; // Ensure correct class
+                           remainingDaysBadge.dataset.stat = 'remaining-days'; // Keep data attribute
+                        } else {
+                           remainingDaysBadge.textContent = 'منقضی شده';
+                           remainingDaysBadge.className = 'badge bg-danger-subtle text-danger ms-1'; // Update class for expired status
+                           remainingDaysBadge.dataset.stat = 'remaining-days'; // Keep data attribute
+                        }
+                    } else if (remainingDaysBadge) { console.warn('Remaining days data missing in stats'); }
+                      else { console.warn('Remaining days element not found for update'); }
+
+                    // Update other elements as needed, e.g., Subscription Name, Expiry Date, etc.
+                    // Example (assuming you have elements with these IDs or data attributes):
+                    // const expiryDateElement = document.getElementById('subscription-expiry-date');
+                    // if (expiryDateElement && stats.expiryDatePersian) {
+                    //     expiryDateElement.textContent = stats.expiryDatePersian;
+                    // }
+                    // const subscriptionNameElement = document.getElementById('subscription-name');
+                    // if (subscriptionNameElement && stats.subscriptionName) {
+                    //     subscriptionNameElement.textContent = stats.subscriptionName;
+                    // }
+                }
+
+                // Function to show toast messages (requires a toast library like Toastify or Bootstrap Toasts)
+                // This is a basic placeholder - replace with your actual toast implementation
+                function showToast(message, type = 'info') {
+                     console.log(`Toast [${type}]: ${message}`); // Fallback to console log
+
+                    // Example using Bootstrap 5 Toasts (ensure you have the necessary HTML structure)
+                    /*
+                    const toastContainer = document.getElementById('toast-container'); // Assume you have a container
+                    if (toastContainer) {
+                        const toastId = 'liveToast-' + Date.now();
+                        const toastHtml = `
+                            <div class="toast align-items-center text-white bg-${type === 'error' ? 'danger' : type} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        ${message}
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        `;
+                        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+                        const toastElement = document.getElementById(toastId);
+                        const toast = new bootstrap.Toast(toastElement);
+                        toast.show();
+                        // Optional: Remove toast from DOM after it's hidden
+                        toastElement.addEventListener('hidden.bs.toast', function () {
+                            toastElement.remove();
+                        });
+                    }
+                    */
+
+                     // Example using a library like iziToast
+                     /*
+                     if (typeof iziToast !== 'undefined') {
+                         iziToast[type === 'error' ? 'error' : (type === 'success' ? 'success' : 'info')]({
+                             title: type === 'error' ? 'خطا' : (type === 'success' ? 'موفق' : 'اطلاع'),
+                             message: message,
+                             position: 'topLeft', // Or your preferred position
+                             rtl: true
+                         });
+                     }
+                     */
+                }
+            });
+        </script>
+    }
