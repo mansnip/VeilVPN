@@ -101,7 +101,7 @@ namespace Domain.DTOs.VPN
 
             // ساخت لینک نهایی با RemarkName انکود شده
             //return $"vless://{VpnId}@{serverInfo}?type=tcp&path=%2F&host=www.speedtest.net&headerType=http&security=none#{RemarkName}"; // کد قبلی
-            return $"vless://{VpnId}@{serverInfo}?type=tcp&path=%2F&host=www.speedtest.net&headerType=http&security=none#{encodedRemark}"; // کد جدید
+            return $"vless://{VpnId}@{serverInfo}?type=tcp&path=%2F&host=www.speedtest.net&headerType=http&security=none#RahaGozar - {encodedRemark}"; // کد جدید
         }
 
         private string ExtractServerInfo(string url)
