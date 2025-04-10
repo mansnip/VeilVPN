@@ -19,7 +19,17 @@ namespace Domain.ViewModels.UserPanel
         public string UserEmail { get; set; }
         public string UserPhone { get; set; }
         public string PaymentToken { get; set; } = Guid.NewGuid().ToString();
-        public decimal TotalAmount => Subscription?.FinalPrice ?? 0;
+        public decimal TotalAmount { get; set; }
+
+
+        // --- اطلاعات تخفیف کوپن ---
+        public string? AppliedDiscountCode { get; set; }
+        public decimal CouponDiscountAmount { get; set; }
+        public int CouponDiscountPercent { get; set; }
+
+
+        
+
 
         [Display(Name = "نام")]
         [MaxLength(20, ErrorMessage = "{0} نمی تواند بیشتر از 20 کاراکتر باشد.")]

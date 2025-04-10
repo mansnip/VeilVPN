@@ -11,8 +11,8 @@ namespace Domain.ViewModels.UserPanel
         public int Traffic { get; set; }
         public int Duration { get; set; }
         public decimal BasePrice { get; set; }
-        public decimal DiscountPercent { get; set; }
-        public decimal DiscountAmount { get; set; }
+        public decimal PlanDiscountPercent { get; set; }
+        public decimal PlanDiscountAmount { get; set; }
         public decimal FinalPrice { get; set; }
     }
 }

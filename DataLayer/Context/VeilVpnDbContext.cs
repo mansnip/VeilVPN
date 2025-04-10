@@ -19,6 +19,7 @@ namespace DataLayer.Context
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Tutorial> Tutorials { get; set; } // اضافه کردن این خط
+        public DbSet<DiscountCode> DiscountCodes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,7 +34,7 @@ namespace DataLayer.Context
                 .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Invoice>()
-                .Property(i => i.DiscountAmount)
+                .Property(i => i.PlanDiscountAmount)
                 .HasColumnType("decimal(18,2)");
 
             modelBuilder.Entity<Invoice>()

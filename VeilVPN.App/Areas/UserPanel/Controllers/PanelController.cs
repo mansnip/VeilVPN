@@ -4,15 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.ViewModels.UserPanel;
 using Application.Services.Interfaces;
 using VeilVPN.App.Controllers;
-using System;
-using System.Threading.Tasks;
 using Domain.ViewModels.UserPanel.Dashboard;
-using Application.API;
-using Application.Services.Implimentation;
 using Domain.DTOs.VPN;
 using System.Security.Claims;
-using Domain.DTOs.Subscription;
-using Application.Extensions;
 
 namespace VeilVPN.App.Areas.UserPanel.Controllers
 {
@@ -22,8 +16,9 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
     {
         private readonly ISubscriptionService _subscriptionService;
         private readonly IUserService _userService;
-        private readonly IInvoiceService _invoiceService;
+        private readonly IInvoiceService _invoiceService; // این از قبل هست
         private readonly IServerVPNService _serverVpnService;
+        // IDiscountService نیازی نیست مستقیما اینجا تزریق شود چون از طریق InvoiceService استفاده می‌شود
 
         public PanelController(ISubscriptionService subscriptionService, IUserService userService, IInvoiceService invoiceService, IServerVPNService serverVPNService)
         {
@@ -270,8 +265,8 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
                         Traffic = traffic,
                         Duration = duration,
                         BasePrice = priceDetails.BasePrice,
-                        DiscountPercent = priceDetails.DiscountPercent,
-                        DiscountAmount = priceDetails.DiscountAmount,
+                        PlanDiscountPercent = priceDetails.DiscountPercent,
+                        PlanDiscountAmount = priceDetails.DiscountAmount,
                         FinalPrice = priceDetails.FinalPrice,
                     }
                 };
@@ -548,5 +543,63 @@ namespace VeilVPN.App.Areas.UserPanel.Controllers
         }
 
         #endregion
+
+        #region ApplyDiscountCode
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] // مهم برای امنیت در برابر CSRF
+        public async Task<IActionResult> ApplyDiscountCode(string invoiceId, string discountCode)
+        {
+            // 1. اعتبارسنجی ورودی اولیه
+            if (string.IsNullOrWhiteSpace(invoiceId) || string.IsNullOrWhiteSpace(discountCode))
+            {
+                TempData["ErrorMessage"] = "شناسه فاکتور یا کد تخفیف نامعتبر است.";
+                // بازگشت به صفحه فاکتور
+                return RedirectToAction("ShowInvoice", new { id = invoiceId });
+            }
+
+            // 2. دریافت شناسه کاربر به صورت امن
+            // نکته مهم: User.Identity.Name معمولا نام کاربری را برمی‌گرداند، نه شناسه.
+            // از ClaimTypes.NameIdentifier استفاده کنید که شناسه یکتای کاربر را نگه می‌دارد.
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                // این اتفاق نباید بیفتد اگر کاربر Authorize شده باشد، اما بررسی آن خوب است
+                TempData["ErrorMessage"] = "خطا در شناسایی کاربر.";
+                return RedirectToAction("Invoices"); // یا به صفحه لاگین
+            }
+
+            try
+            {
+                // 3. فراخوانی سرویس فاکتور برای اعمال کد تخفیف
+                // این سرویس شامل تمام منطق اعتبارسنجی کد، محاسبه تخفیف، آپدیت فاکتور و کد در یک تراکنش است.
+                var result = await _invoiceService.ApplyDiscountCodeAsync(invoiceId, discountCode.Trim(), userId); // کد را Trim کنید
+
+                // 4. مدیریت نتیجه بازگشتی از سرویس
+                if (result.IsSuccess)
+                {
+                    TempData["SuccessMessage"] = result.Message; // مثلاً: "کد تخفیف با موفقیت روی فاکتور شما اعمال شد."
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = result.Message; // مثلاً: "کد تخفیف وارد شده نامعتبر است." یا "ظرفیت استفاده تمام شده."
+                }
+
+                // 5. ریدایرکت به صفحه نمایش فاکتور (ShowInvoice)
+                // این باعث می‌شود صفحه با اطلاعات به‌روز شده فاکتور (قیمت جدید و ...) مجدداً لود شود و پیام TempData نمایش داده شود.
+                return RedirectToAction("ShowInvoice", new { id = invoiceId });
+            }
+            catch (Exception ex)
+            {
+                // لاگ کردن خطا (ex) با استفاده از یک کتابخانه لاگ مثل Serilog یا NLog
+                // Log.Error(ex, "An error occurred while applying discount code {DiscountCode} to invoice {InvoiceId} for user {UserId}", discountCode, invoiceId, userId);
+                TempData["ErrorMessage"] = "خطای سیستمی هنگام اعمال کد تخفیف رخ داد. لطفاً با پشتیبانی تماس بگیرید.";
+                // بازگشت به صفحه فاکتور حتی در صورت بروز خطای پیش‌بینی نشده
+                return RedirectToAction("ShowInvoice", new { id = invoiceId });
+            }
+        }
+
+        #endregion
+
     }
 }

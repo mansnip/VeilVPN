@@ -1,0 +1,127 @@
+﻿@model Domain.ViewModels.Admin.DiscountCodeViewModel
+
+@{
+    ViewData["Title"] = "ایجاد کد تخفیف جدید";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@* --- افزودن Breadcrumb --- *@
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">@ViewData["Title"]</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Dashboard" asp-area="Admin">داشبورد ادمین</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="DiscountCodes" asp-area="Admin">مدیریت کد تخفیف</a></li>
+                    <li class="breadcrumb-item active">ایجاد کد جدید</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        @* یا col-lg-6 برای فرم جمع‌وجورتر *@
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h5 class="card-title mb-0 flex-grow-1"><i class="ri-coupon-3-line me-1 text-primary"></i>فرم تعریف کد تخفیف</h5>
+                @* <div class="flex-shrink-0">
+                    <a asp-action="Index" class="btn btn-sm btn-secondary">بازگشت به لیست</a>
+                </div> *@
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" asp-controller="DiscountCode" asp-area="Admin" method="post">
+                    @* نمایش خطاهای کلی مدل *@
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row g-3">
+                        @* --- فیلد کد تخفیف --- *@
+                        <div class="col-md-6">
+                            <label asp-for="Code" class="form-label"><i class="ri-barcode-line me-1"></i>کد تخفیف</label>
+                            <input asp-for="Code" type="text" class="form-control" placeholder="مثال: SUMMER25 یا عید۱۴۰۴" />
+                            <span asp-validation-for="Code" class="text-danger fs-sm"></span>
+                            <div class="form-text text-muted fs-sm">کدی که کاربر باید وارد کند (حروف انگلیسی و اعداد توصیه می‌شود).</div>
+                        </div>
+
+                        @* --- فیلد درصد تخفیف --- *@
+                        <div class="col-md-6">
+                            <label asp-for="DiscountPercent" class="form-label"><i class="ri-percent-line me-1"></i>درصد تخفیف</label>
+                            <div class="input-group">
+                                <input asp-for="DiscountPercent" type="number" class="form-control" placeholder="مثلا 20" min="1" max="100" />
+                                <span class="input-group-text">%</span>
+                            </div>
+                            <span asp-validation-for="DiscountPercent" class="text-danger fs-sm"></span>
+                        </div>
+
+                        @* --- فیلد حداکثر تعداد استفاده --- *@
+                        <div class="col-md-6">
+                            <label asp-for="MaxUses" class="form-label"><i class="ri-numbers-line me-1"></i>حداکثر تعداد استفاده</label>
+                            <input asp-for="MaxUses" type="number" class="form-control" placeholder="مثلا 100" min="1" />
+                            <span asp-validation-for="MaxUses" class="text-danger fs-sm"></span>
+                            <div class="form-text text-muted fs-sm">این کد حداکثر چند بار می‌تواند استفاده شود؟</div>
+                        </div>
+
+                        @* --- فیلد تاریخ انقضا --- *@
+                        <div class="col-md-6">
+                            <label asp-for="ExpiryDate" class="form-label"><i class="ri-calendar-event-line me-1"></i>تاریخ انقضا (اختیاری)</label>
+                            <input asp-for="ExpiryDate" type="text" class="form-control flatpickr-input" placeholder="تاریخ انقضا را انتخاب کنید"
+                                   data-provider="flatpickr" data-date-format="Y/m/d" readonly="readonly" value="@ViewData["ExpiryDateValue"]"> @* استفاده از flatpickr *@
+                            <span asp-validation-for="ExpiryDate" class="text-danger fs-sm"></span>
+                            <div class="form-text text-muted fs-sm">اگر تاریخ انتخاب نشود، کد تاریخ انقضا نخواهد داشت.</div>
+                        </div>
+
+                        @* --- فیلد وضعیت فعال بودن --- *@
+                        <div class="col-md-12">
+                            @* یا col-md-6 اگر کنار فیلد دیگری قرار گیرد *@
+                            <label class="form-label d-block mb-2"><i class="ri-toggle-line me-1"></i>وضعیت کد</label>
+                            <div class="form-check form-switch form-switch-lg form-switch-success">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" checked> @* به صورت پیش‌فرض فعال باشد *@
+                                <label class="form-check-label" asp-for="IsActive">فعال باشد؟ (کاربران بتوانند استفاده کنند)</label>
+                            </div>
+                            <span asp-validation-for="IsActive" class="text-danger fs-sm"></span>
+                        </div>
+
+                        @* --- دکمه ثبت --- *@
+                        <div class="col-12">
+                            <div class="text-end mt-3">
+                                <button type="submit" class="btn btn-success w-sm"><i class="ri-check-line align-bottom me-1"></i> ایجاد کد</button>
+                                <a asp-action="Index" class="btn btn-light w-sm ms-1"><i class="ri-arrow-go-back-line align-bottom me-1"></i> انصراف</a>
+                            </div>
+                        </div>
+                    </div> <!-- end row -->
+                </form>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@section Styles {
+@* اگر flatpickr در لی‌اوت اصلی لود نشده، اینجا اضافه کنید *@
+    <link rel="stylesheet" href="~/assets/libs/flatpickr/flatpickr.min.css">
+}
+
+@section Scripts {
+    @* برای فعال‌سازی اعتبارسنجی سمت کلاینت *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @* اگر flatpickr در لی‌اوت اصلی لود نشده، اینجا اضافه کنید *@
+    <script src="~/assets/libs/flatpickr/flatpickr.min.js"></script>
+    <script src="~/assets/libs/flatpickr/l10n/fa.js"></script> @* فارسی‌ساز اختیاری *@
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Flatpickr
+            if (document.querySelector('[data-provider="flatpickr"]')) {
+                flatpickr('.flatpickr-input', {
+                     dateFormat: "Y/m/d",
+                     locale: "fa" // استفاده از فارسی‌ساز (اختیاری)
+                    // minDate: "today" // برای اینکه تاریخ گذشته انتخاب نشود (اختیاری)
+                });
+            }
+        });
+    </script>
+}
+

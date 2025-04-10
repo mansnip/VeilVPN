@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.ViewModels.Admin;
 using Domain.ViewModels.UserPanel;
 using System;
@@ -21,6 +22,8 @@ namespace Application.Services.Interfaces
 
         Task<Invoice> GetOrginalInvoiceById(string id);
         Task UpdateInvoice(Invoice invoice);
+
+        Task<ResultDto> ApplyDiscountCodeAsync(string invoiceId, string code, string userId);
     }
 
 }

@@ -180,11 +180,11 @@
                                         <td>قیمت پایه</td>
                                         <td class="text-end">@Model.Subscription.BasePrice.ToPrice() تومان</td>
                                     </tr>
-                                    @if (Model.Subscription.DiscountPercent > 0)
+                                    @if (Model.Subscription.PlanDiscountPercent > 0)
                                     {
                                         <tr>
-                                            <td>تخفیف (@Model.Subscription.DiscountPercent%)</td>
-                                            <td class="text-end text-danger">- @Model.Subscription.DiscountAmount.ToPrice() تومان</td>
+                                            <td>تخفیف (@Model.Subscription.PlanDiscountPercent%)</td>
+                                            <td class="text-end text-danger">- @Model.Subscription.PlanDiscountAmount.ToPrice() تومان</td>
                                         </tr>
                                     }
                                     <tr class="border-top border-top-dashed fs-15">

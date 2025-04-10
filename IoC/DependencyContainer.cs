@@ -30,7 +30,7 @@ namespace IoC
             service.AddSingleton<VPNSessionManager>();
             service.AddScoped<IExpenseService, ExpenseService>();
             service.AddScoped<IExpenseRepository, ExpenseRepository>();
-
+            service.AddScoped<IDiscountCodeRepository, DiscountCodeRepository>();
             #endregion
 
             #region Repositories
@@ -45,6 +45,8 @@ namespace IoC
             service.AddScoped<IInvoiceRepository, InvoiceRepository>();
             service.AddScoped<IInvoiceService, InvoiceService>();
             service.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            service.AddScoped<IDiscountService, DiscountService>();
+
 
         }
     }

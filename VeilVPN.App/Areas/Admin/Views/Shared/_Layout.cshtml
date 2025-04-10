@@ -414,10 +414,28 @@
                                     <li class="nav-item">
                                         <a href="~/Admin/Subscription/Index" class="nav-link" data-key="t-subscription-plans">نمایش اشتراک ها</a>
                                     </li>
+                                    <!-- می‌توانید لینک‌های دیگری مثل ویرایش پلن‌ها، افزودن پلن و ... را اینجا اضافه کنید -->
                                 </ul>
                             </div>
                         </li>
 
+                        <!-- ================== بخش اضافه شده برای کدهای تخفیف ================== -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarDiscountCodes" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDiscountCodes">
+                                <i class="ri-coupon-3-line"></i> <span data-key="t-discount-codes">مدیریت کدهای تخفیف</span> <!-- آیکن ri-coupon-3-line یا ri-price-tag-3-line مناسب است -->
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarDiscountCodes">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="~/Admin/DiscountCode/Index" class="nav-link" data-key="t-discount-codes-list">لیست کدهای تخفیف</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Admin/DiscountCode/Create" class="nav-link" data-key="t-create-discount-code">ایجاد کد تخفیف جدید</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- ================== پایان بخش اضافه شده ================== -->
                         <!-- مدیریت فاکتورها -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarInvoices" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoices">
@@ -462,7 +480,6 @@
                         </li>
 
                         <!-- پشتیبانی -->
-                        
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarSupport" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSupport">
                                 <i class="ri-customer-service-2-line"></i> <span data-key="t-support">پشتیبانی کاربران</span>
@@ -470,32 +487,49 @@
                             <div class="collapse menu-dropdown" id="sidebarSupport">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/Admin/Chat/Index" class="nav-link" data-key="t-all-tickets">چت زنده</a>
+                                        <a href="~/Admin/Chat/Index" class="nav-link" data-key="t-all-tickets">چت زنده</a> <!-- فرض بر اینکه چت زنده بخش اصلی پشتیبانی است -->
                                     </li>
+                                    <!-- ممکن است لینک های دیگری مثل تیکت ها و ... هم اینجا اضافه شود -->
                                 </ul>
                             </div>
                         </li>
 
-                        <!-- راهنما -->
-                        <li class="nav-item">
+                        <!-- راهنما / آموزش ها -->
+                        <!-- <li class="nav-item">  این بخش کمی تکراری به نظر می رسد، بخش پایین را نگه می داریم
                             <a class="nav-link menu-link" href="#sidebarTutorials" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTutorials">
-                                <i class="ri-server-line"></i> <span data-key="t-servers">بخش آموزش ها</span>
+                                <i class="ri-book-read-line"></i> <span data-key="t-tutorials">بخش آموزش ها</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarTutorials">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/Admin/Tutorials/Index" class="nav-link" data-key="t-add-Tutorials">آموزش ها</a>
+                                        <a href="~/Admin/Tutorials/Index" class="nav-link" data-key="t-all-tutorials">لیست آموزش ها</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="~/Admin/Servers/Create" class="nav-link" data-key="t-add-Tutorials">ایجاد آموزش جدید</a>
+                                        <a href="~/Admin/Tutorials/Create" class="nav-link" data-key="t-create-tutorial">ایجاد آموزش جدید</a>
                                     </li>
                                 </ul>
                             </div>
-                        </li>
-                        <li class="nav-item">
+                        </li> -->
+                        <!-- <li class="nav-item"> این بخش هم با بالایی تکراری است، یکی کافی است
                             <a class="nav-link menu-link" href="~/Admin/Tutorials/Index">
                                 <i class="ri-question-line"></i> <span data-key="t-help">آموزش ها</span>
                             </a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarTutorialsCombined" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTutorialsCombined">
+                                <i class="ri-book-read-line"></i> <span data-key="t-tutorials-section">بخش آموزش ها</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarTutorialsCombined">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="~/Admin/Tutorials/Index" class="nav-link" data-key="t-all-tutorials">لیست آموزش ها</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="~/Admin/Tutorials/Create" class="nav-link" data-key="t-create-tutorial">ایجاد آموزش جدید</a>
+                                    </li>
+                                    <!-- لینک ایجاد آموزش در کد اصلی شما به Servers/Create ارجاع میداد که اصلاح شد -->
+                                </ul>
+                            </div>
                         </li>
 
                         <!-- گزارشات -->
@@ -506,7 +540,7 @@
                             <div class="collapse menu-dropdown" id="sidebarReports">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="~/Admin/Expenses/Index" class="nav-link" data-key="t-sales-reports">هزینه ها</a>
+                                        <a href="~/Admin/Expenses/Index" class="nav-link" data-key="t-expenses-reports">هزینه ها</a> <!-- اصلاح data-key -->
                                     </li>
                                     <li class="nav-item">
                                         <a href="~/Admin/Reports/Usage" class="nav-link" data-key="t-usage-reports">گزارش مصرف</a>
@@ -514,6 +548,7 @@
                                     <li class="nav-item">
                                         <a href="~/Admin/Reports/UserActivity" class="nav-link" data-key="t-user-activity">فعالیت کاربران</a>
                                     </li>
+                                    <!-- می‌توانید گزارش فروش (Sales Report) را نیز اینجا اضافه کنید -->
                                 </ul>
                             </div>
                         </li>
@@ -550,7 +585,11 @@
 
                         <!-- خروج -->
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="~/Admin/Account/Logout">
+                            <!-- بهتر است از فرم POST برای خروج استفاده شود برای امنیت بیشتر -->
+                            <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post" id="logoutFormAdmin" class="d-none">
+                                @Html.AntiForgeryToken()
+                            </form>
+                            <a class="nav-link menu-link" href="javascript:void(0);" onclick="document.getElementById('logoutFormAdmin').submit();">
                                 <i class="ri-logout-box-line"></i> <span data-key="t-logout">خروج</span>
                             </a>
                         </li>
